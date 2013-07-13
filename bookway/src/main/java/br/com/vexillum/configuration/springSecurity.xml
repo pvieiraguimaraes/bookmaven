@@ -1,0 +1,36 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<jee:jndi-lookup id="dataSource" jndi-name="java:jboss/datasources/BookwayDS" />
+
+    <bean id="VXAuthenticatorProvider" class="br.com.vexillum.control.security.AuthenticatorProvider"/>
+    
+	<!-- Parte do Spring Security -->
+	<security:http auto-config="true">
+		<security:intercept-url pattern="/pages/user/**"
+			access="ROLE_USER" />
+		<security:intercept-url pattern="/pages/**"
+			access="ROLE_ANONYMOUS" />
+		<security:form-login login-page="/pages/login.zul"
+			default-target-url="/pages/user/perfil.zul"
+			authentication-failure-url="/pages/login.zul?login_error=1" />
+	</security:http>
+
+	<security:authentication-manager>
+		<security:authentication-provider ref="VXAuthenticatorProvider"/>
+		<security:authentication-provider>
+			<!-- A query users-by-username-query deve retorna as colunas username, 
+				password e enable username-query deve trazer o nome de usuário e o tipo de 
+				autenticação (username, authority) (OBRIGATORIAMENTE) -->
+			<security:jdbc-user-service
+				data-source-ref="dataSource"
+				users-by-username-query="select email as username, password, validaccount as enable from users where validaccount = 'true' and email=?"
+				authorities-by-username-query="select u.email as username, c.name as authority from users as u inner join category as c on c.id = u.id_category where u.email=?" />
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+</beans>

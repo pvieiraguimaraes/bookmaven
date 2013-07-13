@@ -1,0 +1,28 @@
+<zk>
+	<style src="/css/bootstrap.css" />
+	<borderlayout hflex="1" vflex="1">
+		<north height="50px" border="none">
+			<include src="/template/navbar.zul" />
+		</north>
+		<west width="200px" border="none" collapsible="true"
+			splittable="true" minsize="200">
+			<borderlayout hflex="1" vflex="1">
+				<north>
+					<div width="200px" height="200px" align="center" style="margin-top: 25px;">
+						<image src="/images/perfilicon.png"
+							width="150px" height="150px" />
+					</div>
+				</north>
+				<center>
+					<include src="/template/mainmenu.zul" />
+				</center>
+			</borderlayout>
+		</west>
+		<center id="mainContent" autoscroll="true"
+			self="@{insert(content)}" />
+		<east width="200px" border="none" collapsible="true"
+			splittable="true" minsize="200">
+			<include src="/template/sidebar.zul" />
+		</east>
+	</borderlayout>
+</zk>

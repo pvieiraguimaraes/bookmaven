@@ -1,0 +1,41 @@
+<?page title="" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<grid hflex="1" vflex="1">
+		<columns>
+			<column width="40px" />
+			<column />
+		</columns>
+		<rows>
+			<row>
+				<attribute name="onClick">
+					Executions.sendRedirect("/pages/user/perfil.zul");
+				</attribute>
+				<image src="/images/edit-user.png" />
+				<label value="${labels.myperfil}"/>
+			</row>
+			<row>
+				<image src="/images/note.png" />
+				<label value="${labels.mynotes}" />
+			</row>
+			<row>
+				<image src="/images/book.png" />
+				<label value="${labels.mystudies}" />
+			</row>
+			<row>
+				<image src="/images/tag-white.png" />
+				<label value="${labels.mytags}" />
+			</row>
+			<row>
+				<image src="/images/user-group.png" />
+				<label value="${labels.myfriends}" />
+			</row>
+			<row>
+				<attribute name="onClick">
+					Executions.sendRedirect("/pages/user/configuration.zul");
+				</attribute>
+				<image src="/images/configuration.png" />
+				<label value="${labels.myconfiguration}" />
+			</row>
+		</rows>
+	</grid>
+</zk>

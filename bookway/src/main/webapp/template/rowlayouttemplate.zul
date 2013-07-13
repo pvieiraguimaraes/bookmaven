@@ -1,0 +1,7 @@
+<zk>
+	<rowlayout>
+		<rowchildren offset="1" colspan="10">
+			<include src="navbar.zul"/>
+		</rowchildren>	
+	</rowlayout>
+</zk>
