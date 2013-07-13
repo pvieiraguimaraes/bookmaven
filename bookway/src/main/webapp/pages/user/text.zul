@@ -1,0 +1,120 @@
+<?page title="Inserção de Texto" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
+<zk>
+	<window title="Inserção de Texto" border="normal" self="@{define(content)}"
+		apply="br.ueg.tcc.bookway.view.composer.TextComposer">
+		<panel>
+			<panelchildren id="basicData">
+				<groupbox>
+					<caption label="Dados Básicos"/>
+					<div width="400px">
+						<grid>
+							<columns>
+								<column hflex="2"/>
+								<column hflex="5"/>
+							</columns>
+							<rows>
+								<row >
+									<label value="Título"/>
+									<textbox value="@{controller.entity.title}" width="250px"/>
+								</row>
+								<row>
+									<label value="Descrição"/>
+									<textbox value="@{controller.entity.description}" multiline="true" rows="4" width="250px"/>
+								</row>
+								<row>
+									<label value="Tipo"/>
+									<cell>
+										<combobox id="cbTypeText" 
+												model="@{controller.listTypesText}"
+											selectedItem="@{controller.entity.typeText}">
+											<comboitem self="@{each=tipo}"
+												label="@{tipo.value}" value="@{tipo}" />
+										</combobox>
+										<checkbox value="@{controller.entity.community}" label="Comunitário"/>
+									</cell>
+								</row>
+							</rows>
+						</grid>
+					</div>
+				</groupbox>
+			</panelchildren>
+		</panel>
+		<panel>
+			<panelchildren id="panelSimple">
+				<groupbox>
+				<caption label="Importação Simples"/>
+					<vlayout>
+						<hlayout>
+							<label value="Linhas por página"/>
+							<textbox />
+						</hlayout>
+						<hlayout>
+							<label value="Página por capítulo"/>
+							<textbox />
+						</hlayout>
+						<button label="Escolher Arquivo TXT" upload="true">
+							<attribute name="onUpload"><![CDATA[
+								org.zkoss.util.media.Media media = event.getMedia();
+								if (media.getFormat().equalsIgnoreCase("txt")) {
+									upLabelTxt.setValue(media.getName());
+									controller.uploadText(media);
+								} else {
+									Messagebox.show("Não é um arquivo válido: " + media, "Error",
+											Messagebox.OK, Messagebox.ERROR);
+									break;
+								}
+							]]></attribute>
+						</button>
+						<label id="upLabelTxt" />
+					</vlayout>
+				</groupbox>
+			</panelchildren>
+		</panel>
+		<panel>
+			<panelchildren id="panelAvanced">
+				<groupbox>
+					<caption label="Importação Avançada" />
+					<label	value="NOTA: O arquivo importado através da importação avançada deverá estar com os níveis devidamente estabelecidos segundo as instruções do manual para " />
+						<a>Importação Avançada.</a>
+					<vlayout>
+						<hlayout>
+							<label value="Nível 1:" />
+							<textbox value="@{controller.nivel1}" />
+						</hlayout>
+						<hlayout>
+							<label value="Nível 2:" />
+							<textbox value="@{controller.nivel2}" />
+						</hlayout>
+						<hlayout>
+							<label value="Nível 3:" />
+							<textbox value="@{controller.nivel3}" />
+						</hlayout>
+						<hlayout>
+							<label value="Nível 4:" />
+							<textbox value="@{controller.nivel4}" />
+						</hlayout>
+						<hlayout>
+							<label value="Quantidade:" />
+							<textbox value="@{controller.countLevels}" />
+						</hlayout>
+					</vlayout>
+					<button label="Escolher Arquivo XML" upload="true">
+						<attribute name="onUpload"><![CDATA[
+							org.zkoss.util.media.Media media = event.getMedia();
+							if (media.getFormat().equalsIgnoreCase("xml")) {
+								upLabelXml.setValue(media.getName());
+								controller.uploadXml(media);
+							} else {
+								Messagebox.show("Não é um arquivo válido: " + media, "Error",
+										Messagebox.OK, Messagebox.ERROR);
+								break;
+							}
+						]]></attribute>
+					</button>
+					<label id="upLabelXml" />
+				</groupbox>
+			</panelchildren>
+		</panel>
+	</window>
+</zk>

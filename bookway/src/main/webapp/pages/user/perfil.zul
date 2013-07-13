@@ -1,0 +1,82 @@
+<?page title="" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
+<zk>
+	<div id="frmUser" self="@{define(content)}"
+		apply="br.ueg.tcc.bookway.view.composer.UserComposer"
+		onCreate="controller.testeEditar()"
+		style="margin-left: auto;margin-right: auto;" width="400px">
+		<grid>
+			<columns>
+				<column hflex="3" />
+				<column hflex="5" />
+			</columns>
+			<rows>
+				<row>
+					<label value="Nome Completo: " />
+					<textbox id="fldNome"
+						value="@{controller.entity.name}" />
+				</row>
+				<row>
+					<label value="E-mail: " />
+					<textbox id="fldEmail"
+						value="@{controller.entity.email}" />
+				</row>
+				<row>
+					<label value="Senha: " />
+					<a>Alterar Senha</a>
+				</row>
+				<row>
+					<label value="Data Nascimento: " />
+					<datebox id="fldDataNascimento"
+						value="@{controller.entity.birthDate}" />
+				</row>
+				<row>
+					<label value="Sexo: " />
+					<radiogroup id="fldSexo"
+						selectedItem="@{controller.entity.sex, converter='br.ueg.tcc.bookway.view.util.SexoEnumRadiogroupConverter'}">
+						<radio label="Masculino" value="Masculino" />
+						<radio label="Feminino" value="Feminino" />
+					</radiogroup>
+				</row>
+				<row>
+					<label value="Estado: " />
+					<combobox id="fldState"
+						model="@{controller.listState}"
+						selectedItem="@{controller.entity.state}">
+						<comboitem self="@{each=estado}"
+							label="@{estado.value}" value="@{estado}" />
+					</combobox>
+				</row>
+				<row>
+					<label value="Cidade: " />
+					<textbox id="fldCity"
+						value="@{controller.entity.city}" />
+				</row>
+				<row>
+					<label value="Profissão: " />
+					<textbox id="fldProfession"
+						value="@{controller.entity.profession}" />
+				</row>
+				<row>
+					<label value="Área de Interesse: " />
+					<combobox id="fldAreaOfInterest"
+						model="@{controller.listAreaOfInterest}"
+						selectedItem="@{controller.entity.areaOfInterest}">
+						<comboitem self="@{each=area}"
+							label="@{area.value}" value="@{area}" />
+					</combobox>
+				</row>
+				<row>
+					<label value="Graduação/Curso: " />
+					<textbox id="fldGraduation"
+						value="@{controller.entity.graduation}" />
+				</row>
+			</rows>
+		</grid>
+		<div align="right">
+			<button label="Editar Dados"
+				onClick="controller.updateAccount()" />
+			<button label="Cancelar" />
+		</div>
+	</div>
+</zk>

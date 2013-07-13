@@ -1,0 +1,13 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<cardlayout id="card" width="300px" height="300px" selectedIndex="1">
+    <window title="Window Component" border="normal"
+     width="200px">width: 200px</window>
+    <window title="Window Component" border="normal"
+     width="300px">width: 300px</window>
+    <window title="Window Component" border="normal"
+     width="400px">width: 400px</window>
+</cardlayout>
+<button onClick="card.previous()">previous</button>
+<button onClick="card.next()">next</button>
+</zk>

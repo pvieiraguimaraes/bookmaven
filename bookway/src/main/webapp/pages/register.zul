@@ -1,0 +1,78 @@
+<?page title="" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<panel>
+		<panelchildren>
+			<style src="/css/bootstrap.css"/>
+			<div align="center"
+				style="margin-top: 50px; margin-bottom: 50px;">
+				<image src="/images/logo.png" width="400px" />
+			</div>
+			<div apply="br.ueg.tcc.bookway.view.composer.UserComposer"
+				width="400px" height="600px" align="center"
+				style="margin-left: auto;margin-right: auto;">
+				<grid>
+					<columns>
+						<column hflex="2" />
+						<column hflex="5" />
+					</columns>
+					<rows>
+						<row>
+							<label value="Nome Completo: " />
+							<cell align="center">
+								<textbox id="fldName"
+									value="@{controller.entity.name}" />
+							</cell>
+						</row>
+						<row>
+							<label value="E-mail: " />
+							<cell align="center">
+								<textbox id="fldEmail"
+									value="@{controller.entity.email}" />
+							</cell>
+						</row>
+						<row>
+							<label value="Senha: " />
+							<cell align="center">
+								<textbox id="fldSPassword"
+									value="@{controller.entity.password}" />
+							</cell>
+						</row>
+						<row>
+							<label value="Confirmar Senha: " />
+							<cell align="center">
+								<textbox id="fldConfirmPassword"
+									value="@{controller.entity.confirmPassword}" />
+							</cell>
+						</row>
+						<row>
+							<label value="Data Nascimento: " />
+							<cell align="center">
+								<datebox width="220px" id="fldbirthDate"
+									value="@{controller.entity.birthDate}" format="dd/MM/yyyy" locale="pt_BR" />
+							</cell>
+						</row>
+						<row>
+							<label value="Sexo: " />
+							<cell align="center">
+								<radiogroup id="fldSex" selectedItem="@{controller.entity.sex, converter='br.ueg.tcc.bookway.view.util.SexoEnumRadiogroupConverter'}" >
+									<radio label="Masculino" value="Masculino"/>
+									<radio label="Feminino" value="Feminino" />
+								</radiogroup>
+							</cell>
+						</row>
+					</rows>
+				</grid>
+				Ao clicar em Cadastre-se, você está afirmando que leu e
+				concorda com os
+				<a>Termos de uso</a>
+				e com a
+				<a>Política de Privacidade.</a>
+				<div align="right" style="margin-top: 30px;">
+					<button label="Cadastre-se"
+						onClick="controller.register()"
+						sclass="btn btn-large btn-primary" />
+				</div>
+			</div>
+		</panelchildren>
+	</panel>
+</zk>

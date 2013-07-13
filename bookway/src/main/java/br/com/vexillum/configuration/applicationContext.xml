@@ -1,0 +1,71 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/jee
+        http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+        http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<context:annotation-config />
+	<context:component-scan base-package="br.com.vexillum.control" />
+	<context:component-scan base-package="br.com.vexillum.view" />
+	<context:component-scan base-package="br.ueg.tcc.bookway.control" />
+	<context:component-scan base-package="br.ueg.tcc.bookway.view.composer" />
+	
+	<jee:jndi-lookup id="dataSource" jndi-name="java:jboss/datasources/BookwayDS" />
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<!-- DataSource -->
+		<property name="dataSource" ref="dataSource" />
+		<!-- As configurações específicas do Hibernate -->
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+<!-- 				<prop key="hibernate.connection.autocommit">false</prop> -->
+<!-- 				<prop key="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.JBossTransactionManagerLookup</prop> -->
+<!-- 				<prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JTATransactionFactory</prop> -->
+<!-- 				<prop key="hibernate.transaction.jta.platform">org.hibernate.service.jta.platform.internal.JBossStandAloneJtaPlatform</prop> -->
+			</props>
+		</property>
+		<property name="packagesToScan">
+			<list>
+				<value>br.com.vexillum.model.**</value>
+				<value>br.ueg.tcc.bookway.model.**</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="messagesProperties" class="br.com.vexillum.configuration.Properties">
+		<property name="pathName" value="properties/messages/messages.properties"/>
+	</bean>
+	
+	<bean id="exceptionProperties" class="br.com.vexillum.configuration.Properties">
+		<property name="pathName" value="properties/exceptions/exception.properties"/>
+	</bean>
+	
+	<bean id="emailProperties" class="br.com.vexillum.configuration.Properties">
+		<property name="pathName" value="properties/email/email.properties"/>
+	</bean>
+	
+	<bean id="textProperties" class="br.com.vexillum.configuration.Properties">
+		<property name="pathName" value="properties/text/elements.properties"/>
+	</bean>
+	
+	     <!-- DAOs -->
+    <bean id="genericPersistence" class="br.com.vexillum.control.persistence.GenericPersistence">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+</beans>
