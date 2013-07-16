@@ -1,5 +1,6 @@
 <zk>
-	<style src="/css/bootstrap.css" />
+	<style src="/css/cerulean.css" />
+	<style src="/css/bookway.css" />
 	<borderlayout hflex="1" vflex="1">
 		<north height="50px" border="none">
 			<include src="/template/navbar.zul" />
@@ -8,7 +9,8 @@
 			splittable="true" minsize="200">
 			<borderlayout hflex="1" vflex="1">
 				<north>
-					<div width="200px" height="200px" align="center" style="margin-top: 25px;">
+					<div width="200px" height="200px" align="center"
+						style="margin-top: 25px;">
 						<image src="/images/perfilicon.png"
 							width="150px" height="150px" />
 					</div>

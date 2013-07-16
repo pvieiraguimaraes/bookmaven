@@ -4,10 +4,8 @@ import java.util.List;
 
 import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Executions;
 
 import br.com.vexillum.util.ReflectionUtils;
-import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.com.vexillum.view.CRUDComposer;
 import br.ueg.tcc.bookway.control.UserControl;
@@ -17,9 +15,9 @@ import br.ueg.tcc.bookway.model.enums.State;
 
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
-@Scope("prototype")//poderá ser prototype
+@Scope("prototype")
 public class UserComposer extends CRUDComposer<UserBookway, UserControl> {
-
+	
 	private List<AreaOfInterest> listAreaOfInterest;
 	private List<State> listState;
 	
@@ -42,31 +40,12 @@ public class UserComposer extends CRUDComposer<UserBookway, UserControl> {
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
+		init();
 		loadBinder();
 	}
-	
-	public void register() {
-		Return retRegister = new Return(true);
-		retRegister = getControl().registerUser();
-		if(retRegister.isValid()) resetEntity(); //TODO Arrumar uma maneira para resetar o objeto
-		treatReturn(retRegister);
-	}
 
-	public void resetEntity(){
-		entity = null;
-		binder.loadAll();
-	}
-	
-	public void redirectPerfil() {
-		Executions.sendRedirect("/pages/user/perfil.zul");
-	}
-
-	/**
-	 * feito só pra testar se o editar esta funcionando
-	 */
-	//TODO Remover após conseguir pegar o usuário da sessão corretamente
-	public void testeEditar() {
-		somenteParaTeste();
+	public void init() {
+		setUserProfile();
 		initLists();
 		binder.loadAll();
 	}
@@ -74,14 +53,9 @@ public class UserComposer extends CRUDComposer<UserBookway, UserControl> {
 	private void initLists() {
 		setListAreaOfInterest(getControl().initListAreaOfInterest());
 		setListState(getControl().initListState());
-		
 	}
 
-	//TODO Remover após conseguir pegar o usuário da sessão corretamente
-	private void somenteParaTeste() {
-//		entity.setName("Juliana");
-//		searchEntitys();
-//		entity = getListEntity().get(0);
+	private void setUserProfile() {
 		entity = (UserBookway) getUserInSession();
 	}
 
@@ -90,9 +64,8 @@ public class UserComposer extends CRUDComposer<UserBookway, UserControl> {
 	}
 
 	public void deleteAccount() {
-		somenteParaTeste();
 		treatReturn(getControl().deleteAccount());
-	}
+	}//TODO talvez será deslocado para o ConfigurationComposer
 	
 	@Override
 	public UserBookway getEntityObject() {

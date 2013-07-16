@@ -33,8 +33,6 @@ public class UserControl extends GenericControl<UserBookway> {
 	}
 
 	public Return registerUser() {
-		//TODO Chamar a validação de email único aqui, e se o email é valido
-		//TODO Chamar a validação para confirmar a senha aqui
 		Return retRegister = new Return(true);
 		retRegister.concat(doAction("save")); 
 		if (retRegister.isValid()){
@@ -42,7 +40,7 @@ public class UserControl extends GenericControl<UserBookway> {
 		}
 		return retRegister;
 	}
-
+	
 	private void sendValidationEmailAccount(String emailAdres) {
 //		EmailManager email = new EmailManager("SimpleEmail");
 //		email.sendEmail(emailAdres, "Ativação conta Bookway", "Ative sua conta");
@@ -52,10 +50,8 @@ public class UserControl extends GenericControl<UserBookway> {
 	public Return updateAccount(){
 		Return retUpdate = new Return(true);
 		retUpdate.concat(doAction("update"));
-		if(retUpdate.isValid())
-			retUpdate.addMessage(new Message(null, "Dados alterados com sucesso"));
 		return retUpdate;
-	}
+	}//TODO Testar a msg de alterado com sucesso
 
 	public List<AreaOfInterest> initListAreaOfInterest() {
 		return EnumUtils.getEnumList(AreaOfInterest.class);
