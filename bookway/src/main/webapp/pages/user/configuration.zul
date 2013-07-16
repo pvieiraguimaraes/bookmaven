@@ -2,13 +2,18 @@
 <?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
 <zk>
 	<div id="frmUser" self="@{define(content)}"
-		apply="${userComposer}"
+		apply="${configurationComposer}"
 		style="margin-left: auto;margin-right: auto;" width="400px">
-		<include src="~./pages/configuration/configuration.zul" />
-		<label value="Configurações de Conta" style="font-size: 21px;"/>
-		<div align="left">
-			<button label="Alterar Dados" onClick="controller.redirectPerfil()"/>
-			<button label="Excluir Conta" onClick="controller.deleteAccount()"/>
-		</div>
+		<groupbox>
+			<caption label="Configurações de Conta"/>
+			<div align="left">
+				<button label="Alterar Dados" onClick="controller.redirectPerfil()"/>
+				<button label="Excluir Conta" onClick="controller.deleteAccount()"/>
+			</div>
+		</groupbox>
+		<groupbox>
+			<caption label="Configurações de Estilo"/>
+			<include src="~./pages/configuration/configuration.zul"/>
+		</groupbox>
 	</div>
 </zk>

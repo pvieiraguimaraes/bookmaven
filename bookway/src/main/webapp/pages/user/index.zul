@@ -1,5 +1,0 @@
-<?page title="" contentType="text/html;charset=UTF-8"?>
-<?init class="org.zkoss.zk.ui.util.Composition" arg0="template.zul" ?>
-<zk>
-
-</zk>

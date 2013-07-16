@@ -3,7 +3,6 @@
 <zk>
 	<div id="frmUser" self="@{define(content)}"
 		apply="br.ueg.tcc.bookway.view.composer.UserComposer"
-		onCreate="controller.testeEditar()"
 		style="margin-left: auto;margin-right: auto;" width="400px">
 		<grid>
 			<columns>

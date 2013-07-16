@@ -14,12 +14,20 @@ public class UserValidator extends Validator {
 	public UserValidator(Map<String, Object> mapData) {
 		super(mapData);
 	}
+	
+	public Return validateRegisterUser(){
+		Return retCheck = new Return(true);
+		retCheck.concat(existsEmail());
+		if(retCheck.isValid())
+			retCheck.concat(equalsSenha());
+		return retCheck;
+	}
 
 	private Return existsEmail() {
 		Return ret = new Return(true);
 		HashMap<String, Object> data = new HashMap<String, Object>();
 
-		data.put("sql", "FROM User u WHERE u.email = '"
+		data.put("sql", "FROM UserBookway u WHERE u.email = '"
 				+ ((UserBookway) entity).getEmail() + "'");
 
 		UserControl controller = SpringFactory.getController("userControl",
@@ -33,10 +41,11 @@ public class UserValidator extends Validator {
 
 	private Return equalsSenha() {
 		Return ret = new Return(true);
-		if (!equalsFields(((UserBookway) entity).getPassword(),
-				(String) mapData.get("cSenha")).isValid()) {
-			ret.concat(creatReturn("cSenha",
-					getValidationMessage("senha", "equals", false)));
+		String password = ((UserBookway) entity).getPassword();
+		String confirmPassword = ((UserBookway) entity).getConfirmPassword();
+		if (!equalsFields(password, confirmPassword).isValid()){
+			ret.concat(creatReturn("confirmPassword",
+					getValidationMessage("password", "equals", false)));
 		}
 		return ret;
 	}

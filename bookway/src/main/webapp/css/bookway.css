@@ -1,3 +1,38 @@
+/*REGISTER PAGE*/
+
+.logoregister {
+	margin-bottom: 30px;
+	margin-top: 30px;
+}
+
+.register {
+	margin-top: 30px;
+	width: 400px;
+	height: 400px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+/*COR NO GROUPBOX*/
+.z-groupbox {
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.z-groupbox-notitle {
+	border: 2.8px solid #78BEF4;
+}
+.z-groupbox-cnt {
+	overflow: hidden;
+	padding: 5px;
+	border: 2.8px solid #78BEF4;
+}
+
+.panelregister .z-groupbox {
+	width: 600px;
+	height: 500px;
+}
+
 /* INICIO TEMPLATE*/
 
 /*NAVBAR*/
@@ -5,9 +40,20 @@
 	background-color: rgb(120, 190, 244);
 }
 
-.search {
-	margin-top: 15px;
+.navbookway .z-textbox {
 	margin-left: 300px;
 }
+
+.navbookway .btnlogout {
+	float: right;
+	margin-top: 15px;
+	margin-right: 20px;
+}
+
+/*MAIN MENU*/
+.mainmenu .z-label{
+	margin-left: 30px;
+}
+
 
 /* FIM TEMPLATE*/

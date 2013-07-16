@@ -12,6 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import br.com.vexillum.model.UserBasic;
+import br.com.vexillum.model.annotations.Validate;
 import br.com.vexillum.model.annotations.ValidatorClass;
 import br.ueg.tcc.bookway.model.enums.AreaOfInterest;
 import br.ueg.tcc.bookway.model.enums.State;
@@ -36,6 +37,7 @@ public class UserBookway extends UserBasic {
 	private boolean validAccount;
 	private Date solicitationExclusion;
 
+	@Validate(notNull = true)
 	@Transient
 	private String confirmPassword;
 
