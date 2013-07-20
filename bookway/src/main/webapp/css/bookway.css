@@ -28,12 +28,21 @@
 	border: 2.8px solid #78BEF4;
 }
 
+.z-groupbox-hr {
+	position: relative;
+	top: 8px;
+	border: 2.8px solid #78BEF4;
+	border-bottom: 0;
+}
+
+.z-groupbox-header {
+	font-size: 18px;
+}
+
 .panelregister .z-groupbox {
 	width: 600px;
 	height: 500px;
 }
-
-/* INICIO TEMPLATE*/
 
 /*NAVBAR*/
 .navbookway {
@@ -55,5 +64,59 @@
 	margin-left: 30px;
 }
 
+.mainmenu .z-image{
+	margin-left: 30px;
+}
 
-/* FIM TEMPLATE*/
+/*PERFIL PAGE*/
+.panelperfil {
+	width: 500px;
+	height: 550px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+}
+
+.panelperfil .z-groupbox {
+	width: 450px;
+	height: 500px;
+}
+
+.perfil {
+	margin-top: 30px;
+	width: 350px;
+	height: 450px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.buttonsperfil {
+	margin-top: 30px;
+}
+
+/*TEXT PAGE*/
+.paneltext {
+	width: 600px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+}
+
+.basicdata {
+	width: 500px;
+	height: 150px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.simpleimport {
+	width: 500px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+.avancedimport {
+	width: 500px;
+	margin-right: auto;
+	margin-left: auto;
+}

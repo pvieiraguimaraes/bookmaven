@@ -47,7 +47,6 @@ public class UserComposer extends CRUDComposer<UserBookway, UserControl> {
 	public void init() {
 		setUserProfile();
 		initLists();
-		binder.loadAll();
 	}
 
 	private void initLists() {
