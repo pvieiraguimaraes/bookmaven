@@ -12,8 +12,8 @@
 			<label value="Minhas Anotações" />
 		</hlayout>
 		<hlayout>
-			<image src="/images/book.png" />
-			<label value="Meus Estudos" />
+			<a href="/pages/user/text.zul"><image src="/images/book.png" />
+			<label value="Meus Estudos" /></a>
 		</hlayout>
 		<hlayout>
 			<image src="/images/tag-white.png" />

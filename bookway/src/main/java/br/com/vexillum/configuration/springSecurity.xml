@@ -17,7 +17,7 @@
 			access="ROLE_ANONYMOUS" />
 		<security:form-login login-page="/pages/login.zul"
 			default-target-url="/pages/user/perfil.zul"
-			authentication-failure-url="/pages/login.zul?login_error=1" />
+			authentication-failure-url="/pages/login.zul?error=true" />
 	</security:http>
 
 	<security:authentication-manager>
