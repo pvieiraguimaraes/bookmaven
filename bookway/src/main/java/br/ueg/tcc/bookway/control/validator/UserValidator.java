@@ -6,7 +6,7 @@ import java.util.Map;
 import br.com.vexillum.control.validator.Validator;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
-import br.ueg.tcc.bookway.control.UserControl;
+import br.ueg.tcc.bookway.control.UserBookwayControl;
 import br.ueg.tcc.bookway.model.UserBookway;
 
 public class UserValidator extends Validator {
@@ -30,8 +30,8 @@ public class UserValidator extends Validator {
 		data.put("sql", "FROM UserBookway u WHERE u.email = '"
 				+ ((UserBookway) entity).getEmail() + "'");
 
-		UserControl controller = SpringFactory.getController("userControl",
-				UserControl.class, data);
+		UserBookwayControl controller = SpringFactory.getController("userBookwayControl",
+				UserBookwayControl.class, data);
 		if (!controller.searchByHQL().getList().isEmpty()) {
 			ret.concat(creatReturn("email",
 					getValidationMessage("email", "exists", true)));
