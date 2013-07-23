@@ -7,7 +7,11 @@
 
 	<jee:jndi-lookup id="dataSource" jndi-name="java:jboss/datasources/BookwayDS" />
 
+	<!-- 	Provider da Arquitetura padrao -->
     <bean id="VXAuthenticatorProvider" class="br.com.vexillum.control.security.AuthenticatorProvider"/>
+    
+	<!--     Provider Bookway Personalizado -->
+    <bean id="BookwayProvider" class="br.ueg.tcc.bookway.control.security.BookwayProvider"/>
     
 	<!-- Parte do Spring Security -->
 	<security:http auto-config="true">
@@ -21,7 +25,7 @@
 	</security:http>
 
 	<security:authentication-manager>
-		<security:authentication-provider ref="VXAuthenticatorProvider"/>
+		<security:authentication-provider ref="BookwayProvider"/>
 		<security:authentication-provider>
 			<!-- A query users-by-username-query deve retorna as colunas username, 
 				password e enable username-query deve trazer o nome de usuário e o tipo de 

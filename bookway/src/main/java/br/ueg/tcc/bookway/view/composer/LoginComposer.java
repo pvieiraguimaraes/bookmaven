@@ -7,13 +7,13 @@ import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.com.vexillum.view.CRUDComposer;
-import br.ueg.tcc.bookway.control.UserControl;
+import br.ueg.tcc.bookway.control.UserBookwayControl;
 import br.ueg.tcc.bookway.model.UserBookway;
 
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
 @Scope("prototype")
-public class LoginComposer extends CRUDComposer<UserBookway, UserControl> {
+public class LoginComposer extends CRUDComposer<UserBookway, UserBookwayControl> {
 
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
@@ -22,8 +22,8 @@ public class LoginComposer extends CRUDComposer<UserBookway, UserControl> {
 	}	
 	
 	@Override
-	public UserControl getControl() {
-		return SpringFactory.getController("userControl", UserControl.class, ReflectionUtils.prepareDataForPersistence(this));
+	public UserBookwayControl getControl() {
+		return SpringFactory.getController("userBookwayControl", UserBookwayControl.class, ReflectionUtils.prepareDataForPersistence(this));
 	}
 
 	@Override
