@@ -55,7 +55,8 @@ public class UserComposer extends CRUDComposer<UserBookway, UserBookwayControl> 
 	}
 
 	private void setUserProfile() {
-		entity = (UserBookway) getUserInSession();
+		setUserLogged((UserBookway) getUserInSession());
+		entity = getUserLogged();
 	}
 
 	public void updateAccount() {
