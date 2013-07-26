@@ -1,0 +1,6 @@
+<?page title="" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<hbox hflex="1" vflex="1" apply="br.ueg.tcc.bookway.view.composer.LoginComposer">
+		Obrigado por fazer parte do Bookway!!
+	</hbox>
+</zk>
