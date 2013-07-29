@@ -15,18 +15,28 @@ import br.ueg.tcc.bookway.model.UserBookway;
 @org.springframework.stereotype.Component
 @Scope("prototype")
 public class LoginComposer extends CRUDComposer<UserBookway, UserBookwayControl> {
+	
+	private String code;
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
 
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
-		String[] code = Executions.getCurrent().getParameterValues("code");
+		code = Executions.getCurrent().getParameter("code");
 		super.doAfterCompose(comp);
 		if(code != null)
-			validateAccount(code[0]);
+			validateAccount();
 		loadBinder();
 	}	
 	
-	private void validateAccount(String code) {
-		if(getControl().validateAccountUser(code).isValid()){
+	private void validateAccount() {
+		if(getControl().doAction("validateAccountUser").isValid()){
 			showNotification("Conta validada com sucesso", "info");
 			Executions.sendRedirect("/");
 		}		
@@ -50,6 +60,7 @@ public class LoginComposer extends CRUDComposer<UserBookway, UserBookwayControl>
 	}
 
 	public void resetEntity(){
+		entity = getEntityObject();
 		loadBinder();
 	}
 
