@@ -98,5 +98,8 @@
 			<label id="upLabelXml" />
 		</div>
 		</groupbox>
+		<div align="right">
+			<button label="Salvar" onClick="controller.saveText()" sclass="btn btn-primary"/>
+		</div>
 	</div>
 </zk>
