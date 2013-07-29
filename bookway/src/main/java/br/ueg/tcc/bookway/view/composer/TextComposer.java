@@ -174,7 +174,6 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	
 	public void saveText(){
 		Return retSave = new Return(true);
-		//TODO O correto é uploadValidText, usando insertTextIntoDataBase somente para testes
 		retSave.concat(getControl().doAction("uploadValidText"));
 		if(!retSave.isValid())
 			retSave.addMessage(new Message(null, "Erro ao salvar o texto!"));

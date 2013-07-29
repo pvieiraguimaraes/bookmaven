@@ -102,9 +102,9 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 
 	public Return updateAccount() {
 		Return retUpdate = new Return(true);
-		retUpdate.concat(doAction("saveEntity"));
+		retUpdate.concat(doAction("update"));
 		return retUpdate;
-	}// TODO Testar a msg de alterado com sucesso
+	}
 
 	public List<AreaOfInterest> initListAreaOfInterest() {
 		return EnumUtils.getEnumList(AreaOfInterest.class);
@@ -128,12 +128,10 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 	
 	public Return validateAccountUser(String code){
 		Return retValid = new Return(true);
-		UserBookway user = new UserBookway();
-		user = getUserByCode(code);
-		user.setVerificationCode(null);
-		user.setValidAccount(true);
-		entity = user;
-		retValid = doAction("saveEntity");
+		entity = getUserByCode(code);
+		entity.setVerificationCode(null);
+		entity.setValidAccount(true);
+		retValid.concat(doAction("update"));
 		return retValid;
 	}
 

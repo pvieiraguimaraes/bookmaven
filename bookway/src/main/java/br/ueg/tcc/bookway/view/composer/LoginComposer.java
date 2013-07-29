@@ -19,9 +19,9 @@ public class LoginComposer extends CRUDComposer<UserBookway, UserBookwayControl>
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		String[] code = Executions.getCurrent().getParameterValues("code");
+		super.doAfterCompose(comp);
 		if(code != null)
 			validateAccount(code[0]);
-		super.doAfterCompose(comp);
 		loadBinder();
 	}	
 	
@@ -50,8 +50,7 @@ public class LoginComposer extends CRUDComposer<UserBookway, UserBookwayControl>
 	}
 
 	public void resetEntity(){
-		entity = null;
-		binder.loadAll();
+		loadBinder();
 	}
 
 }
