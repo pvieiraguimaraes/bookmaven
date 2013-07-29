@@ -42,7 +42,7 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 		String hql = "from UserBookway where verificationCode ='" + code + "'";
 		data.put("sql", hql);
 		Return retCode = searchByHQL();
-		if(retCode.getList() != null)
+		if(retCode.getList() != null && !retCode.getList().isEmpty())
 			return (UserBookway) retCode.getList().get(0);
 		return null;
 	}
@@ -126,12 +126,13 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 		return code;
 	}
 	
-	public Return validateAccountUser(String code){
+	public Return validateAccountUser(){
+		String code = (String) data.get("code");
 		Return retValid = new Return(true);
 		entity = getUserByCode(code);
 		entity.setVerificationCode(null);
 		entity.setValidAccount(true);
-		retValid.concat(doAction("update"));
+		retValid.concat(update());
 		return retValid;
 	}
 
