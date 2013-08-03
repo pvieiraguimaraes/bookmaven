@@ -21,6 +21,10 @@ import br.ueg.tcc.bookway.model.enums.State;
 @DiscriminatorValue("1")
 @Entity
 public class UserBookway extends UserBasic {
+	
+	public UserBookway() {
+		setActive(false);
+	}
 
 	private String city;
 
@@ -33,7 +37,6 @@ public class UserBookway extends UserBasic {
 	@Enumerated(EnumType.STRING)
 	private AreaOfInterest areaOfInterest;
 
-	private boolean validAccount;
 	private Date solicitationExclusion;
 
 	@Transient
@@ -80,14 +83,6 @@ public class UserBookway extends UserBasic {
 
 	public void setAreaOfInterest(AreaOfInterest areaOfInterest) {
 		this.areaOfInterest = areaOfInterest;
-	}
-
-	public boolean isValidAccount() {
-		return validAccount;
-	}
-
-	public void setValidAccount(boolean validAccount) {
-		this.validAccount = validAccount;
 	}
 
 	public Date getSolicitationExclusion() {

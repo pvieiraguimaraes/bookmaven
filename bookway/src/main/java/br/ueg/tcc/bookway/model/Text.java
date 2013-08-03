@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import br.com.vexillum.model.CommonEntity;
+import br.com.vexillum.model.annotations.Validate;
 import br.com.vexillum.model.annotations.ValidatorClass;
 import br.ueg.tcc.bookway.model.enums.TypeText;
 
@@ -23,10 +24,12 @@ public class Text extends CommonEntity {
 	 */
 	private static final long serialVersionUID = 1L;
 
+	@Validate(notNull = true, min = 5, max=500)
 	private String title;
 	private String description;
 	private Date insertDate;
 
+	@Validate(notNull = true)
 	@Enumerated(EnumType.STRING)
 	private TypeText typeText;
 	private boolean community;

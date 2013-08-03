@@ -7,7 +7,7 @@
 		<vlayout spacing="5px">
 			<hlayout spacing="70px">
 				<label value="Título"/>
-				<textbox value="@{controller.entity.title}" width="250px"/>
+				<textbox id="fldTitle" value="@{controller.entity.title}" width="250px"/>
 			</hlayout>
 			<hlayout spacing="45px">
 				<label value="Descrição"/>
@@ -16,12 +16,12 @@
 			<hlayout spacing="75px">
 				<label sclass="typetext" value="Tipo"/>
 				<hlayout>
-				<combobox id="cbTypeText" model="@{controller.listTypesText}"
+				<combobox id="fldTypeText" model="@{controller.listTypesText}" onChange="controller.checkComboType()"
 					selectedItem="@{controller.entity.typeText}" width="250px">
 					<comboitem self="@{each=tipo}"
 						label="@{tipo.value}" value="@{tipo}" />
 				</combobox>
-				<checkbox value="@{controller.entity.community}" label="Comunitário"/>
+				<checkbox id="chckCommunity" value="@{controller.entity.community}" label="Comunitário"/>
 				</hlayout>
 			</hlayout>
 		</vlayout>
@@ -43,7 +43,7 @@
 					org.zkoss.util.media.Media media = event.getMedia();
 					if (media.getFormat().equalsIgnoreCase("txt")) {
 						upLabelTxt.setValue(media.getName());
-						controller.uploadText(media);
+						controller.upload(media, "txt");
 					} else {
 						Messagebox.show("Não é um arquivo válido: " + media, "Error",
 								Messagebox.OK, Messagebox.ERROR);
@@ -55,51 +55,50 @@
 		</vlayout>
 		</div>
 		</groupbox>
-		
+		<zscript>int i = 1</zscript>
 		<groupbox><caption label="Importação Avançada" />
 		<div sclass="avancedimport">
 			<label	value="NOTA: O arquivo importado através da importação avançada deverá estar com os níveis 
 			devidamente estabelecidos segundo as instruções do manual para " /><a>Importação Avançada.</a>
 			<vlayout>
-				<hlayout>
-					<label value="Nível 1:" />
-					<textbox value="@{controller.nivel1}" />
-				</hlayout>
-				<hlayout>
-					<label value="Nível 2:" />
-					<textbox value="@{controller.nivel2}" />
-				</hlayout>
-				<hlayout>
-					<label value="Nível 3:" />
-					<textbox value="@{controller.nivel3}" />
-				</hlayout>
-				<hlayout>
-					<label value="Nível 4:" />
-					<textbox value="@{controller.nivel4}" />
-				</hlayout>
-				<hlayout>
-					<label value="Quantidade:" />
-					<textbox value="@{controller.countLevels}" />
-				</hlayout>
+				<button label="Escolher XML" upload="true">
+					<attribute name="onUpload"><![CDATA[
+						org.zkoss.util.media.Media media = event.getMedia();
+						if (media.getFormat().equalsIgnoreCase("xml")) {
+							upLabelXml.setValue(media.getName());
+							controller.upload(media, "xml");
+						} else {
+							Messagebox.show("Não é um arquivo válido: " + media, "Error",
+									Messagebox.OK, Messagebox.ERROR);
+							break;
+						}
+					]]></attribute>
+				</button>
+				<label id="upLabelXml" />
+				<div sclass="listlevel" align="center">
+					<hlayout>
+						<label value="Nível:" />
+						<textbox id="fldLevel" />
+						<button image="/images/add.png" width="35px" onClick="controller.addLevelInList()"/>
+					</hlayout>
+					<listbox id="fldlstlevel" width="310px" visible="false">
+						<listhead>
+							<listheader align="center" label="Nome" width="70px"/>
+							<listheader align="center" label="Valor" width="210px"/>
+							<listheader width="30px"/>
+						</listhead>
+					</listbox>
+					<hlayout>
+						<label value="Quantidade:" />
+						<textbox id="fldCountlevels" value="@{controller.countLevels}" />
+					</hlayout>
+				</div>
 			</vlayout>
-			<button label="Escolher XML" upload="true">
-				<attribute name="onUpload"><![CDATA[
-					org.zkoss.util.media.Media media = event.getMedia();
-					if (media.getFormat().equalsIgnoreCase("xml")) {
-						upLabelXml.setValue(media.getName());
-						controller.uploadXml(media);
-					} else {
-						Messagebox.show("Não é um arquivo válido: " + media, "Error",
-								Messagebox.OK, Messagebox.ERROR);
-						break;
-					}
-				]]></attribute>
-			</button>
-			<label id="upLabelXml" />
 		</div>
 		</groupbox>
 		<div align="right">
 			<button label="Salvar" onClick="controller.saveText()" sclass="btn btn-primary"/>
 		</div>
 	</div>
+	
 </zk>

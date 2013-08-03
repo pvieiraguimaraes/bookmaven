@@ -6,7 +6,17 @@ import java.util.List;
 import org.springframework.context.annotation.Scope;
 import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.util.Clients;
+import org.zkoss.zul.Checkbox;
+import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Listcell;
+import org.zkoss.zul.Listitem;
+import org.zkoss.zul.Textbox;
 
 import br.com.vexillum.util.Message;
 import br.com.vexillum.util.ReflectionUtils;
@@ -25,11 +35,22 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	private String nivel1;
-	private String nivel2;
-	private String nivel3;
-	private String nivel4;
+	
+	@Wire
+	protected Textbox fldLevel;
+	
+	@Wire
+	protected Listbox fldlstlevel;
+	private Integer i = 1;
+	
+	@Wire
+	protected Textbox fldCountlevels;
+	
+	@Wire
+	protected Checkbox chckCommunity;
+	
+	@Wire
+	protected Combobox fldTypeText;
 	
 	private String linesForPage;
 	private String pagesForChapter;
@@ -40,7 +61,6 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	private ArrayList<String> levels;
 
 	private List<TypeText> listTypesText;
-	//TODO Fazer o combobox do texto funcionar, e colocar uma validação para o tipo privado desabilitar o checkbox
 	
 	public String getLinesForPage() {
 		return linesForPage;
@@ -81,38 +101,6 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	public void setStream(String stream) {
 		this.stream = stream;
 	}
-
-	public String getNivel1() {
-		return nivel1;
-	}
-
-	public void setNivel1(String nivel1) {
-		this.nivel1 = nivel1;
-	}
-
-	public String getNivel2() {
-		return nivel2;
-	}
-
-	public void setNivel2(String nivel2) {
-		this.nivel2 = nivel2;
-	}
-
-	public String getNivel3() {
-		return nivel3;
-	}
-
-	public void setNivel3(String nivel3) {
-		this.nivel3 = nivel3;
-	}
-
-	public String getNivel4() {
-		return nivel4;
-	}
-
-	public void setNivel4(String nivel4) {
-		this.nivel4 = nivel4;
-	}
 	
 	public Integer getCountLevels() {
 		return countLevels;
@@ -132,51 +120,30 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 		super.doAfterCompose(comp);
 		loadBinder();
 	}
-
-	public void uploadTxt(Media media) {
-		Return retUploadText = new Return(true);
-		retUploadText.concat(upload(media, "txt"));
-		treatReturn(retUploadText);
-	}
 	
-	public void uploadXml(Media media) {
-		Return retUploadText = new Return(true);
-		retUploadText.concat(upload(media, "xml"));
-		treatReturn(retUploadText);
-	}
-
-
-	private void getLevelsName() {
-		ArrayList<String> levelsMap = new ArrayList<>();
-		levelsMap.add(getNivel1());
-		levelsMap.add(getNivel2());
-		levelsMap.add(getNivel3());
-		levelsMap.add(getNivel4());
-			if(levelsMap.get(0) == null) setLevels(null);
-			else setLevels(levelsMap);
-	}
-	
-	public Return upload(Media media, String type) {
-		Return retUpload = new Return(true);
+	public void upload(Media media, String type) {
 		if (media != null && media.getFormat().equalsIgnoreCase(type)) {
 			showBusyServer(null, "Lendo o arquivo");
 			setStream(media.getStringData());
-			getLevelsName();
-			confirmCountLevels();
 			Clients.clearBusy();
-		} else {
-			retUpload.setValid(false);
-			retUpload
-					.addMessage(new Message(null, "Erro na leitura do arquivo"));
-		}
-		return retUpload;
+		} else if (media == null)
+			showNotification("Insira um arquivo para Upload!", "error");
 	}
 	
+	private void prepareDataText(){
+		getLevelsName();
+		confirmCountLevels();
+	}
+	
+	private void confirmCountLevels() {
+		if(getLevels() != null)
+			setCountLevels(getLevels().size());
+	}
+
 	public void saveText(){
 		Return retSave = new Return(true);
+		prepareDataText();
 		retSave.concat(getControl().doAction("uploadValidText"));
-		if(!retSave.isValid())
-			retSave.addMessage(new Message(null, "Erro ao salvar o texto!"));
 		treatReturn(retSave);
 	}
 	
@@ -195,10 +162,25 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 		searchEntitys();
 		entity = getListEntity().get(0);
 	}
+	
+	private void getLevelsName() {
+        ArrayList<String> levelsMap = new ArrayList<>();
+        levelsMap = createListLevelByListBox();
+                if(levelsMap == null) setLevels(null);
+                else setLevels(levelsMap);
+	}
 
-	private void confirmCountLevels() {
-		if(getLevels() != null)
-			setCountLevels(getLevels().size());		
+	private ArrayList<String> createListLevelByListBox() {
+		ArrayList<String> list = new ArrayList<String>();
+		for (Listitem item : fldlstlevel.getItems()) {
+			for (Component cell : item.getChildren()) {
+				for (Component child : cell.getChildren()) {
+					if(child instanceof Textbox)
+						list.add(((Textbox) child).getValue());
+				}
+			}
+		}
+		return list.isEmpty() ? null : list;
 	}
 
 	@Override
@@ -210,5 +192,56 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	public Text getEntityObject() {
 		return new Text();
 	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void addLevelInList(){
+		if(fldLevel.getValue() != ""){
+			Listitem item = new Listitem();
+			Listcell cell1 = new Listcell("Nível "+ i++), cell2 = new Listcell(), cell3 = new Listcell();
+			String nameLevel = fldLevel.getValue();
+			Textbox txt = new Textbox(nameLevel);
+			txt.setWidth("180px");
+			cell2.appendChild(txt);
+			cell3.setImage("/images/close.png");
+			cell3.addEventListener(Events.ON_CLICK, new EventListener() {
+				@Override
+				public void onEvent(Event event) throws Exception {
+					if(event.getTarget().getParent().getParent().getLastChild() == event.getTarget().getParent()){
+						fldlstlevel.removeChild(event.getTarget().getParent());
+						checkListBoxLevel();
+						--i;
+					}
+				}
+			});
+			cell1.setParent(item);
+			cell2.setParent(item);
+			cell3.setParent(item);
+			item.setId("fldLstlevel" + nameLevel);
+			item.setParent(fldlstlevel);
+			fldLevel.setValue("");
+			checkListBoxLevel();
+		}
+	}
 
+	private void checkListBoxLevel() {
+		if(fldlstlevel.getItems().isEmpty() || fldlstlevel.getItems() == null){
+			fldlstlevel.setVisible(false);
+			fldCountlevels.setValue(null);
+			fldCountlevels.setDisabled(false);
+		}
+		else {
+			fldlstlevel.setVisible(true);
+			int s = fldlstlevel.getItems().size();
+			fldCountlevels.setValue(String.valueOf(s));
+			fldCountlevels.setDisabled(true);
+		}
+	}
+	
+	public void checkComboType(){
+		if(fldTypeText.getSelectedItem().getValue().equals(TypeText.PRIVADO)){
+			chckCommunity.setChecked(false);
+			chckCommunity.setDisabled(true);
+		}
+		else chckCommunity.setDisabled(false);
+	}
 }

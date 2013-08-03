@@ -37,8 +37,8 @@ public class LoginComposer extends CRUDComposer<UserBookway, UserBookwayControl>
 	
 	private void validateAccount() {
 		if(getControl().doAction("validateAccountUser").isValid()){
+			Executions.sendRedirect("/pages/login.zul");
 			showNotification("Conta validada com sucesso", "info");
-			Executions.sendRedirect("/");
 		}		
 	}
 

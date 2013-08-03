@@ -1,0 +1,13 @@
+<?page title="Pesquisa de Textos" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
+<zk>
+	<vlayout id="searchTexts" self="@{define(content)}" apply="${textComposer}">
+		<hlayout>
+			<textbox value="@{controller.searchField}"/>
+			<button image="/images/search.png" width="35px"/>
+		</hlayout>
+		<vlayout id="resultSearch">
+		
+		</vlayout>
+	</vlayout>
+</zk>
