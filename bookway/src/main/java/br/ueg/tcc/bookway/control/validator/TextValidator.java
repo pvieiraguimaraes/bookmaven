@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import br.com.vexillum.control.validator.Validator;
-import br.com.vexillum.util.Message;
 import br.com.vexillum.util.Return;
 
 public class TextValidator extends Validator {
@@ -16,20 +15,29 @@ public class TextValidator extends Validator {
 	@SuppressWarnings("unchecked")
 	public Return validateUploadValidText() {
 		ArrayList<String> arrayList = (ArrayList<String>) mapData.get("levels");
+		Integer countLevels = (Integer) mapData.get("countLevels");
 		Return retLevels = new Return(true);
-		retLevels.concat(validateLevels(arrayList));
-		if(!retLevels.isValid())
-			retLevels.addMessage(new Message(null, "Uso de níveis protegidos, vide manual importação avançada!"));
+		retLevels.concat(validateLevels(arrayList, countLevels));
+		retLevels.concat(validateModel());
 		return retLevels;
 	}
 	
-	public Return validateLevels(ArrayList<String> arrayList) {
+	public Return validateLevels(ArrayList<String> arrayList, Integer countLevels) {
 		Return retLevels = new Return(true);
-		if(arrayList == null) return retLevels;
-		for (String string : arrayList) {
-			if(string.equalsIgnoreCase("documento") || string.equalsIgnoreCase("conteudo") || string.equalsIgnoreCase("referencia")){
-				retLevels.setValid(false);
-				retLevels.addMessage(new Message(null, "Uso de algum dos níveis: documento, conteudo ou referencia"));
+		if(arrayList == null && countLevels == null){
+			retLevels.setValid(false);
+			retLevels.concat(creatReturn("level", getValidationMessage("level", "save", false)));
+		}
+		if(countLevels == null){
+			retLevels.setValid(false);
+			retLevels.concat(creatReturn("countlevels", getValidationMessage("countlevels", "save", false)));
+		}
+		if (arrayList != null && countLevels != null) {
+			for (String string : arrayList) {
+				if(string.equalsIgnoreCase("documento") || string.equalsIgnoreCase("conteudo") || string.equalsIgnoreCase("referencia")){
+					retLevels.setValid(false);
+					retLevels.concat(creatReturn("lstlevel" + string, getValidationMessage("lstlevel", "save", false) + string));
+				}
 			}
 		}
 		return retLevels;

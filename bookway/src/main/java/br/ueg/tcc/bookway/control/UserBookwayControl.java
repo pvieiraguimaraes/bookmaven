@@ -26,17 +26,6 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 		super();
 		classEntity = UserBookway.class;
 	}
-
-	@Override
-	public UserBookway getUser(String name, String password) {
-		UserBookway user = new UserBookway();
-		user = (UserBookway) getUserByMail(name);
-		String encriptyPass = EncryptUtils.encryptOnSHA512(password);
-		if (user != null && user.getPassword().equals(encriptyPass)
-				&& user.isValidAccount())
-			return user;
-		return null;
-	}
 	
 	public UserBookway getUserByCode(String code){
 		String hql = "from UserBookway where verificationCode ='" + code + "'";
@@ -85,14 +74,14 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 	private void sendValidationEmailAccount(String emailAdres, String nameUser, String code) {
 		EmailManager email = new EmailManager("HtmlEmail");
 		String subject = "Conta criada com sucesso!!";
-		String link = "";
+		String link = "<a href='http://localhost:8080/bookway/pages/validate.zul?code="+code+"'>aqui</a>";
 		String message = "<div><table width='650' align='center' style='font-size:14px' cellpadding='0' cellspacing='0'><tbody><tr>" +
 				"<td height='50' bgcolor='#f4faff' align='center'><table width='95%'><tbody><tr><td align='left'>" +
 				"<img src='http://premiumportal.com.br/images/bookway.png'></td></tr></tbody></table>" +
 				"</td></tr><tr><td bgcolor='#f4faff' align='center'><table width='95%' cellpadding='30'><tbody><tr><td align='left'>" +
 				"<font face='Lucida Grande, Segoe UI, Arial, Verdana, Lucida Sans Unicode, Tahoma, Sans Serif'>" +
 				"Parabéns,<br><br>" + nameUser + ", agora você faz parte da melhor Rede Social do Brasil.<br>" +
-				"<br>Clique <a href='localhost:8080/bookway/validate.zul?code=" + code + "' target='_blank'>aqui</a> para ativar sua conta.<br><br>Bons Estudos com o " +
+				"<br>Clique " + link + " para ativar sua conta.<br><br>Bons Estudos com o " +
 				"<span class='il'>Bookway</span>!<br>- A equipe <span class='il'><br></font>" +
 				"</td></tr><tr><td align='right'><span style='font-family:'Lucida Grande','Segoe UI',Arial,Verdana,'Lucida Sans Unicode',Tahoma" +
 				",'Sans Serif';font-size:11px;color:#888'>&nbsp;2013&nbsp;<span class='il'>Bookway</span></span></td></tr></tbody></table></td>" +
@@ -131,7 +120,7 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 		Return retValid = new Return(true);
 		entity = getUserByCode(code);
 		entity.setVerificationCode(null);
-		entity.setValidAccount(true);
+		entity.setActive(true);
 		retValid.concat(update());
 		return retValid;
 	}

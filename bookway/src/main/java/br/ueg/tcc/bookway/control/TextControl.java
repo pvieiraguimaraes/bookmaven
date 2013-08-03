@@ -42,6 +42,11 @@ public class TextControl extends GenericControl<Text> {
 			retMaping.addMessage(new Message(null, "Erro no mapeamento do texto!"));
 		return retMaping;
 	}
+	
+	public Return uploadText(){
+		Return retText = new Return(true);
+		return retText ;
+	}
 
 	@SuppressWarnings("unchecked")
 	public Return uploadValidText() {
@@ -94,7 +99,7 @@ public class TextControl extends GenericControl<Text> {
 		if(!retInsert.isValid())
 			retInsert.addMessage(new Message(null, "Erro ao inserir no Banco de Dados!"));
 		return retInsert;
-	}
+	}//TODO Colocar pra chamar a msg do properties
 	
 	public Return deleteText(){
 		Return retDelete = new Return(true);
@@ -103,7 +108,7 @@ public class TextControl extends GenericControl<Text> {
 			retDelete.addMessage(new Message(null, "Erro ao deletar o arquivo!"));
 		else retDelete.addMessage(new Message(null, "Texto excluído com sucesso!"));
 		return retDelete;
-	}
+	}//TODO Colocar pra chamar a msg do properties
 
 	public List<TypeText> initTypesText() {
 		return EnumUtils.getEnumList(TypeText.class);

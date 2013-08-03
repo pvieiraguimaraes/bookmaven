@@ -13,6 +13,7 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.input.sax.XMLReaders;
 
 import br.com.vexillum.configuration.Properties;
+import br.com.vexillum.control.manager.ExceptionManager;
 import br.com.vexillum.util.Message;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
