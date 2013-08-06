@@ -13,15 +13,24 @@ public class TextValidator extends Validator {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Return validateUploadValidText() {
+	public Return validateCreateText() {
 		ArrayList<String> arrayList = (ArrayList<String>) mapData.get("levels");
 		Integer countLevels = (Integer) mapData.get("countLevels");
+		String stream = (String) mapData.get("stream");
 		Return retLevels = new Return(true);
+		retLevels.concat(validateStream(stream));
 		retLevels.concat(validateLevels(arrayList, countLevels));
 		retLevels.concat(validateModel());
 		return retLevels;
 	}
 	
+	private Return validateStream(String stream) {
+		Return retStream = new Return(true);
+		if(stream == null || stream.equalsIgnoreCase(""))
+			retStream.concat(creatReturn("stream", getValidationMessage("stream", "upload", false)));
+		return retStream;
+	}
+
 	public Return validateLevels(ArrayList<String> arrayList, Integer countLevels) {
 		Return retLevels = new Return(true);
 		if(arrayList == null && countLevels == null){

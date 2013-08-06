@@ -3,6 +3,7 @@ package br.ueg.tcc.bookway.control.textfactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.jdom2.Attribute;
@@ -11,6 +12,8 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.input.sax.XMLReaders;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
 import br.com.vexillum.configuration.Properties;
 import br.com.vexillum.control.manager.ExceptionManager;
@@ -21,7 +24,14 @@ import br.ueg.tcc.bookway.model.ElementText;
 import br.ueg.tcc.bookway.model.LevelText;
 import br.ueg.tcc.bookway.model.Text;
 
-public class TextReader {
+@Service
+@Scope("prototype")
+@SuppressWarnings("serial")
+public class TextReader extends TextBookwayIO {
+	
+	public TextReader(HashMap<String, Object> map) {
+		textData = map;
+	}
 	
 	protected Properties elements;
 	
@@ -51,17 +61,17 @@ public class TextReader {
 	public ArrayList<String> getDefaultLevels(Integer quantLevels) {
 		ArrayList<String> defaultLevels = new ArrayList<>();
 		for (int i = 1; i <= quantLevels; i++) {
-			defaultLevels.add("nivel"+i);
+			defaultLevels.add(configuration.getKey("LEVEL_DEFAULT")+i);
 		}
 		return defaultLevels;
 	}
 
 	public ArrayList<String> addBannedLevels(ArrayList<String> arrayList) {
 		ArrayList<String> levels = new ArrayList<>();
-		levels.add("documento");
+		levels.add(configuration.getKey("LEVEL_ROOT"));
 		levels.addAll(arrayList);
-		levels.add("conteudo");
-		levels.add("referencia");
+		levels.add(configuration.getKey("LEVEL_CONTENT"));
+		levels.add(configuration.getKey("LEVEL_REFERENCE"));
 		return levels;
 	}
 
@@ -75,9 +85,9 @@ public class TextReader {
 					break;
 			}
 		}
-		// TODO Fazer pegar o nome do elemento conteudo de um arquivo properties
-		if(child.equalsIgnoreCase("conteudo")) return "conteudo,referencia*";
-		if (child.equalsIgnoreCase("referencia") || child.equalsIgnoreCase(""))
+		if(child.equalsIgnoreCase(configuration.getKey("LEVEL_CONTENT"))) 
+			return configuration.getKey("LEVEL_CONTENT") + "," + configuration.getKey("LEVEL_REFERENCE") + "*";
+		if (child.equalsIgnoreCase(configuration.getKey("LEVEL_REFERENCE")) || child.equalsIgnoreCase(""))
 			return "#PCDATA";
 		return child + "*";
 	}
@@ -99,9 +109,7 @@ public class TextReader {
 					+ source);
 			Document document = saxBuilder.build(characterStream);
 			if (document != null){
-				List<Object> doc = new ArrayList<>();
-				doc.add(document);
-				retHierarchy.setList(doc);
+				textData.put("document", document);
 				retHierarchy.addMessage(new Message(null,
 						"Arquivo validado"));
 			}
@@ -124,21 +132,20 @@ public class TextReader {
 							+ "Modalidade Avançada"));
 		}
 		return retHierarchy;
+		//TODO Resolver as menssagens deste metodo
 	}
 
-	public Return mappingText(List<?> list) {
+	public Return mappingText() {
 		Return retMapp = new Return(true);
-		List<Object> listText = new ArrayList<>();
 		try {
-			Document document = (Document) list.get(0);
-			Text text = (Text) list.get(1);
+			Document document = (Document) textData.get("document");
+			Text text = (Text) textData.get("text");
 			Element rootElement = document.getRootElement();
 			text.setLevelsText(extractLevelsText(rootElement, text));
-			listText.add(text); 
-			retMapp.setList(listText);
+			textData.put("text", text);
 		} catch (Exception e) {
 			retMapp.setValid(false);
-			retMapp.addMessage(new Message(null, "Erro no mapeamento do texto!"));
+			new ExceptionManager(e).treatException();
 		}
 		return retMapp;
 	}
@@ -176,9 +183,9 @@ public class TextReader {
 			elementText.setIdLevel(level);
 			listElementsText.add(elementText);
 		}
-		if(element.getName().equalsIgnoreCase("conteudo") || element.getName().equalsIgnoreCase("referencia")){
+		if(element.getName().equalsIgnoreCase(configuration.getKey("LEVEL_CONTENT")) || element.getName().equalsIgnoreCase(configuration.getKey("LEVEL_REFERENCE"))){
 			elementText.setIdLevel(level);
-			elementText.setName("valor");
+			elementText.setName(configuration.getKey("LEVEL_VALUE"));
 			elementText.setValue(element.getText());
 			listElementsText.add(elementText);
 		}

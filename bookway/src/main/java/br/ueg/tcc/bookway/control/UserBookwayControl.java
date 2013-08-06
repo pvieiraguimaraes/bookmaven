@@ -24,7 +24,6 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 
 	public UserBookwayControl() {
 		super();
-		classEntity = UserBookway.class;
 	}
 	
 	public UserBookway getUserByCode(String code){
@@ -88,6 +87,7 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 				"</tr></tbody></table></div>";
 		email.sendEmail(emailAdres, subject, message);
 	}//TODO ALterar o caminho do logo quando estiver hospedado
+	//TODO Colocar minitemplator pra funcionar
 
 	public Return updateAccount() {
 		Return retUpdate = new Return(true);
