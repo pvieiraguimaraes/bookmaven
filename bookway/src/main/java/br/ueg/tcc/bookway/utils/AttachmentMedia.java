@@ -1,4 +1,4 @@
-package br.ueg.tcc.bookway.view.util;
+package br.ueg.tcc.bookway.utils;
 
 import java.io.File;
 import java.io.InputStream;

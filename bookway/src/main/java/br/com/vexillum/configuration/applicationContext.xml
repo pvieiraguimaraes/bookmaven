@@ -63,6 +63,10 @@
 		<property name="pathName" value="properties/text/elements.properties"/>
 	</bean>
 	
+	<bean id="configProperties" class="br.com.vexillum.configuration.Properties">
+		<property name="pathName" value="properties/config/configuration.properties"/>
+	</bean>
+	
 	     <!-- DAOs -->
     <bean id="genericPersistence" class="br.com.vexillum.control.persistence.GenericPersistence">
         <property name="sessionFactory" ref="sessionFactory" />

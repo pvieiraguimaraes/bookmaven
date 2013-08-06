@@ -18,7 +18,6 @@ import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Textbox;
 
-import br.com.vexillum.util.Message;
 import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
@@ -35,33 +34,33 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@Wire
 	protected Textbox fldLevel;
-	
+
 	@Wire
 	protected Listbox fldlstlevel;
 	private Integer i = 1;
-	
+
 	@Wire
 	protected Textbox fldCountlevels;
-	
+
 	@Wire
 	protected Checkbox chckCommunity;
-	
+
 	@Wire
 	protected Combobox fldTypeText;
-	
+
 	private String linesForPage;
 	private String pagesForChapter;
-	
+
 	private Integer countLevels;
-	
+
 	private String stream;
 	private ArrayList<String> levels;
 
 	private List<TypeText> listTypesText;
-	
+
 	public String getLinesForPage() {
 		return linesForPage;
 	}
@@ -101,7 +100,7 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	public void setStream(String stream) {
 		this.stream = stream;
 	}
-	
+
 	public Integer getCountLevels() {
 		return countLevels;
 	}
@@ -109,8 +108,8 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	public void setCountLevels(Integer countLevels) {
 		this.countLevels = countLevels;
 	}
-	
-	public void initListTypeText(){
+
+	public void initListTypeText() {
 		setListTypesText(getControl().initTypesText());
 	}
 
@@ -120,7 +119,7 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 		super.doAfterCompose(comp);
 		loadBinder();
 	}
-	
+
 	public void upload(Media media, String type) {
 		if (media != null && media.getFormat().equalsIgnoreCase(type)) {
 			showBusyServer(null, "Lendo o arquivo");
@@ -129,45 +128,44 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 		} else if (media == null)
 			showNotification("Insira um arquivo para Upload!", "error");
 	}
-	
-	private void prepareDataText(){
+
+	private void prepareDataText() {
 		getLevelsName();
 		confirmCountLevels();
 	}
-	
+
 	private void confirmCountLevels() {
-		if(getLevels() != null)
+		if (getLevels() != null)
 			setCountLevels(getLevels().size());
 	}
 
-	public void saveText(){
+	public void saveText() {
 		Return retSave = new Return(true);
 		prepareDataText();
-		retSave.concat(getControl().doAction("uploadValidText"));
+		retSave.concat(getControl().doAction("createText"));
 		treatReturn(retSave);
 	}
-	
-	public void deleteText(){
+
+	public void deleteText() {
 		Return retDelete = new Return(true);
 		somenteParaTeste();
 		retDelete.concat(getControl().doAction("deleteText"));
-		if(!retDelete.isValid()){
-			retDelete.addMessage(new Message(null, "Erro ao deletar arquivo"));
-		}
 	}
-	
-	//TODO Remover após conseguir pegar o texto dos estudos
+
+	// TODO Remover após conseguir pegar o texto dos estudos
 	private void somenteParaTeste() {
-		entity.setId((long)1);
+		entity.setId((long) 1);
 		searchEntitys();
 		entity = getListEntity().get(0);
 	}
-	
+
 	private void getLevelsName() {
-        ArrayList<String> levelsMap = new ArrayList<>();
-        levelsMap = createListLevelByListBox();
-                if(levelsMap == null) setLevels(null);
-                else setLevels(levelsMap);
+		ArrayList<String> levelsMap = new ArrayList<>();
+		levelsMap = createListLevelByListBox();
+		if (levelsMap == null)
+			setLevels(null);
+		else
+			setLevels(levelsMap);
 	}
 
 	private ArrayList<String> createListLevelByListBox() {
@@ -175,7 +173,7 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 		for (Listitem item : fldlstlevel.getItems()) {
 			for (Component cell : item.getChildren()) {
 				for (Component child : cell.getChildren()) {
-					if(child instanceof Textbox)
+					if (child instanceof Textbox)
 						list.add(((Textbox) child).getValue());
 				}
 			}
@@ -185,19 +183,20 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 
 	@Override
 	public TextControl getControl() {
-		return SpringFactory.getController("textControl", TextControl.class, ReflectionUtils.prepareDataForPersistence(this));
+		return SpringFactory.getController("textControl", TextControl.class,
+				ReflectionUtils.prepareDataForPersistence(this));
 	}
 
 	@Override
 	public Text getEntityObject() {
 		return new Text();
 	}
-	
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void addLevelInList(){
-		if(fldLevel.getValue() != ""){
+	public void addLevelInList() {
+		if (fldLevel.getValue() != "") {
 			Listitem item = new Listitem();
-			Listcell cell1 = new Listcell("Nível "+ i++), cell2 = new Listcell(), cell3 = new Listcell();
+			Listcell cell1 = new Listcell("Nível " + i++), cell2 = new Listcell(), cell3 = new Listcell();
 			String nameLevel = fldLevel.getValue();
 			Textbox txt = new Textbox(nameLevel);
 			txt.setWidth("180px");
@@ -206,7 +205,8 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 			cell3.addEventListener(Events.ON_CLICK, new EventListener() {
 				@Override
 				public void onEvent(Event event) throws Exception {
-					if(event.getTarget().getParent().getParent().getLastChild() == event.getTarget().getParent()){
+					if (event.getTarget().getParent().getParent()
+							.getLastChild() == event.getTarget().getParent()) {
 						fldlstlevel.removeChild(event.getTarget().getParent());
 						checkListBoxLevel();
 						--i;
@@ -224,24 +224,23 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	}
 
 	private void checkListBoxLevel() {
-		if(fldlstlevel.getItems().isEmpty() || fldlstlevel.getItems() == null){
+		if (fldlstlevel.getItems().isEmpty() || fldlstlevel.getItems() == null) {
 			fldlstlevel.setVisible(false);
 			fldCountlevels.setValue(null);
 			fldCountlevels.setDisabled(false);
-		}
-		else {
+		} else {
 			fldlstlevel.setVisible(true);
 			int s = fldlstlevel.getItems().size();
 			fldCountlevels.setValue(String.valueOf(s));
 			fldCountlevels.setDisabled(true);
 		}
 	}
-	
-	public void checkComboType(){
-		if(fldTypeText.getSelectedItem().getValue().equals(TypeText.PRIVADO)){
+
+	public void checkComboType() {
+		if (fldTypeText.getSelectedItem().getValue().equals(TypeText.PRIVADO)) {
 			chckCommunity.setChecked(false);
 			chckCommunity.setDisabled(true);
-		}
-		else chckCommunity.setDisabled(false);
+		} else
+			chckCommunity.setDisabled(false);
 	}
 }

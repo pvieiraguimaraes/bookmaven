@@ -2,6 +2,7 @@ package br.ueg.tcc.bookway.control;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.EnumUtils;
@@ -14,78 +15,80 @@ import br.com.vexillum.util.Return;
 import br.ueg.tcc.bookway.control.textfactory.TextReader;
 import br.ueg.tcc.bookway.control.textfactory.TextWriter;
 import br.ueg.tcc.bookway.model.Text;
+import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.model.enums.TypeText;
 
 @Service
 @Scope("prototype")
 public class TextControl extends GenericControl<Text> {
 	
+	private TextWriter txtWriter;
+	private TextReader txtReader;
+	HashMap<String, Object> map;
+	
 	public TextControl() {
-		super();
-		classEntity = Text.class;
+		super(Text.class);
+		map = new HashMap<>();
+		txtWriter = new TextWriter(map);
+		txtReader = new TextReader(map);
 	}
 
-	public Return insertTextIntoRepository(List<?> list) {
+	public Return insertTextIntoRepository() {
 		Return retRepository = new Return(true);
-		TextWriter txtWriter = new TextWriter();
-		retRepository.concat(txtWriter.insertTextIntoRepository(list));
+		UserBookway user = ((UserBookway) data.get("userLogged"));
+		map.put("user", user);
+		retRepository.concat(txtWriter.insertTextIntoRepository());
 		if(!retRepository.isValid())
 			retRepository.addMessage(new Message(null, "Erro no repositório!"));
 		return retRepository;
 	}
 
-	public Return mapedTextForDataBase(List<?> list) {
+	public Return mapedTextForDataBase() {
 		Return retMaping = new Return(true);
-		TextReader txtReader = new TextReader();
-		retMaping.concat(txtReader.mappingText(list));
+		retMaping.concat(txtReader.mappingText());
 		if(!retMaping.isValid())
 			retMaping.addMessage(new Message(null, "Erro no mapeamento do texto!"));
 		return retMaping;
 	}
 	
-	public Return uploadText(){
-		Return retText = new Return(true);
-		return retText ;
-	}
-
-	@SuppressWarnings("unchecked")
-	public Return uploadValidText() {
-		Integer countLevels = (Integer) data.get("countLevels");
+	public Return createText() {
 		String stream = (String) data.get("stream");
-		ArrayList<String> levels = (ArrayList<String>) data.get("levels");
-		Text text = (Text) data.get("entity");
-		text.setInsertDate(new Date());
-		
 		Return retUpload = new Return(true);
-		TextReader txtReader = new TextReader();
-		String dtd = "";
-
-		if (levels != null && levels.isEmpty()) {
-			dtd = txtReader.createDTDValidator(levels);
-		} else
-			dtd = txtReader.createDTDValidator(txtReader.getDefaultLevels(countLevels));
-
-		retUpload.concat(txtReader.createText(dtd, stream));		
-		if (retUpload.isValid()){
-			List<Object> list = (List<Object>) retUpload.getList();
-			list.add(text);
-			retUpload.setList(list);
-			retUpload.addMessage(new Message(null, "e lido com sucesso!"));
-			retUpload.concat(afterUploadText(list));
-		}
-
+		map.put("text", createObjectText());
+		retUpload.concat(txtReader.createText(createDTDValidator(), stream));		
+		if (retUpload.isValid())
+			retUpload.concat(afterCreateText());
 		return retUpload;
+	}
+	
+	private Text createObjectText(){
+		Text text = (Text) data.get("entity");
+		UserBookway user = (UserBookway) data.get("userLogged");
+		text.setInsertDate(new Date());
+		text.setUserOwning(user);
+		return text;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private String createDTDValidator(){
+		ArrayList<String> levels = (ArrayList<String>) data.get("levels");
+		Integer countLevels = (Integer) data.get("countLevels");
+		if (levels != null && levels.isEmpty())
+			return txtReader.createDTDValidator(levels);
+		return txtReader.createDTDValidator(txtReader.getDefaultLevels(countLevels));
+		
 	}
 
 	/**Este método armazenará o arquivo no repositório e também mapeará no banco de dados.
 	 * @param list
 	 * @return Return
 	 */
-	private Return afterUploadText(List<?> list) {
+	private Return afterCreateText() {
 		Return retAfterUpload = new Return(true);
-		retAfterUpload.concat(insertTextIntoRepository(list));
+		retAfterUpload.concat(insertTextIntoRepository());
 		if(retAfterUpload.isValid())
-			retAfterUpload.concat(mapedTextForDataBase(list));
+			entity.setFilePath((String) retAfterUpload.getList().get(0));
+			retAfterUpload.concat(mapedTextForDataBase());
 		if(retAfterUpload.isValid()){
 			entity = (Text) retAfterUpload.getList().get(0);
 			retAfterUpload.concat(insertTextIntoDataBase());
