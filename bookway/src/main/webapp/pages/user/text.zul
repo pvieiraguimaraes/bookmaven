@@ -27,16 +27,16 @@
 		</vlayout>
 		</div>
 		</groupbox>
-		<groupbox><caption label="Importação Simples"/>
+		<groupbox id="simpleImport" open="false" onOpen="avancedImport.setOpen(false);controller.checkFormImport()"><caption label="Importação Simples"/>
 		<div sclass="simpleimport">
 		<vlayout>
 			<hlayout spacing="20px">
 				<label value="Linhas/Página" tooltip="É a quantidade de linhas para cada página"/>
-				<textbox width="250px"/>
+				<intbox id="fldLinesForPage" value="@{controller.linesForPage}" width="250px"/>
 			</hlayout>
 			<hlayout spacing="5px">
 				<label value="Páginas/Capítulo" tooltip="É a quantidade de páginas para cada capítulo"/>
-				<textbox width="250px"/>
+				<intbox id="fldPagesForChapter" value="@{controller.pagesForChapter}" width="250px"/>
 			</hlayout>
 			<button label="Escolher TXT" upload="true">
 				<attribute name="onUpload"><![CDATA[
@@ -56,7 +56,7 @@
 		</div>
 		</groupbox>
 		<zscript>int i = 1</zscript>
-		<groupbox><caption label="Importação Avançada" />
+		<groupbox id="avancedImport" open="false" onOpen="simpleImport.setOpen(false);controller.checkFormImport()"><caption label="Importação Avançada" />
 		<div sclass="avancedimport">
 			<label	value="NOTA: O arquivo importado através da importação avançada deverá estar com os níveis 
 			devidamente estabelecidos segundo as instruções do manual para " /><a>Importação Avançada.</a>
@@ -90,7 +90,7 @@
 					</listbox>
 					<hlayout>
 						<label value="Quantidade:" />
-						<textbox id="fldCountlevels" value="@{controller.countLevels}" />
+						<intbox id="fldCountlevels" value="@{controller.countLevels}" />
 					</hlayout>
 				</div>
 			</vlayout>

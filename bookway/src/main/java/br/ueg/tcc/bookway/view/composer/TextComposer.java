@@ -13,6 +13,9 @@ import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Groupbox;
+import org.zkoss.zul.Intbox;
+import org.zkoss.zul.Label;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listitem;
@@ -43,7 +46,7 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	private Integer i = 1;
 
 	@Wire
-	protected Textbox fldCountlevels;
+	protected Intbox fldCountlevels;
 
 	@Wire
 	protected Checkbox chckCommunity;
@@ -51,8 +54,24 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	@Wire
 	protected Combobox fldTypeText;
 
-	private String linesForPage;
-	private String pagesForChapter;
+	@Wire
+	protected Label upLabelTxt;
+
+	@Wire
+	protected Label upLabelXml;
+
+	@Wire
+	protected Groupbox simpleImport;
+
+	private boolean simple;
+
+	@Wire
+	protected Groupbox avancedImport;
+
+	private boolean avanced;
+
+	private Integer linesForPage;
+	private Integer pagesForChapter;
 
 	private Integer countLevels;
 
@@ -60,20 +79,38 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	private ArrayList<String> levels;
 
 	private List<TypeText> listTypesText;
+	
+	private String type;
 
-	public String getLinesForPage() {
+	public boolean getSimple() {
+		return simple;
+	}
+
+	public void setSimple(boolean simple) {
+		this.simple = simple;
+	}
+
+	public boolean getAvanced() {
+		return avanced;
+	}
+
+	public void setAvanced(boolean avanced) {
+		this.avanced = avanced;
+	}
+
+	public Integer getLinesForPage() {
 		return linesForPage;
 	}
 
-	public void setLinesForPage(String linesForPage) {
+	public void setLinesForPage(Integer linesForPage) {
 		this.linesForPage = linesForPage;
 	}
 
-	public String getPagesForChapter() {
+	public Integer getPagesForChapter() {
 		return pagesForChapter;
 	}
 
-	public void setPagesForChapter(String pagesForChapter) {
+	public void setPagesForChapter(Integer pagesForChapter) {
 		this.pagesForChapter = pagesForChapter;
 	}
 
@@ -112,6 +149,14 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	public void initListTypeText() {
 		setListTypesText(getControl().initTypesText());
 	}
+	
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
@@ -124,6 +169,7 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 		if (media != null && media.getFormat().equalsIgnoreCase(type)) {
 			showBusyServer(null, "Lendo o arquivo");
 			setStream(media.getStringData());
+			setType(media.getFormat());
 			Clients.clearBusy();
 		} else if (media == null)
 			showNotification("Insira um arquivo para Upload!", "error");
@@ -132,6 +178,12 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	private void prepareDataText() {
 		getLevelsName();
 		confirmCountLevels();
+		confirmPanelImport();
+	}
+
+	private void confirmPanelImport() {
+		setSimple(simpleImport.isOpen());
+		setAvanced(avancedImport.isOpen());
 	}
 
 	private void confirmCountLevels() {
@@ -144,19 +196,35 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 		prepareDataText();
 		retSave.concat(getControl().doAction("createText"));
 		treatReturn(retSave);
+		if (retSave.isValid())
+			resetEntity();
+	}
+
+	private void resetEntity() {
+		entity = getEntityObject();
+		resetFormSimpleImport();
+		resetFormAvancedImport();
+		loadBinder();
+	}
+
+	private void resetFormSimpleImport() {
+		upLabelTxt.setValue(null);
+		setPagesForChapter(null);
+		setLinesForPage(null);
+	}
+
+	private void resetFormAvancedImport() {
+		upLabelXml.setValue(null);
+		fldCountlevels.setValue(null);
+		countLevels = null;
+		if (fldlstlevel.getItems() != null && !fldlstlevel.getItems().isEmpty())
+			removeListLevelOfListBox();
+		fldLevel.setValue(null);
 	}
 
 	public void deleteText() {
 		Return retDelete = new Return(true);
-		somenteParaTeste();
 		retDelete.concat(getControl().doAction("deleteText"));
-	}
-
-	// TODO Remover após conseguir pegar o texto dos estudos
-	private void somenteParaTeste() {
-		entity.setId((long) 1);
-		searchEntitys();
-		entity = getListEntity().get(0);
 	}
 
 	private void getLevelsName() {
@@ -181,6 +249,13 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 		return list.isEmpty() ? null : list;
 	}
 
+	private void removeListLevelOfListBox() {
+		for (int i = fldlstlevel.getItemCount() - 1; i >= 0; i--) {
+			fldlstlevel.removeItemAt(i);
+		}
+		checkListBoxLevel();
+	}
+
 	@Override
 	public TextControl getControl() {
 		return SpringFactory.getController("textControl", TextControl.class,
@@ -194,7 +269,7 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void addLevelInList() {
-		if (fldLevel.getValue() != "") {
+		if (fldLevel.getValue() != "" && !checkListBoxLevelNames()) {
 			Listitem item = new Listitem();
 			Listcell cell1 = new Listcell("Nível " + i++), cell2 = new Listcell(), cell3 = new Listcell();
 			String nameLevel = fldLevel.getValue();
@@ -230,10 +305,18 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 			fldCountlevels.setDisabled(false);
 		} else {
 			fldlstlevel.setVisible(true);
-			int s = fldlstlevel.getItems().size();
-			fldCountlevels.setValue(String.valueOf(s));
+			fldCountlevels.setValue(fldlstlevel.getItems().size());
 			fldCountlevels.setDisabled(true);
 		}
+	}
+
+	private boolean checkListBoxLevelNames() {
+		List<String> levels = createListLevelByListBox();
+		if (levels != null && levels.contains(fldLevel.getValue())) {
+			showNotification("Não poderá conter níveis repetidos!", "error");
+			return true;
+		}
+		return false;
 	}
 
 	public void checkComboType() {
@@ -242,5 +325,14 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 			chckCommunity.setDisabled(true);
 		} else
 			chckCommunity.setDisabled(false);
+	}
+
+	public void checkFormImport() {
+		setStream(null);
+		if (!simpleImport.isOpen())
+			resetFormSimpleImport();
+		if (!avancedImport.isOpen())
+			resetFormAvancedImport();
+		loadBinder();
 	}
 }

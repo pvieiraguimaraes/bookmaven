@@ -13,6 +13,15 @@
 	margin-left: auto;
 }
 
+/*TEMPLATE*/
+
+.z-north, .z-south, .z-west, .z-center, .z-east {
+	border: 1px solid #FFF;
+	position: absolute;
+	overflow: hidden;
+	background-color: #FFF;
+}
+
 /*COR NO GROUPBOX*/
 .z-groupbox {
 	margin-right: auto;
