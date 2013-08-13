@@ -53,9 +53,12 @@ public class TextControl extends GenericControl<Text> {
 	
 	public Return createText() {
 		String stream = (String) data.get("stream");
+		String type = (String) data.get("type");
+		Integer linesForPage = (Integer) data.get("linesForPage");
+		Integer pagesForChapter = (Integer) data.get("linesForPage");
 		Return retUpload = new Return(true);
 		map.put("text", createObjectText());
-		retUpload.concat(txtReader.createText(createDTDValidator(), stream));		
+		retUpload.concat(txtReader.createText(createDTDValidator(), stream, type, linesForPage, pagesForChapter));		
 		if (retUpload.isValid())
 			retUpload.concat(afterCreateText());
 		return retUpload;
@@ -75,8 +78,9 @@ public class TextControl extends GenericControl<Text> {
 		Integer countLevels = (Integer) data.get("countLevels");
 		if (levels != null && levels.isEmpty())
 			return txtReader.createDTDValidator(levels);
-		return txtReader.createDTDValidator(txtReader.getDefaultLevels(countLevels));
-		
+		if (countLevels != null)
+			return txtReader.createDTDValidator(txtReader.getDefaultLevels(countLevels));
+		return null;
 	}
 
 	/**Este método armazenará o arquivo no repositório e também mapeará no banco de dados.
@@ -89,20 +93,16 @@ public class TextControl extends GenericControl<Text> {
 		if(retAfterUpload.isValid())
 			entity.setFilePath((String) retAfterUpload.getList().get(0));
 			retAfterUpload.concat(mapedTextForDataBase());
-		if(retAfterUpload.isValid()){
-			entity = (Text) retAfterUpload.getList().get(0);
+		if(retAfterUpload.isValid())
 			retAfterUpload.concat(insertTextIntoDataBase());
-		}
 		return retAfterUpload;
 	}
 
 	public Return insertTextIntoDataBase() {
 		Return retInsert = new Return(true);
 		retInsert.concat(doAction("save"));
-		if(!retInsert.isValid())
-			retInsert.addMessage(new Message(null, "Erro ao inserir no Banco de Dados!"));
 		return retInsert;
-	}//TODO Colocar pra chamar a msg do properties
+	}
 	
 	public Return deleteText(){
 		Return retDelete = new Return(true);

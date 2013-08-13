@@ -1,5 +1,6 @@
 package br.ueg.tcc.bookway.control.textfactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -7,11 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.jdom2.Attribute;
+import org.jdom2.Content;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.input.sax.XMLReaders;
+import org.jdom2.output.XMLOutputter;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +40,7 @@ public class TextReader extends TextBookwayIO {
 	
 	public String createDTDValidator(ArrayList<String> arrayList) {
 		ArrayList<String> levelsMapped = addBannedLevels(arrayList);
-		String docType = "<!DOCTYPE documento [";
+		String docType = "<!DOCTYPE " + configuration.getKey("LEVEL_ROOT") + " [";
 		String elementsValidation = "";
 		elements = SpringFactory.getInstance().getBean("textProperties", Properties.class);
 		for (int i = 0; i < levelsMapped.size(); i++) {
@@ -92,6 +95,96 @@ public class TextReader extends TextBookwayIO {
 		return child + "*";
 	}
 	
+	public Return createText(String docTypeValid, String source, String type, Integer linesForPage, Integer pagesForChapter) {
+		Return retCreate = new Return(true);
+		if(type.equalsIgnoreCase("xml"))
+			retCreate.concat(createDocumentByXML(docTypeValid, source));
+		else retCreate.concat(createDocumentByTXT(source, linesForPage, pagesForChapter));
+		return retCreate;
+		//TODO Resolver as menssagens deste metodo
+	}
+	
+	private Return createDocumentByTXT(String source, Integer linesForPage, Integer pagesForChapter){
+		Return retTxt = new Return(true);
+		StringReader stringReader = new StringReader(source);
+		BufferedReader buffer = new BufferedReader(stringReader);
+		String thisLine = "";
+		try {
+			int countLinesPage = 0, countPagesChapter = 0, numberPage = 1, numberChapter = 1;
+			String content = ""; 
+			Element root = createElementForXML(configuration.getKey("LEVEL_ROOT"), null), page = null, chapter = createTXTElement(numberChapter++, null, "chapter");
+			Document doc = new Document();
+			while((thisLine = buffer.readLine()) != null){
+				if(countLinesPage < linesForPage){
+					content += thisLine + System.getProperty("line.separator");
+					countLinesPage++;
+				} else if (countLinesPage == linesForPage){
+					page = createTXTElement(numberPage++, createContentElementForXML(content), "page");
+					countLinesPage = 1; content = thisLine + System.getProperty("line.separator");
+				}
+				if(page != null && countPagesChapter < pagesForChapter){
+					chapter.addContent(page); page = null;
+					countPagesChapter++;
+				} else if(countPagesChapter == pagesForChapter){
+					root.addContent(chapter);
+					numberPage = 1; countPagesChapter = 0;
+					chapter = createTXTElement(numberChapter++, null, "chapter");
+				}
+			}
+			doc.addContent(root);
+			print(doc);
+			textData.put("document", doc);
+			retTxt.setValid(false);
+		} catch (IOException e) {
+			retTxt.setValid(false);
+			new ExceptionManager(e).treatException();
+		}
+		return retTxt;
+	}
+	
+	/**Cria os elementos necessários para mapeamento do Texto em Document
+	 * @param number, sequencia do elemento
+	 * @param cont, conteudo se houver
+	 * @param type, poderá se chapter ou page
+	 * @return retorna um novo elemento Element para adicionar ao Document
+	 */
+	private Element createTXTElement(Integer number, Content cont, String type){
+		if(type.equalsIgnoreCase("page"))
+			return createElementForXML(configuration.getKey("LEVEL_PAGE") + number, cont);
+		return createElementForXML(configuration.getKey("LEVEL_CHAPTER") + number, cont);
+	}
+	
+	private void print(Document doc) {
+		XMLOutputter xout = new XMLOutputter();
+		try {
+		      xout.output(doc, System.out);
+		} catch (IOException e) {
+		      e.printStackTrace();
+		}
+	}
+
+	/**Cria um elemento com uma lista de filhos
+	 * @param name, nome do elemento
+	 * @param content, lista de filhos
+	 * @return o novo elemento
+	 */
+	private Element createElementForXML(String name, Content con){
+		Element element = new Element(name);
+		if(con != null)
+			element.addContent(con);
+		return element;
+	}
+	
+	/**Cria o elemento conteudo para o mapeamento do TXT
+	 * @param content, o conteudo do elemento
+	 * @return um novo elemento com nome de conteudo e valor content
+	 */
+	private Element createContentElementForXML(String content){
+		Element element = new Element(configuration.getKey("LEVEL_CONTENT"));
+		element.setText(content);
+		return element;
+	}
+	
 	/**
 	 * Este método servirá para validação do arquivo XML a nível de sua
 	 * hierarquia Através do arquivo em String e o DTD, que define a estrutura
@@ -101,7 +194,7 @@ public class TextReader extends TextBookwayIO {
 	 * @param str
 	 * @return
 	 */
-	public Return createText(String docTypeValid, String source) {
+	private Return createDocumentByXML(String docTypeValid, String source){
 		Return retHierarchy = new Return(true);
 		SAXBuilder saxBuilder = new SAXBuilder(XMLReaders.DTDVALIDATING);
 		try {
@@ -132,7 +225,6 @@ public class TextReader extends TextBookwayIO {
 							+ "Modalidade Avançada"));
 		}
 		return retHierarchy;
-		//TODO Resolver as menssagens deste metodo
 	}
 
 	public Return mappingText() {
