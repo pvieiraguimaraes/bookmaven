@@ -31,40 +31,46 @@ import br.ueg.tcc.bookway.model.Text;
 @Scope("prototype")
 @SuppressWarnings("serial")
 public class TextReader extends TextBookwayIO {
-	
+
 	public TextReader(HashMap<String, Object> map) {
 		textData = map;
 	}
-	
+
 	protected Properties elements;
-	
+
 	public String createDTDValidator(ArrayList<String> arrayList) {
 		ArrayList<String> levelsMapped = addBannedLevels(arrayList);
-		String docType = "<!DOCTYPE " + configuration.getKey("LEVEL_ROOT") + " [";
+		String docType = "<!DOCTYPE " + configuration.getKey("LEVEL_ROOT")
+				+ " [";
 		String elementsValidation = "";
-		elements = SpringFactory.getInstance().getBean("textProperties", Properties.class);
+		elements = SpringFactory.getInstance().getBean("textProperties",
+				Properties.class);
 		for (int i = 0; i < levelsMapped.size(); i++) {
 			String child = getChild(levelsMapped, levelsMapped.get(i));
-			docType += "<!ELEMENT " + levelsMapped.get(i) + " (" + child + ") >";
-			int x = 1, y = i+1;
+			docType += "<!ELEMENT " + levelsMapped.get(i) + " (" + child
+					+ ") >";
+			int x = 1, y = i + 1;
 			String elementLevel = getElement(y, x);
 			while (!elementLevel.isEmpty()) {
-				elementsValidation += "<!ATTLIST " + levelsMapped.get(y) + " " + elementLevel + " CDATA #IMPLIED>";
-				x += 1; elementLevel = getElement(y, x);
+				elementsValidation += "<!ATTLIST " + levelsMapped.get(y) + " "
+						+ elementLevel + " CDATA #IMPLIED>";
+				x += 1;
+				elementLevel = getElement(y, x);
 			}
 		}
 		docType += elementsValidation;
 		return docType + " ]>";
 	}
-	
-	protected String getElement(int levelNumber, int elementNumber){
-		return elements.getKey("nivel"+levelNumber+"_element"+elementNumber);
+
+	protected String getElement(int levelNumber, int elementNumber) {
+		return elements.getKey("nivel" + levelNumber + "_element"
+				+ elementNumber);
 	}
 
 	public ArrayList<String> getDefaultLevels(Integer quantLevels) {
 		ArrayList<String> defaultLevels = new ArrayList<>();
 		for (int i = 1; i <= quantLevels; i++) {
-			defaultLevels.add(configuration.getKey("LEVEL_DEFAULT")+i);
+			defaultLevels.add(configuration.getKey("LEVEL_DEFAULT") + i);
 		}
 		return defaultLevels;
 	}
@@ -83,108 +89,170 @@ public class TextReader extends TextBookwayIO {
 		int p = 0;
 		for (int i = 0; i < arrayList.size(); i++) {
 			if (arrayList.get(i).equalsIgnoreCase(selectedLevel)) {
-					p = i + 1;
-					child += p < arrayList.size() ? arrayList.get(p) : "";
-					break;
+				p = i + 1;
+				child += p < arrayList.size() ? arrayList.get(p) : "";
+				break;
 			}
 		}
-		if(child.equalsIgnoreCase(configuration.getKey("LEVEL_CONTENT"))) 
-			return configuration.getKey("LEVEL_CONTENT") + "," + configuration.getKey("LEVEL_REFERENCE") + "*";
-		if (child.equalsIgnoreCase(configuration.getKey("LEVEL_REFERENCE")) || child.equalsIgnoreCase(""))
+		if (child.equalsIgnoreCase(configuration.getKey("LEVEL_CONTENT")))
+			return configuration.getKey("LEVEL_CONTENT") + ","
+					+ configuration.getKey("LEVEL_REFERENCE") + "*";
+		if (child.equalsIgnoreCase(configuration.getKey("LEVEL_REFERENCE"))
+				|| child.equalsIgnoreCase(""))
 			return "#PCDATA";
 		return child + "*";
 	}
-	
-	public Return createText(String docTypeValid, String source, String type, Integer linesForPage, Integer pagesForChapter) {
+
+	public Return createText(String docTypeValid, String source, String type,
+			Integer linesForPage, Integer pagesForChapter) {
 		Return retCreate = new Return(true);
-		if(type.equalsIgnoreCase("xml"))
+		if (type.equalsIgnoreCase("xml"))
 			retCreate.concat(createDocumentByXML(docTypeValid, source));
-		else retCreate.concat(createDocumentByTXT(source, linesForPage, pagesForChapter));
+		else
+			retCreate.concat(createDocumentByTXT(source, linesForPage,
+					pagesForChapter));
 		return retCreate;
-		//TODO Resolver as menssagens deste metodo
+		// TODO Resolver as menssagens deste metodo
 	}
-	
-	private Return createDocumentByTXT(String source, Integer linesForPage, Integer pagesForChapter){
+
+	private Return createDocumentByTXT(String source, Integer linesForPage,
+			Integer pagesForChapter) {
 		Return retTxt = new Return(true);
 		StringReader stringReader = new StringReader(source);
 		BufferedReader buffer = new BufferedReader(stringReader);
-		String thisLine = "";
+		Document doc = new Document();
 		try {
-			int countLinesPage = 0, countPagesChapter = 0, numberPage = 1, numberChapter = 1;
-			String content = ""; 
-			Element root = createElementForXML(configuration.getKey("LEVEL_ROOT"), null), page = null, chapter = createTXTElement(numberChapter++, null, "chapter");
-			Document doc = new Document();
-			while((thisLine = buffer.readLine()) != null){
-				if(countLinesPage < linesForPage){
-					content += thisLine + System.getProperty("line.separator");
-					countLinesPage++;
-				} else if (countLinesPage == linesForPage){
-					page = createTXTElement(numberPage++, createContentElementForXML(content), "page");
-					countLinesPage = 1; content = thisLine + System.getProperty("line.separator");
-				}
-				if(page != null && countPagesChapter < pagesForChapter){
-					chapter.addContent(page); page = null;
-					countPagesChapter++;
-				} else if(countPagesChapter == pagesForChapter){
-					root.addContent(chapter);
-					numberPage = 1; countPagesChapter = 0;
-					chapter = createTXTElement(numberChapter++, null, "chapter");
-				}
+			String thisLine;
+			List<String> linesOfPage = new ArrayList<String>();
+			while ((thisLine = buffer.readLine()) != null) {
+				linesOfPage.add(thisLine);
+			}
+			HashMap<String, Element> mapPages = mappingPages(linesOfPage,
+					linesForPage);
+			HashMap<String, Element> mapChapters = mappingChapters(mapPages,
+					pagesForChapter);
+			int i = 1;
+			String key = "chapter" + i++;
+			Element root = createElementForXML(
+					configuration.getKey("LEVEL_ROOT"), null), chapter = mapChapters
+					.get(key);
+			while (chapter != null) {
+				root.addContent(chapter);
+				key = "chapter" + i++;
+				chapter = mapChapters.get(key);
 			}
 			doc.addContent(root);
-			print(doc);
 			textData.put("document", doc);
-			retTxt.setValid(false);
 		} catch (IOException e) {
 			retTxt.setValid(false);
 			new ExceptionManager(e).treatException();
 		}
 		return retTxt;
 	}
-	
-	/**Cria os elementos necessários para mapeamento do Texto em Document
-	 * @param number, sequencia do elemento
-	 * @param cont, conteudo se houver
-	 * @param type, poderá se chapter ou page
-	 * @return retorna um novo elemento Element para adicionar ao Document
-	 */
-	private Element createTXTElement(Integer number, Content cont, String type){
-		if(type.equalsIgnoreCase("page"))
-			return createElementForXML(configuration.getKey("LEVEL_PAGE") + number, cont);
-		return createElementForXML(configuration.getKey("LEVEL_CHAPTER") + number, cont);
-	}
-	
-	private void print(Document doc) {
-		XMLOutputter xout = new XMLOutputter();
-		try {
-		      xout.output(doc, System.out);
-		} catch (IOException e) {
-		      e.printStackTrace();
+
+	private HashMap<String, Element> mappingChapters(
+			HashMap<String, Element> mapPages, Integer pagesForChapter) {
+		HashMap<String, Element> mapChapter = new HashMap<String, Element>();
+		int countPages = 1, numberChapter = 1, i = 1, x = 1;
+		String key = "page" + i++;
+		Element chapter = createTXTElement(numberChapter++, null, "chapter"), page = mapPages
+				.get(key);
+		while (page != null) {
+			if (countPages > pagesForChapter) {
+				mapChapter.put("chapter" + x++, chapter);
+				chapter = createTXTElement(numberChapter++, page, "chapter");
+				key = "page" + i++;
+				page = mapPages.get(key);
+				countPages = 2;
+			}
+			chapter.addContent(page);
+			key = "page" + i++;
+			page = mapPages.get(key);
+			if (page == null)
+				mapChapter.put("chapter" + x++, chapter);
+			countPages += 1;
 		}
+		return mapChapter;
 	}
 
-	/**Cria um elemento com uma lista de filhos
-	 * @param name, nome do elemento
-	 * @param content, lista de filhos
+	private HashMap<String, Element> mappingPages(List<String> linesOfPage,
+			Integer linesForPage) {
+		HashMap<String, Element> mapPages = new HashMap<String, Element>();
+		List<String> list = new ArrayList<String>();
+		Element element = null, page = null;
+		String content;
+		int initPage = 0, endPage = linesForPage, countPage = 1, aux;
+		for (int i = 0; i < linesOfPage.size() / linesForPage + 1; i++) {
+			list = linesOfPage.subList(initPage, endPage);
+			if (!list.isEmpty()) {
+				content = extractListString(list);
+				element = addContentInPage(content);
+				page = createTXTElement(countPage, element, "page");
+				mapPages.put("page" + countPage++, page);
+				initPage = endPage;
+				aux = endPage += linesForPage;
+				endPage = aux < linesOfPage.size() ? aux : linesOfPage.size();
+			}
+		}
+		return mapPages;
+	}
+
+	private String extractListString(List<String> list) {
+		String aux = "";
+		for (int i = 0; i < list.size(); i++) {
+			aux += list.get(i);
+		}
+		return aux;
+	}
+
+	/**
+	 * Cria os elementos necessários para mapeamento do Texto em Document
+	 * 
+	 * @param number
+	 *            , sequencia do elemento
+	 * @param cont
+	 *            , conteudo se houver
+	 * @param type
+	 *            , poderá se chapter ou page
+	 * @return retorna um novo elemento Element para adicionar ao Document
+	 */
+	private Element createTXTElement(Integer number, Content cont, String type) {
+		if (type.equalsIgnoreCase("page"))
+			return createElementForXML(configuration.getKey("LEVEL_PAGE")
+					+ number, cont);
+		return createElementForXML(configuration.getKey("LEVEL_CHAPTER")
+				+ number, cont);
+	}
+
+	/**
+	 * Cria um elemento com uma lista de filhos
+	 * 
+	 * @param name
+	 *            , nome do elemento
+	 * @param content
+	 *            , lista de filhos
 	 * @return o novo elemento
 	 */
-	private Element createElementForXML(String name, Content con){
+	private Element createElementForXML(String name, Content con) {
 		Element element = new Element(name);
-		if(con != null)
+		if (con != null)
 			element.addContent(con);
 		return element;
 	}
-	
-	/**Cria o elemento conteudo para o mapeamento do TXT
-	 * @param content, o conteudo do elemento
+
+	/**
+	 * Cria o elemento conteudo para o mapeamento do TXT
+	 * 
+	 * @param content
+	 *            , o conteudo do elemento
 	 * @return um novo elemento com nome de conteudo e valor content
 	 */
-	private Element createContentElementForXML(String content){
+	private Element addContentInPage(String content) {
 		Element element = new Element(configuration.getKey("LEVEL_CONTENT"));
 		element.setText(content);
 		return element;
 	}
-	
+
 	/**
 	 * Este método servirá para validação do arquivo XML a nível de sua
 	 * hierarquia Através do arquivo em String e o DTD, que define a estrutura
@@ -194,19 +262,17 @@ public class TextReader extends TextBookwayIO {
 	 * @param str
 	 * @return
 	 */
-	private Return createDocumentByXML(String docTypeValid, String source){
+	private Return createDocumentByXML(String docTypeValid, String source) {
 		Return retHierarchy = new Return(true);
 		SAXBuilder saxBuilder = new SAXBuilder(XMLReaders.DTDVALIDATING);
 		try {
 			StringReader characterStream = new StringReader(docTypeValid
 					+ source);
 			Document document = saxBuilder.build(characterStream);
-			if (document != null){
+			if (document != null) {
 				textData.put("document", document);
-				retHierarchy.addMessage(new Message(null,
-						"Arquivo validado"));
-			}
-			else {
+				retHierarchy.addMessage(new Message(null, "Arquivo validado"));
+			} else {
 				retHierarchy.setValid(false);
 				retHierarchy.addMessage(new Message(null,
 						"Ocorreu uma falha na validação do arquivo!"));
@@ -241,8 +307,8 @@ public class TextReader extends TextBookwayIO {
 		}
 		return retMapp;
 	}
-	
-	private LevelText extractLevelsText(Element rootElement, Text text){
+
+	private LevelText extractLevelsText(Element rootElement, Text text) {
 		LevelText level = extractLevel(rootElement, text);
 		for (Element child : rootElement.getChildren()) {
 			level.getLevelsChildren().add(extractLevelsText(child, text));
@@ -250,7 +316,7 @@ public class TextReader extends TextBookwayIO {
 		return level;
 	}
 
-	private LevelText extractLevel(Element element, Text text){
+	private LevelText extractLevel(Element element, Text text) {
 		LevelText levelText = new LevelText();
 		String nameElement = element.getName();
 		levelText.setName(nameElement);
@@ -258,32 +324,36 @@ public class TextReader extends TextBookwayIO {
 		levelText.setElements(extractElements(element, levelText));
 		return levelText;
 	}
-	
-	
-	
-	/**Este método extrai os elementos de um dado nível do texto
-	 * @param element, que representa o nível do texto
+
+	/**
+	 * Este método extrai os elementos de um dado nível do texto
+	 * 
+	 * @param element
+	 *            , que representa o nível do texto
 	 * @return uma lista de elementos pertencentes aquele nível
 	 */
-	private List<ElementText> extractElements(Element element, LevelText level){
+	private List<ElementText> extractElements(Element element, LevelText level) {
 		List<ElementText> listElementsText = new ArrayList<>();
 		List<Attribute> listAttributes = element.getAttributes();
 		ElementText elementText = new ElementText();
-		for(int i = 0; i < listAttributes.size(); i++){
+		for (int i = 0; i < listAttributes.size(); i++) {
 			elementText.setName(listAttributes.get(i).getName());
 			elementText.setValue(listAttributes.get(i).getValue());
 			elementText.setIdLevel(level);
 			listElementsText.add(elementText);
 		}
-		if(element.getName().equalsIgnoreCase(configuration.getKey("LEVEL_CONTENT")) || element.getName().equalsIgnoreCase(configuration.getKey("LEVEL_REFERENCE"))){
+		if (element.getName().equalsIgnoreCase(
+				configuration.getKey("LEVEL_CONTENT"))
+				|| element.getName().equalsIgnoreCase(
+						configuration.getKey("LEVEL_REFERENCE"))) {
 			elementText.setIdLevel(level);
 			elementText.setName(configuration.getKey("LEVEL_VALUE"));
 			elementText.setValue(element.getText());
 			listElementsText.add(elementText);
 		}
-		if(listElementsText.isEmpty())
+		if (listElementsText.isEmpty())
 			return null;
 		return listElementsText;
 	}
-	
+
 }

@@ -133,3 +133,21 @@
 .listlevel {
 	margin-top: 10px;
 }
+
+/*SEARCH TEXTS*/
+.searchtexts {
+	margin-top: 15px;
+}
+
+.labelsearchtexts {
+	margin-left: 100px;
+}
+
+.itembook {
+	background-color: rgb(181, 219, 248);
+	padding: 15px;
+}
+
+.resultsearch {
+	margin-top: 20px;
+}
