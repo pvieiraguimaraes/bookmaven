@@ -55,7 +55,7 @@ public class TextControl extends GenericControl<Text> {
 		String stream = (String) data.get("stream");
 		String type = (String) data.get("type");
 		Integer linesForPage = (Integer) data.get("linesForPage");
-		Integer pagesForChapter = (Integer) data.get("linesForPage");
+		Integer pagesForChapter = (Integer) data.get("pagesForChapter");
 		Return retUpload = new Return(true);
 		map.put("text", createObjectText());
 		retUpload.concat(txtReader.createText(createDTDValidator(), stream, type, linesForPage, pagesForChapter));		
