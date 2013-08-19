@@ -1,0 +1,19 @@
+<zk>
+	<div sclass="well itemtext" width="400px" height="100%">
+		<hlayout id="panelgeneral">
+			<vlayout id="subpanelleft">
+				<image id="imagetext" src="/images/bookavatarlarge.png" />
+				<a><label id="userowner" /></a>
+			</vlayout>
+			<vlayout id="subpanelrigth">
+				<label id="titletext" sclass="titleitemtext" />
+				<label id="descriptiontext" />
+			</vlayout>
+		</hlayout>
+		<div id="panelbuttons" align="right">
+			<button sclass="btn btn-primary" label="Estudar" />
+			<button sclass="btn btn-primary" label="Editar" />
+			<button sclass="btn btn-primary" label="Excluir" />
+		</div>
+	</div>
+</zk>

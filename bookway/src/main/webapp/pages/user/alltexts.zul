@@ -1,5 +1,7 @@
 <?page title="Pesquisa de Textos" contentType="text/html;charset=UTF-8"?>
 <?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
+<?component name="itemText" class="br.ueg.tcc.bookway.view.composite.ItemTextViewSearch" ?>
+
 <zk>
 	<div self="@{define(content)}">
 		<hbox sclass="searchtexts" id="searchTexts" width="100%" height="100%" pack="center" apply="${textComposer}">
@@ -7,23 +9,9 @@
 				<button image="/images/search.png" width="35px"/>
 		</hbox>
 		<hbox sclass="resultsearch" id="resultSearch" width="100%" height="100%" pack="center">
-			<div sclass="itembook" width="400px" height="100%">
-				<hlayout>
-					<vlayout>
-						<image src="/images/bookavatarlarge.png"/>
-						<label value="Nome do Usúario"/>
-					</vlayout>
-					<vlayout>				
-						<label value="Título do Texto"/>
-						<label value="Descrição do Texto"/>
-					</vlayout>
-				</hlayout>
-				<div align="right">
-					 <button sclass="btn btn-primary" label="Estudar"/>
-					 <button sclass="btn btn-primary" label="Editar"/>
-					 <button sclass="btn btn-primary" label="Excluir"/>
-				</div>
-			</div>
+			<zk forEach="controller.getListTextsUser();">
+				<itemText userOwner="userOwning.name" titleText="title" descriptionText="description"/>			
+			</zk>
 		</hbox>
 	</div>
 </zk>

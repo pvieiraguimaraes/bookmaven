@@ -335,4 +335,13 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 			resetFormAvancedImport();
 		loadBinder();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Text> getListTextsUser(){
+		Return retSeachText = new Return(true);
+		retSeachText.concat(getControl().doAction("searchTextsUser"));
+		if(retSeachText.isValid() && retSeachText.getList() != null)
+			return (List<Text>) retSeachText.getList();
+		return null;
+	}
 }
