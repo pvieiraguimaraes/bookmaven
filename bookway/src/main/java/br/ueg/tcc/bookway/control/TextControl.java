@@ -116,4 +116,14 @@ public class TextControl extends GenericControl<Text> {
 	public List<TypeText> initTypesText() {
 		return EnumUtils.getEnumList(TypeText.class);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Text> searchTextsUser(){
+		Return ret = new Return(true);
+		UserBookway user = (UserBookway) data.get("userLogged");
+		String sql = "FROM Text where userOwning = '" + user.getId() + "'";
+		data.put("sql", sql);
+		ret.concat(searchByHQL());
+		return (List<Text>) ret.getList();
+	}
 }

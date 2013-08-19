@@ -1,5 +1,4 @@
 /*REGISTER PAGE*/
-
 .logoregister {
 	margin-bottom: 30px;
 	margin-top: 30px;
@@ -14,8 +13,7 @@
 }
 
 /*TEMPLATE*/
-
-.z-north, .z-south, .z-west, .z-center, .z-east {
+.z-north,.z-south,.z-west,.z-center,.z-east {
 	border: 1px solid #FFF;
 	position: absolute;
 	overflow: hidden;
@@ -31,6 +29,7 @@
 .z-groupbox-notitle {
 	border: 2.8px solid #78BEF4;
 }
+
 .z-groupbox-cnt {
 	overflow: hidden;
 	padding: 5px;
@@ -69,11 +68,11 @@
 }
 
 /*MAIN MENU*/
-.mainmenu .z-label{
+.mainmenu .z-label {
 	margin-left: 30px;
 }
 
-.mainmenu .z-image{
+.mainmenu .z-image {
 	margin-left: 30px;
 }
 
@@ -143,11 +142,16 @@
 	margin-left: 100px;
 }
 
-.itembook {
-	background-color: rgb(181, 219, 248);
-	padding: 15px;
-}
-
 .resultsearch {
 	margin-top: 20px;
+}
+
+/*ITEM BOOK COMPONENT*/
+.titleitemtext {
+	font-size: x-large;
+	color: rgb(0, 0, 0);
+}
+
+.itemtext {
+	padding: 15px;
 }

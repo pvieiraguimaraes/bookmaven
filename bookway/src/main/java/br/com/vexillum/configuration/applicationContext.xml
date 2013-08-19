@@ -19,6 +19,7 @@
 	<context:component-scan base-package="br.com.vexillum.view" />
 	<context:component-scan base-package="br.ueg.tcc.bookway.control" />
 	<context:component-scan base-package="br.ueg.tcc.bookway.view.composer" />
+	<context:component-scan base-package="br.ueg.tcc.bookway.view.composite" />
 	
 	<jee:jndi-lookup id="dataSource" jndi-name="java:jboss/datasources/BookwayDS" />
 
