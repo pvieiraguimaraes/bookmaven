@@ -1,17 +1,15 @@
 <?page title="Pesquisa de Textos" contentType="text/html;charset=UTF-8"?>
 <?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
-<?component name="itemText" class="br.ueg.tcc.bookway.view.composite.ItemTextViewSearch" ?>
+<?component name="itemtext" macroURI="/template/itemtext.zul" class="br.ueg.tcc.bookway.view.macros.ItemText"?>
 
 <zk>
 	<div self="@{define(content)}">
-		<hbox sclass="searchtexts" id="searchTexts" width="100%" height="100%" pack="center" apply="${textComposer}">
-				<textbox value="@{controller.searchField}"/>
-				<button image="/images/search.png" width="35px"/>
-		</hbox>
-		<hbox sclass="resultsearch" id="resultSearch" width="100%" height="100%" pack="center">
-			<zk forEach="controller.getListTextsUser();">
-				<itemText userOwner="userOwning.name" titleText="title" descriptionText="description"/>			
-			</zk>
+		<hbox sclass="searchtexts" id="searchTexts" width="100%"
+			height="100%" pack="center"
+			apply="br.ueg.tcc.bookway.view.composer.TextComposer">
+			<textbox value="@{controller.entity.title}" />
+			<button image="/images/search.png" width="35px" />
+			<vbox sclass="resultsearch" id="resultSearch" width="100%"></vbox>
 		</hbox>
 	</div>
 </zk>

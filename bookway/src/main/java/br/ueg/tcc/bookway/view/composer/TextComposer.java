@@ -28,15 +28,12 @@ import br.com.vexillum.view.CRUDComposer;
 import br.ueg.tcc.bookway.control.TextControl;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.enums.TypeText;
+import br.ueg.tcc.bookway.view.macros.ItemText;
 
+@SuppressWarnings("serial")
 @org.springframework.stereotype.Component
 @Scope("prototype")
 public class TextComposer extends CRUDComposer<Text, TextControl> {
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
 	@Wire
 	protected Textbox fldLevel;
@@ -81,7 +78,7 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	private List<TypeText> listTypesText;
 	
 	private String type;
-
+	
 	public boolean getSimple() {
 		return simple;
 	}
@@ -150,6 +147,14 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 		setListTypesText(getControl().initTypesText());
 	}
 	
+	@SuppressWarnings("unchecked")
+	private List<Text> getListTextUser(){
+		Return retSeachText = new Return(true);
+		retSeachText.concat(getControl().doAction("searchTextsUser"));
+		List<Text> list = (List<Text>) retSeachText.getList();
+		return list;
+	}
+	
 	public String getType() {
 		return type;
 	}
@@ -162,9 +167,10 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	public void doAfterCompose(Component comp) throws Exception {
 		initListTypeText();
 		super.doAfterCompose(comp);
+		createListTextUser(getListTextUser(), "resultSearch", comp);
 		loadBinder();
 	}
-
+	
 	public void upload(Media media, String type) {
 		if (media != null && media.getFormat().equalsIgnoreCase(type)) {
 			showBusyServer(null, "Lendo o arquivo");
@@ -336,12 +342,22 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 		loadBinder();
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<Text> getListTextsUser(){
-		Return retSeachText = new Return(true);
-		retSeachText.concat(getControl().doAction("searchTextsUser"));
-		if(retSeachText.isValid() && retSeachText.getList() != null)
-			return (List<Text>) retSeachText.getList();
-		return null;
+	public void searchText(){
+		//TODO Buscar o texto de acordo com um parâmetro de busca
 	}
+	
+	private void createListTextUser(List<Text> textsUser, String idParent, Component comp){
+		for (Text text : textsUser) {
+			getComponentById(comp, idParent).appendChild(createItemText(text));
+		}
+	}
+	
+	private ItemText createItemText(Text text){
+		ItemText item = new ItemText();
+		item.setUser(text.getUserOwning().getName());
+		item.setTitle(text.getTitle());
+		item.setDescription(text.getDescription());
+		return item;
+	}
+	
 }
