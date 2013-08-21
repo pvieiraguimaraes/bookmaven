@@ -146,7 +146,7 @@
 	margin-top: 20px;
 }
 
-/*ITEM BOOK COMPONENT*/
+/*ITEM TEXT MACRO COMPONENT*/
 .titleitemtext {
 	font-size: x-large;
 	color: rgb(0, 0, 0);
@@ -154,4 +154,9 @@
 
 .itemtext {
 	padding: 15px;
+}
+
+.descriptionitemtext {
+	width: 250px;
+	text-align: justify;
 }

@@ -55,7 +55,7 @@ public class TextValidator extends Validator {
 		if (arrayList != null && countLevels != null) {
 			retAvancedData.concat(validatePrivateLevels(arrayList));
 		}
-		if (arrayList == null) {
+		if (arrayList == null && countLevels == null) {
 			retAvancedData.setValid(false);
 			retAvancedData.concat(creatReturn("level",
 					getValidationMessage("level", "save", false)));

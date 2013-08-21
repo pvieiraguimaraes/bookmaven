@@ -165,7 +165,8 @@ public class TextReader extends TextBookwayIO {
 				page = mapPages.get(key);
 				countPages = 2;
 			}
-			chapter.addContent(page);
+			if(page != null)
+				chapter.addContent(page);
 			key = "page" + i++;
 			page = mapPages.get(key);
 			if (page == null)
