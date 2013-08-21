@@ -21,11 +21,11 @@ import br.ueg.tcc.bookway.model.enums.TypeText;
 @Service
 @Scope("prototype")
 public class TextControl extends GenericControl<Text> {
-	
+
 	private TextWriter txtWriter;
 	private TextReader txtReader;
 	HashMap<String, Object> map;
-	
+
 	public TextControl() {
 		super(Text.class);
 		map = new HashMap<>();
@@ -38,7 +38,7 @@ public class TextControl extends GenericControl<Text> {
 		UserBookway user = ((UserBookway) data.get("userLogged"));
 		map.put("user", user);
 		retRepository.concat(txtWriter.insertTextIntoRepository());
-		if(!retRepository.isValid())
+		if (!retRepository.isValid())
 			retRepository.addMessage(new Message(null, "Erro no repositório!"));
 		return retRepository;
 	}
@@ -46,11 +46,12 @@ public class TextControl extends GenericControl<Text> {
 	public Return mapedTextForDataBase() {
 		Return retMaping = new Return(true);
 		retMaping.concat(txtReader.mappingText());
-		if(!retMaping.isValid())
-			retMaping.addMessage(new Message(null, "Erro no mapeamento do texto!"));
+		if (!retMaping.isValid())
+			retMaping.addMessage(new Message(null,
+					"Erro no mapeamento do texto!"));
 		return retMaping;
 	}
-	
+
 	public Return createText() {
 		String stream = (String) data.get("stream");
 		String type = (String) data.get("type");
@@ -58,42 +59,47 @@ public class TextControl extends GenericControl<Text> {
 		Integer pagesForChapter = (Integer) data.get("pagesForChapter");
 		Return retUpload = new Return(true);
 		map.put("text", createObjectText());
-		retUpload.concat(txtReader.createText(createDTDValidator(), stream, type, linesForPage, pagesForChapter));		
+		retUpload.concat(txtReader.createText(createDTDValidator(), stream,
+				type, linesForPage, pagesForChapter));
 		if (retUpload.isValid())
 			retUpload.concat(afterCreateText());
 		return retUpload;
 	}
-	
-	private Text createObjectText(){
+
+	private Text createObjectText() {
 		Text text = (Text) data.get("entity");
 		UserBookway user = (UserBookway) data.get("userLogged");
 		text.setInsertDate(new Date());
 		text.setUserOwning(user);
 		return text;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	private String createDTDValidator(){
+	private String createDTDValidator() {
 		ArrayList<String> levels = (ArrayList<String>) data.get("levels");
 		Integer countLevels = (Integer) data.get("countLevels");
 		if (levels != null && levels.isEmpty())
 			return txtReader.createDTDValidator(levels);
 		if (countLevels != null)
-			return txtReader.createDTDValidator(txtReader.getDefaultLevels(countLevels));
+			return txtReader.createDTDValidator(txtReader
+					.getDefaultLevels(countLevels));
 		return null;
 	}
 
-	/**Este método armazenará o arquivo no repositório e também mapeará no banco de dados.
+	/**
+	 * Este método armazenará o arquivo no repositório e também mapeará no banco
+	 * de dados.
+	 * 
 	 * @param list
 	 * @return Return
 	 */
 	private Return afterCreateText() {
 		Return retAfterUpload = new Return(true);
 		retAfterUpload.concat(insertTextIntoRepository());
-		if(retAfterUpload.isValid())
+		if (retAfterUpload.isValid())
 			entity.setFilePath((String) retAfterUpload.getList().get(0));
-			retAfterUpload.concat(mapedTextForDataBase());
-		if(retAfterUpload.isValid())
+		retAfterUpload.concat(mapedTextForDataBase());
+		if (retAfterUpload.isValid())
 			retAfterUpload.concat(insertTextIntoDataBase());
 		return retAfterUpload;
 	}
@@ -103,21 +109,27 @@ public class TextControl extends GenericControl<Text> {
 		retInsert.concat(doAction("save"));
 		return retInsert;
 	}
-	
-	public Return deleteText(){
+
+	public Return deleteText() {
 		Return retDelete = new Return(true);
 		retDelete.concat(doAction("delete"));
-		if(!retDelete.isValid())
-			retDelete.addMessage(new Message(null, "Erro ao deletar o arquivo!"));
-		else retDelete.addMessage(new Message(null, "Texto excluído com sucesso!"));
+		if (!retDelete.isValid())
+			retDelete
+					.addMessage(new Message(null, "Erro ao deletar o arquivo!"));
+		else
+			retDelete.addMessage(new Message(null,
+					"Texto excluído com sucesso!"));
 		return retDelete;
-	}//TODO Colocar pra chamar a msg do properties
+	}// TODO Colocar pra chamar a msg do properties
 
 	public List<TypeText> initTypesText() {
 		return EnumUtils.getEnumList(TypeText.class);
 	}
-	
-	public Return searchTextsUser(){
+
+	/**Método retorna todos os textos criados pelo usuário logado
+	 * @return lista com todos os textos do usuário logado
+	 */
+	public Return listTextsUser() {
 		Return ret = new Return(true);
 		UserBookway user = (UserBookway) data.get("userLogged");
 		String sql = "FROM Text where userOwning = '" + user.getId() + "'";
@@ -125,4 +137,50 @@ public class TextControl extends GenericControl<Text> {
 		ret.concat(searchByHQL());
 		return ret;
 	}
+	
+	/**Método servirá para buscar os textos que o usuário tem adicionado em sua lista
+	 * @return lista de textos adicionados do usuário
+	 */
+	public Return listTextsAddedByUser() {
+		return new Return(true);
+	}
+
+	/**Método retorna lista de acordo com titulo dado para todos os textos que não são do usuário 
+	 * @return lista com textos que não são do usuário
+	 */
+	public Return searchTexts() {
+		Return ret = new Return(true);
+		Text text = (Text) data.get("entity");
+		UserBookway user = (UserBookway) data.get("userLogged");
+		String title = text.getTitle() == null ? "" : text.getTitle();
+		String sql = "FROM Text where userOwning != '" + user.getId()
+				+ "' and title like '%" + title	+ "%' and typeText = '" + text.getTypeText() + "' and community = '" + text.isCommunity() + "'";
+		data.put("sql", sql);
+
+		ret.concat(searchByHQL());
+		return ret;
+	}
+	
+	public Return searchFriendTexts(){
+		//TODO Servirá para buscar todos os textos do amigos.
+		return new Return(true);
+	}
+	
+	/** Metodo que subtrai listA da listB
+	 * @param listA
+	 * @param listB
+	 * @return lista resultante da subtração
+	 */
+	public List<Text> substractListText(List<Text> listA, List<Text> listB){
+		List<Text> list = new ArrayList<Text>();
+		List<Text> listAux = new ArrayList<Text>();
+		for (Text text : listA) {
+			if(listB.contains(text))
+				listAux.add(text);
+		}
+		list.addAll(listB);
+		list.addAll(listAux);
+		return list;
+	}
+
 }

@@ -30,6 +30,10 @@ import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.enums.TypeText;
 import br.ueg.tcc.bookway.view.macros.ItemText;
 
+/**
+ * @author Pedro
+ * 
+ */
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
 @Scope("prototype")
@@ -65,6 +69,9 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	@Wire
 	protected Groupbox avancedImport;
 
+	@Wire
+	protected Checkbox myTexts;
+
 	private boolean avanced;
 
 	private Integer linesForPage;
@@ -76,9 +83,11 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	private ArrayList<String> levels;
 
 	private List<TypeText> listTypesText;
-	
+
+	private List<Text> allMyTexts;
+
 	private String type;
-	
+
 	public boolean getSimple() {
 		return simple;
 	}
@@ -146,15 +155,15 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	public void initListTypeText() {
 		setListTypesText(getControl().initTypesText());
 	}
-	
-	@SuppressWarnings("unchecked")
-	private List<Text> getListTextUser(){
-		Return retSeachText = new Return(true);
-		retSeachText.concat(getControl().doAction("searchTextsUser"));
-		List<Text> list = (List<Text>) retSeachText.getList();
-		return list;
+
+	public List<Text> getAllMyTexts() {
+		return allMyTexts;
 	}
-	
+
+	public void setAllMyTexts(List<Text> allMyTexts) {
+		this.allMyTexts = allMyTexts;
+	}
+
 	public String getType() {
 		return type;
 	}
@@ -167,10 +176,22 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	public void doAfterCompose(Component comp) throws Exception {
 		initListTypeText();
 		super.doAfterCompose(comp);
-		createListTextUser(getListTextUser(), "resultSearch", comp);
+		createListTextUser();
+		// setUpListTextInComponent(getListTextUser(), "resultSearch",
+		// component);
 		loadBinder();
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	private void createListTextUser() {
+		Return retListText = new Return(true);
+		retListText.concat(getControl().doAction("listTextsUser"));
+		if (retListText.isValid())
+			retListText.concat(getControl().doAction("listTextsAddedByUser"));
+		if (retListText.isValid())
+			setAllMyTexts((List<Text>) retListText.getList());
+	}
+
 	public void upload(Media media, String type) {
 		if (media != null && media.getFormat().equalsIgnoreCase(type)) {
 			showBusyServer(null, "Lendo o arquivo");
@@ -341,23 +362,34 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 			resetFormAvancedImport();
 		loadBinder();
 	}
-	
-	public void searchText(){
-		//TODO Buscar o texto de acordo com um parâmetro de busca
+
+	@SuppressWarnings("unchecked")
+	public void searchText() {
+		if (myTexts.isChecked()) {
+			setUpListTextInComponent(getAllMyTexts(), "resultSearch", component);
+		} else {
+			Return ret = new Return(true);
+			entity.setCommunity(false);
+			entity.setTypeText(TypeText.PUBLICO);
+			ret.concat(getControl().doAction("searchTexts"));
+			List<Text> list = getControl().substractListText(getAllMyTexts(), (List<Text>) ret.getList());
+			setUpListTextInComponent(list, "resultSearch", component);
+		}
 	}
-	
-	private void createListTextUser(List<Text> textsUser, String idParent, Component comp){
+
+	private void setUpListTextInComponent(List<Text> textsUser,
+			String idParent, Component comp) {
 		for (Text text : textsUser) {
 			getComponentById(comp, idParent).appendChild(createItemText(text));
 		}
 	}
-	
-	private ItemText createItemText(Text text){
+
+	private ItemText createItemText(Text text) {
 		ItemText item = new ItemText();
 		item.setUser(text.getUserOwning().getName());
 		item.setTitle(text.getTitle());
 		item.setDescription(text.getDescription());
 		return item;
 	}
-	
+
 }

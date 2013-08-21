@@ -11,7 +11,7 @@
 			</hlayout>
 			<hlayout spacing="45px">
 				<label value="Descrição"/>
-				<textbox value="@{controller.entity.description}" multiline="true" rows="4" width="250px"/>
+				<textbox value="@{controller.entity.description}" multiline="true" rows="4" width="250px" maxlength="255"/>
 			</hlayout>
 			<hlayout spacing="75px">
 				<label sclass="typetext" value="Tipo"/>
