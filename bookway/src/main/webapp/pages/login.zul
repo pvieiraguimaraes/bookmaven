@@ -13,7 +13,10 @@
 						<textbox id="j_password" type="password" name="j_password" />
 					</row>
 					<row spans="2" if="${not empty param.error}">
-						<hbox style="color: red;">Dados inválidos ou conta inativa, acesse seu e-mail para ativá-la!</hbox>
+						<hbox style="color: red;">Dados inválidos!</hbox>
+					</row>
+					<row spans="2" if="${not empty param.account}">
+						<hbox style="color: red;">Conta inativa, acesse seu e-mail para ativá-la!</hbox>
 					</row>
 					<row spans="2">
 						<hbox>
