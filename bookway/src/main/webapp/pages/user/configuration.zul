@@ -2,16 +2,16 @@
 <?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
 <zk>
 	<div id="frmUser" self="@{define(content)}"
-		apply="${configurationComposer}"
+		apply="br.ueg.tcc.bookway.view.composer.ConfigurationComposer"
 		style="margin-left: auto;margin-right: auto;" width="400px">
 		<groupbox>
 			<caption label="Configurações de Conta"/>
 			<div align="left">
-				<button label="Alterar Dados" onClick="controller.redirectPerfil()"/>
-				<button label="Excluir Conta" onClick="controller.deleteAccount()"/>
+				<button label="Alterar Dados" onClick="controller.editDataUser()"/>
+				<button label="Excluir Conta" />
 			</div>
 		</groupbox>
-		<groupbox>
+		<groupbox visible="false">
 			<caption label="Configurações de Estilo"/>
 			<include src="~./pages/configuration/configuration.zul"/>
 		</groupbox>

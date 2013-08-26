@@ -7,6 +7,7 @@ import java.util.Random;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
+import org.zkoss.zk.ui.Executions;
 
 import br.com.vexillum.control.UserBasicControl;
 import br.com.vexillum.control.manager.EmailManager;
@@ -23,7 +24,7 @@ import br.ueg.tcc.bookway.model.enums.State;
 public class UserBookwayControl extends UserBasicControl<UserBookway> {
 
 	public UserBookwayControl() {
-		super();
+		super(UserBookway.class);
 	}
 	
 	public UserBookway getUserByCode(String code){
@@ -92,6 +93,8 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 	public Return updateAccount() {
 		Return retUpdate = new Return(true);
 		retUpdate.concat(doAction("update"));
+		if(retUpdate.isValid())
+			Executions.sendRedirect("/paginas/user/index.zul");
 		return retUpdate;
 	}
 

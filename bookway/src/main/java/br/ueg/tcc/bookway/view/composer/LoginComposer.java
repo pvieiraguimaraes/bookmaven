@@ -2,7 +2,9 @@ package br.ueg.tcc.bookway.view.composer;
 
 import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Desktop;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.impl.PageImpl;
 
 import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
@@ -29,17 +31,18 @@ public class LoginComposer extends CRUDComposer<UserBookway, UserBookwayControl>
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		code = Executions.getCurrent().getParameter("code");
+		String page = Executions.getCurrent().getDesktop().getRequestPath();
 		super.doAfterCompose(comp);
 		if(code != null)
 			validateAccount();
+		if(page.equalsIgnoreCase("/pages/validate.zul"))
+			Executions.sendRedirect("/pages/login.zul");
 		loadBinder();
 	}	
 	
 	private void validateAccount() {
-		if(getControl().doAction("validateAccountUser").isValid()){
-			Executions.sendRedirect("/pages/login.zul");
+		if(getControl().doAction("validateAccountUser").isValid())
 			showNotification("Conta validada com sucesso", "info");
-		}		
 	}
 
 	@Override

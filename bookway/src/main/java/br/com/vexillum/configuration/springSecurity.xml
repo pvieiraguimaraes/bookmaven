@@ -17,7 +17,7 @@
 		<security:intercept-url pattern="/pages/**"
 			access="ROLE_ANONYMOUS" />
 		<security:form-login login-page="/pages/login.zul"
-			default-target-url="/pages/user/perfil.zul"
+			default-target-url="/pages/user/index.zul"
 			authentication-failure-url="/pages/login.zul?error=true" />
 	</security:http>
 
