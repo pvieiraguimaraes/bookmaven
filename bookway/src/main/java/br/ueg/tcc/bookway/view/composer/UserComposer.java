@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Component;
 
+import br.com.vexillum.util.EncryptUtils;
 import br.com.vexillum.util.ReflectionUtils;
+import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.com.vexillum.view.CRUDComposer;
 import br.ueg.tcc.bookway.control.UserBookwayControl;
@@ -21,6 +23,34 @@ public class UserComposer extends CRUDComposer<UserBookway, UserBookwayControl> 
 	private List<AreaOfInterest> listAreaOfInterest;
 	private List<State> listState;
 	
+	private String actualPassword;
+	private String newPassword;
+	private String confirmNewPassword;
+	
+	public String getActualPassword() {
+		return actualPassword;
+	}
+
+	public void setActualPassword(String actualPassword) {
+		this.actualPassword = EncryptUtils.encryptOnSHA512(actualPassword);
+	}
+
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = EncryptUtils.encryptOnSHA512(newPassword);
+	}
+
+	public String getConfirmNewPassword() {
+		return confirmNewPassword;
+	}
+
+	public void setConfirmNewPassword(String confirmNewPassword) {
+		this.confirmNewPassword = EncryptUtils.encryptOnSHA512(confirmNewPassword);
+	}
+
 	public List<AreaOfInterest> getListAreaOfInterest() {
 		return listAreaOfInterest;
 	}
@@ -75,5 +105,12 @@ public class UserComposer extends CRUDComposer<UserBookway, UserBookwayControl> 
 	public UserBookwayControl getControl() {
 		return SpringFactory.getController("userBookwayControl", UserBookwayControl.class, ReflectionUtils.prepareDataForPersistence(this));
 	}
-
+	
+	public void changePasswordUser(){
+		Return ret = new Return(true);
+		ret.concat(getControl().doAction("changePasswordUser"));
+		if(ret.isValid())
+			getComponentById(component, "frmChangePassword").detach();
+		treatReturn(ret);
+	}
 }

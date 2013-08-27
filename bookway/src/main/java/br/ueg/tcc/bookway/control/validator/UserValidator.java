@@ -14,11 +14,11 @@ public class UserValidator extends Validator {
 	public UserValidator(Map<String, Object> mapData) {
 		super(mapData);
 	}
-	
-	public Return validateRegisterUser(){
+
+	public Return validateRegisterUser() {
 		Return retCheck = new Return(true);
 		retCheck.concat(existsEmail());
-		if(retCheck.isValid())
+		if (retCheck.isValid())
 			retCheck.concat(equalsSenha());
 		return retCheck;
 	}
@@ -30,8 +30,8 @@ public class UserValidator extends Validator {
 		data.put("sql", "FROM UserBookway u WHERE u.email = '"
 				+ ((UserBookway) entity).getEmail() + "'");
 
-		UserBookwayControl controller = SpringFactory.getController("userBookwayControl",
-				UserBookwayControl.class, data);
+		UserBookwayControl controller = SpringFactory.getController(
+				"userBookwayControl", UserBookwayControl.class, data);
 		if (!controller.searchByHQL().getList().isEmpty()) {
 			ret.concat(creatReturn("email",
 					getValidationMessage("email", "exists", true)));
@@ -43,9 +43,37 @@ public class UserValidator extends Validator {
 		Return ret = new Return(true);
 		String password = ((UserBookway) entity).getPassword();
 		String confirmPassword = ((UserBookway) entity).getConfirmPassword();
-		if (!equalsFields(password, confirmPassword).isValid()){
+		if (!equalsFields(password, confirmPassword).isValid()) {
 			ret.concat(creatReturn("confirmPassword",
 					getValidationMessage("password", "equals", false)));
+		}
+		return ret;
+	}
+
+	public Return validateChangePasswordUser() {
+		Return ret = new Return(true);
+		String password = ((UserBookway) entity).getPassword();
+		String actualPassword = (String) mapData.get("actualPassword");
+		String newPassword = (String) mapData.get("newPassword");
+		String confirmNewPassword = (String) mapData.get("confirmNewPassword");
+		if (actualPassword.equalsIgnoreCase(""))
+			ret.concat(creatReturn("actualPassword",
+					getValidationMessage("", "notnull", false)));
+		else if (newPassword.equalsIgnoreCase(""))
+			ret.concat(creatReturn("newPassword",
+					getValidationMessage("", "notnull", false)));
+		else if (confirmNewPassword.equalsIgnoreCase(""))
+			ret.concat(creatReturn("confirmNewPassword",
+					getValidationMessage("", "notnull", false)));
+		else {
+			if (!equalsFields(password, actualPassword).isValid()) {
+				ret.concat(creatReturn("actualPassword",
+						getValidationMessage("actualPassword", "equals", false)));
+			}
+			if (!equalsFields(newPassword, confirmNewPassword).isValid()) {
+				ret.concat(creatReturn("confirmNewPassword",
+						getValidationMessage("password", "equals", false)));
+			}
 		}
 		return ret;
 	}

@@ -2,9 +2,7 @@ package br.ueg.tcc.bookway.view.composer;
 
 import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Desktop;
 import org.zkoss.zk.ui.Executions;
-import org.zkoss.zk.ui.impl.PageImpl;
 
 import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
