@@ -21,8 +21,11 @@ public class FolderUtils {
 		}
 	}
 
-	public static void deleteFolder(String directoryName) {
-		if (new File(directoryName).exists())
+	public static boolean deleteFileFolder(String directoryName) {
+		if (new File(directoryName).exists()){
 			(new File(directoryName)).delete();
+			return true;
+		}
+		return false;
 	}
 }

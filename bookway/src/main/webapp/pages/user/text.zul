@@ -45,7 +45,7 @@
 						upLabelTxt.setValue(media.getName());
 						controller.upload(media, "txt");
 					} else {
-						Messagebox.show("Não é um arquivo válido: " + media, "Error",
+						Messagebox.show("Não é um arquivo válido: " + media.getName(), "Erro no upload",
 								Messagebox.OK, Messagebox.ERROR);
 						break;
 					}
@@ -68,7 +68,7 @@
 							upLabelXml.setValue(media.getName());
 							controller.upload(media, "xml");
 						} else {
-							Messagebox.show("Não é um arquivo válido: " + media, "Error",
+							Messagebox.show("Não é um arquivo válido: " + media.getName(), "Erro no upload",
 									Messagebox.OK, Messagebox.ERROR);
 							break;
 						}

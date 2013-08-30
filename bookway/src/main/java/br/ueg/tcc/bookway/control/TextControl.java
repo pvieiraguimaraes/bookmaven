@@ -112,21 +112,20 @@ public class TextControl extends GenericControl<Text> {
 
 	public Return deleteText() {
 		Return retDelete = new Return(true);
+		String filePath = entity.getFilePath();
 		retDelete.concat(doAction("delete"));
-		if (!retDelete.isValid())
-			retDelete
-					.addMessage(new Message(null, "Erro ao deletar o arquivo!"));
-		else
-			retDelete.addMessage(new Message(null,
-					"Texto excluído com sucesso!"));
+		if (retDelete.isValid())
+			retDelete.concat(removeTextFromRepository(filePath));
 		return retDelete;
-	}// TODO Colocar pra chamar a msg do properties
+	}
 
 	public List<TypeText> initTypesText() {
 		return EnumUtils.getEnumList(TypeText.class);
 	}
 
-	/**Método retorna todos os textos criados pelo usuário logado
+	/**
+	 * Método retorna todos os textos criados pelo usuário logado
+	 * 
 	 * @return lista com todos os textos do usuário logado
 	 */
 	public Return listTextsUser() {
@@ -137,15 +136,21 @@ public class TextControl extends GenericControl<Text> {
 		ret.concat(searchByHQL());
 		return ret;
 	}
-	
-	/**Método servirá para buscar os textos que o usuário tem adicionado em sua lista
+
+	/**
+	 * Método servirá para buscar os textos que o usuário tem adicionado em sua
+	 * lista
+	 * 
 	 * @return lista de textos adicionados do usuário
 	 */
 	public Return listTextsAddedByUser() {
 		return new Return(true);
 	}
 
-	/**Método retorna lista de acordo com titulo dado para todos os textos que não são do usuário 
+	/**
+	 * Método retorna lista de acordo com titulo dado para todos os textos que
+	 * não são do usuário
+	 * 
 	 * @return lista com textos que não são do usuário
 	 */
 	public Return searchTexts() {
@@ -154,32 +159,70 @@ public class TextControl extends GenericControl<Text> {
 		UserBookway user = (UserBookway) data.get("userLogged");
 		String title = text.getTitle() == null ? "" : text.getTitle();
 		String sql = "FROM Text where userOwning != '" + user.getId()
-				+ "' and title like '%" + title	+ "%' and typeText = '" + text.getTypeText() + "' and community = '" + text.isCommunity() + "'";
+				+ "' and title like '%" + title + "%' and typeText = '"
+				+ text.getTypeText() + "' and community = '"
+				+ text.isCommunity() + "'";
 		data.put("sql", sql);
 
 		ret.concat(searchByHQL());
 		return ret;
 	}
-	
-	public Return searchFriendTexts(){
-		//TODO Servirá para buscar todos os textos do amigos.
+
+	public Return deleteElementsTextsOfUser() {
+		Return ret = new Return(true);
+		ret.concat(removePermitedTexts());
+		return ret;
+	}
+
+	@SuppressWarnings("unchecked")
+	private Return removePermitedTexts() {
+		Return ret = new Return(true);
+		List<Text> listText = (List<Text>) listTextsUser().getList();
+		if (listText != null) {
+			for (Text text : listText) {
+				entity = text;
+				ret.concat(deleteText());
+				ret.setMessages(null);
+			}
+		}
+		return ret;
+	}
+
+	private Return removeTextFromRepository(String filePath) {
+		Return ret = new Return(true);
+		ret.concat(txtWriter.removeTextFromRepository(filePath));
+		return ret;
+	}
+
+	private Return relocaleTextsRepository() {
+		Return ret = new Return(true);
+		// TODO Metodo que servira para relocar um texto quando ele for adotado.
+		return ret;
+	}
+
+	public Return searchFriendTexts() {
+		// TODO Servirá para buscar todos os textos do amigos.
 		return new Return(true);
 	}
-	
-	/** Metodo que subtrai listA da listB
+
+	/**
+	 * Metodo que subtrai listA da listB
+	 * 
 	 * @param listA
 	 * @param listB
 	 * @return lista resultante da subtração
 	 */
-	public List<Text> substractListText(List<Text> listA, List<Text> listB){
+	public List<Text> substractListText(List<Text> listA, List<Text> listB) {
 		List<Text> list = new ArrayList<Text>();
-		List<Text> listAux = new ArrayList<Text>();
-		for (Text text : listA) {
-			if(listB.contains(text))
-				listAux.add(text);
+		if (listA != null) {
+			List<Text> listAux = new ArrayList<Text>();
+			for (Text text : listA) {
+				if (listB.contains(text))
+					listAux.add(text);
+			}
+			list.addAll(listB);
+			list.addAll(listAux);
 		}
-		list.addAll(listB);
-		list.addAll(listAux);
 		return list;
 	}
 

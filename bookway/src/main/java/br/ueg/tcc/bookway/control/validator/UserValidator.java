@@ -17,9 +17,12 @@ public class UserValidator extends Validator {
 
 	public Return validateRegisterUser() {
 		Return retCheck = new Return(true);
-		retCheck.concat(existsEmail());
-		if (retCheck.isValid())
-			retCheck.concat(equalsSenha());
+		retCheck.concat(validateModel());
+		if (retCheck.isValid()) {
+			retCheck.concat(existsEmail());
+			if (retCheck.isValid())
+				retCheck.concat(equalsSenha());
+		}
 		return retCheck;
 	}
 
@@ -77,5 +80,4 @@ public class UserValidator extends Validator {
 		}
 		return ret;
 	}
-
 }

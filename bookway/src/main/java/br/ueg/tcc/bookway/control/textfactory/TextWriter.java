@@ -50,4 +50,10 @@ public class TextWriter extends TextBookwayIO {
 		return retTxtInsert;
 	}
 
+	public Return removeTextFromRepository(String directoryName) {
+		Return ret = new Return(true);
+		ret.setValid(FolderUtils.deleteFileFolder(directoryName));
+		return ret;
+	}
+
 }

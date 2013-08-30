@@ -1,6 +1,7 @@
 package br.ueg.tcc.bookway.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import br.com.vexillum.model.CommonEntity;
 import br.com.vexillum.model.annotations.SearchField;
@@ -25,7 +27,7 @@ public class Text extends CommonEntity {
 	 */
 	private static final long serialVersionUID = 1L;
 	@SearchField
-	@Validate(notNull = true, min = 5, max=500)
+	@Validate(notNull = true, min = 5, max = 500)
 	private String title;
 	private String description;
 	private Date insertDate;
@@ -36,14 +38,25 @@ public class Text extends CommonEntity {
 	private boolean community;
 	private String filePath;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "elementRoot_id")
 	private LevelText levelsText;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_userOwning", insertable = true, updatable = true)
 	private UserBookway userOwning;
-	
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "text", cascade = CascadeType.ALL)
+	private List<RelationshipTextUser> textUser;
+
+	public List<RelationshipTextUser> getTextUser() {
+		return textUser;
+	}
+
+	public void setTextUser(List<RelationshipTextUser> textUser) {
+		this.textUser = textUser;
+	}
+
 	public String getTitle() {
 		return title;
 	}

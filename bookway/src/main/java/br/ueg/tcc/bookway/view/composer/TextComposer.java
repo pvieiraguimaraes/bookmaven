@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.context.annotation.Scope;
 import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -177,8 +178,6 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 		initListTypeText();
 		super.doAfterCompose(comp);
 		createListTextUser();
-		// setUpListTextInComponent(getListTextUser(), "resultSearch",
-		// component);
 		loadBinder();
 	}
 
@@ -365,30 +364,44 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 
 	@SuppressWarnings("unchecked")
 	public void searchText() {
+		resetResultListText();
 		if (myTexts.isChecked()) {
-			setUpListTextInComponent(getAllMyTexts(), "resultSearch", component);
+			setUpListTextInComponent(getAllMyTexts(), "resultSearch",
+					component, "searchTexts", 0);
 		} else {
 			Return ret = new Return(true);
 			entity.setCommunity(false);
 			entity.setTypeText(TypeText.PUBLICO);
 			ret.concat(getControl().doAction("searchTexts"));
-			List<Text> list = getControl().substractListText(getAllMyTexts(), (List<Text>) ret.getList());
-			setUpListTextInComponent(list, "resultSearch", component);
+			List<Text> list = getControl().substractListText(getAllMyTexts(),
+					(List<Text>) ret.getList());
+			setUpListTextInComponent(list, "resultSearch", component,
+					"searchTexts", 0);
 		}
+	}
+
+	private void resetResultListText() {
+		Component resultSearch = getComponentById(component, "resultSearch");
+		Components.removeAllChildren(resultSearch);
 	}
 
 	private void setUpListTextInComponent(List<Text> textsUser,
-			String idParent, Component comp) {
-		for (Text text : textsUser) {
-			getComponentById(comp, idParent).appendChild(createItemText(text));
+			String idParent, Component comp, String prefixId, Integer count) {
+		if (textsUser != null) {
+			for (Text text : textsUser) {
+				String id = prefixId + String.valueOf(count++);
+				getComponentById(comp, idParent).appendChild(
+						createItemText(text, id));
+			}
 		}
 	}
 
-	private ItemText createItemText(Text text) {
+	private ItemText createItemText(Text text, String id) {
 		ItemText item = new ItemText();
 		item.setUser(text.getUserOwning().getName());
 		item.setTitle(text.getTitle());
 		item.setDescription(text.getDescription());
+		item.setId(id);
 		return item;
 	}
 
