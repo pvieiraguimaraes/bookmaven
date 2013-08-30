@@ -5,15 +5,13 @@
 		apply="br.ueg.tcc.bookway.view.composer.ConfigurationComposer"
 		style="margin-left: auto;margin-right: auto;" width="400px">
 		<groupbox>
-			<caption label="Configurações de Conta"/>
-			<div align="left">
-				<button label="Alterar Dados" onClick="controller.editDataUser()"/>
-				<button label="Excluir Conta" />
-			</div>
-		</groupbox>
-		<groupbox visible="false">
-			<caption label="Configurações de Estilo"/>
-			<include src="~./pages/configuration/configuration.zul"/>
+			<caption label="Configurações de Conta" />
+			<hbox>
+				<button label="Alterar Dados"
+					onClick="controller.editDataUser()" />
+				<button label="Excluir Conta"
+					onClick="controller.deleteAccount()" />
+			</hbox>
 		</groupbox>
 	</div>
 </zk>

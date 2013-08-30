@@ -93,9 +93,17 @@ public class UserComposer extends CRUDComposer<UserBookway, UserBookwayControl> 
 	}
 
 	public void deleteAccount() {
-		treatReturn(getControl().deleteAccount());
-	}//TODO talvez será deslocado para o ConfigurationComposer
+		Return ret = new Return(true);
+		ret = getControl().doAction("deleteAccount");
+		if(ret.isValid())
+			removeUserOfSession();			
+		treatReturn(ret);
+	}
 	
+	private void removeUserOfSession() {
+		// TODO Auto-generated method stub
+	}
+
 	@Override
 	public UserBookway getEntityObject() {
 		return new UserBookway();

@@ -11,7 +11,11 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import br.com.vexillum.model.UserBasic;
+import br.com.vexillum.model.annotations.Validate;
 import br.com.vexillum.model.annotations.ValidatorClass;
 import br.ueg.tcc.bookway.model.enums.AreaOfInterest;
 import br.ueg.tcc.bookway.model.enums.State;
@@ -21,7 +25,7 @@ import br.ueg.tcc.bookway.model.enums.State;
 @DiscriminatorValue("1")
 @Entity
 public class UserBookway extends UserBasic {
-	
+
 	public UserBookway() {
 		setActive(false);
 	}
@@ -39,11 +43,24 @@ public class UserBookway extends UserBasic {
 
 	private Date solicitationExclusion;
 
+	@Validate(notNull = true, min = 6)
 	@Transient
 	private String confirmPassword;
 
 	@OneToMany(mappedBy = "userOwning", fetch = FetchType.LAZY)
 	private List<Text> texts;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "userBookway")
+	@Cascade(CascadeType.ALL)
+	private List<RelationshipTextUser> textUser;
+
+	public List<RelationshipTextUser> getTextUser() {
+		return textUser;
+	}
+
+	public void setTextUser(List<RelationshipTextUser> textUser) {
+		this.textUser = textUser;
+	}
 
 	public String getCity() {
 		return city;

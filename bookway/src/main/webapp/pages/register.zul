@@ -22,9 +22,9 @@
 						<vlayout spacing="30px">
 							<textbox id="fldName" value="@{controller.entity.name}" placeholder="Ex: João da Silva" />
 							<textbox id="fldEmail" value="@{controller.entity.email}" placeholder="Ex: seuemail@email.com"/>
-							<textbox id="fldSPassword" type="password" value="@{controller.entity.password}" placeholder="Mínimo 6 dígitos"/>
+							<textbox id="fldPassword" type="password" value="@{controller.entity.password}" placeholder="Mínimo 6 dígitos"/>
 							<textbox id="fldConfirmPassword" type="password" value="@{controller.entity.confirmPassword}" placeholder="Mínimo 6 dígitos" />
-							<datebox width="220px" id="fldbirthDate" value="@{controller.entity.birthDate}" format="dd/MM/yyyy" locale="pt_BR" placeholder="dd/mm/yyyy"/>
+							<datebox width="220px" id="fldBirthDate" value="@{controller.entity.birthDate}" format="dd/MM/yyyy" locale="pt_BR" placeholder="dd/mm/yyyy"/>
 							<radiogroup id="fldSex" selectedItem="@{controller.entity.sex, converter='br.ueg.tcc.bookway.view.util.SexoEnumRadiogroupConverter'}" >
 										<radio label="Masculino" value="Masculino"/>
 										<radio label="Feminino" value="Feminino" />
