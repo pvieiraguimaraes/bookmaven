@@ -1,0 +1,29 @@
+<zk>
+	<style src="/css/bookway.css" />
+	<style src="/css/cerulean.css" />
+	<vlayout sclass="mainmenu">
+		<panel width="100%" border="none">
+			<panelchildren style="padding:5px;">
+				<div align="center">
+					<vbox pack="end" align="start">
+						<toolbarbutton image="/images/edit-user.png"
+							label="Meu Perfil"
+							onClick='Executions.sendRedirect("/pages/user/perfil.zul")' />
+						<toolbarbutton image="/images/note.png"
+							label="Minhas Anotações" />
+						<toolbarbutton image="/images/book.png"
+							label="Meus Estudos"
+							onClick='Executions.sendRedirect("/pages/user/text.zul")' />
+						<toolbarbutton image="/images/tag-white.png"
+							label="Marcações e Tags" />
+						<toolbarbutton image="/images/user-group.png"
+							label="Meus Amigos" />
+						<toolbarbutton image="/images/configuration.png"
+							label="Configurações"
+							onClick='Executions.sendRedirect("/pages/user/configuration.zul")' />
+					</vbox>
+				</div>
+			</panelchildren>
+		</panel>
+	</vlayout>
+</zk>

@@ -1,0 +1,30 @@
+<?component name="mytext" macroURI="/template/component/mytext.zul" class="br.ueg.tcc.bookway.view.macros.MyText"?>
+
+<zk>
+	<panel>
+		<caption label="Meus Amigos"></caption>
+		<panelchildren>
+			<vbox id="myFriends" height="100px"></vbox>
+		</panelchildren>
+	</panel>
+	<panel apply="br.ueg.tcc.bookway.view.composer.InitComposer">
+		<caption label="Meus Textos"></caption>
+		<panelchildren>
+			<vbox id="panelMyTexts" height="300px"></vbox>
+			<hbox>
+				<toolbarbutton image="/images/book-search-icon.png"
+					label="Procurar Textos"
+					onClick='Executions.sendRedirect("/pages/user/alltexts.zul")' />
+				<toolbarbutton image="/images/book-add-icon.png"
+					label="Inserir Texto"
+					onClick='Executions.sendRedirect("/pages/user/text.zul")' />
+			</hbox>
+		</panelchildren>
+	</panel>
+	<panel>
+		<caption label="Anotações"></caption>
+		<panelchildren>
+			<vbox id="Anotations"></vbox>
+		</panelchildren>
+	</panel>
+</zk>

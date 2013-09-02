@@ -25,11 +25,9 @@ import org.zkoss.zul.Textbox;
 import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
-import br.com.vexillum.view.CRUDComposer;
 import br.ueg.tcc.bookway.control.TextControl;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.enums.TypeText;
-import br.ueg.tcc.bookway.view.macros.ItemText;
 
 /**
  * @author Pedro
@@ -38,7 +36,7 @@ import br.ueg.tcc.bookway.view.macros.ItemText;
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
 @Scope("prototype")
-public class TextComposer extends CRUDComposer<Text, TextControl> {
+public class TextComposer extends InitComposer<Text, TextControl> {
 
 	@Wire
 	protected Textbox fldLevel;
@@ -84,8 +82,6 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	private ArrayList<String> levels;
 
 	private List<TypeText> listTypesText;
-
-	private List<Text> allMyTexts;
 
 	private String type;
 
@@ -157,14 +153,6 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 		setListTypesText(getControl().initTypesText());
 	}
 
-	public List<Text> getAllMyTexts() {
-		return allMyTexts;
-	}
-
-	public void setAllMyTexts(List<Text> allMyTexts) {
-		this.allMyTexts = allMyTexts;
-	}
-
 	public String getType() {
 		return type;
 	}
@@ -177,18 +165,7 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	public void doAfterCompose(Component comp) throws Exception {
 		initListTypeText();
 		super.doAfterCompose(comp);
-		createListTextUser();
 		loadBinder();
-	}
-
-	@SuppressWarnings("unchecked")
-	private void createListTextUser() {
-		Return retListText = new Return(true);
-		retListText.concat(getControl().doAction("listTextsUser"));
-		if (retListText.isValid())
-			retListText.concat(getControl().doAction("listTextsAddedByUser"));
-		if (retListText.isValid())
-			setAllMyTexts((List<Text>) retListText.getList());
 	}
 
 	public void upload(Media media, String type) {
@@ -366,8 +343,7 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 	public void searchText() {
 		resetResultListText();
 		if (myTexts.isChecked()) {
-			setUpListTextInComponent(getAllMyTexts(), "resultSearch",
-					component, "searchTexts", 0);
+			setUpListTextInComponent(getAllMyTexts(), "resultSearch", component, "ItemText");
 		} else {
 			Return ret = new Return(true);
 			entity.setCommunity(false);
@@ -375,34 +351,13 @@ public class TextComposer extends CRUDComposer<Text, TextControl> {
 			ret.concat(getControl().doAction("searchTexts"));
 			List<Text> list = getControl().substractListText(getAllMyTexts(),
 					(List<Text>) ret.getList());
-			setUpListTextInComponent(list, "resultSearch", component,
-					"searchTexts", 0);
+			setUpListTextInComponent(list, "resultSearch", component, "ItemText");
 		}
 	}
 
 	private void resetResultListText() {
 		Component resultSearch = getComponentById(component, "resultSearch");
 		Components.removeAllChildren(resultSearch);
-	}
-
-	private void setUpListTextInComponent(List<Text> textsUser,
-			String idParent, Component comp, String prefixId, Integer count) {
-		if (textsUser != null) {
-			for (Text text : textsUser) {
-				String id = prefixId + String.valueOf(count++);
-				getComponentById(comp, idParent).appendChild(
-						createItemText(text, id));
-			}
-		}
-	}
-
-	private ItemText createItemText(Text text, String id) {
-		ItemText item = new ItemText();
-		item.setUser(text.getUserOwning().getName());
-		item.setTitle(text.getTitle());
-		item.setDescription(text.getDescription());
-		item.setId(id);
-		return item;
 	}
 
 }

@@ -1,6 +1,6 @@
 <?page title="Pesquisa de Textos" contentType="text/html;charset=UTF-8"?>
 <?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
-<?component name="itemtext" macroURI="/template/itemtext.zul" class="br.ueg.tcc.bookway.view.macros.ItemText"?>
+<?component name="itemtext" macroURI="/template/component/itemtext.zul" class="br.ueg.tcc.bookway.view.macros.ItemText"?>
 
 <zk>
 	<div self="@{define(content)}">
