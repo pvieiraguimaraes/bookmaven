@@ -3,7 +3,7 @@
 	<style src="/css/bookway.css" />
 	<borderlayout hflex="1" vflex="1">
 		<north height="50px" border="none">
-			<include src="/template/navbar.zul" />
+			<include src="/template/menu/navbar.zul" />
 		</north>
 		<west width="200px" border="none" collapsible="true"
 			splittable="true" minsize="200">
@@ -16,7 +16,7 @@
 					</div>
 				</north>
 				<center>
-					<include src="/template/mainmenu.zul" />
+					<include src="/template/menu/mainmenu.zul" />
 				</center>
 			</borderlayout>
 		</west>
@@ -24,7 +24,7 @@
 			self="@{insert(content)}" />
 		<east width="200px" border="none" collapsible="true"
 			splittable="true" minsize="200">
-			<include src="/template/sidebar.zul" />
+			<include src="/template/menu/sidebar.zul" />
 		</east>
 	</borderlayout>
 </zk>
