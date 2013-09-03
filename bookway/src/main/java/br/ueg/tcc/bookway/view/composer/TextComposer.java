@@ -343,7 +343,7 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 	public void searchText() {
 		resetResultListText();
 		if (myTexts.isChecked()) {
-			setUpListTextInComponent(getAllMyTexts(), "resultSearch", component, "ItemText");
+			setUpListTextInComponent(getAllMyTexts(), "resultSearch", component, "ItemText", false, null);
 		} else {
 			Return ret = new Return(true);
 			entity.setCommunity(false);
@@ -351,7 +351,7 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 			ret.concat(getControl().doAction("searchTexts"));
 			List<Text> list = getControl().substractListText(getAllMyTexts(),
 					(List<Text>) ret.getList());
-			setUpListTextInComponent(list, "resultSearch", component, "ItemText");
+			setUpListTextInComponent(list, "resultSearch", component, "ItemText", false, null);
 		}
 	}
 

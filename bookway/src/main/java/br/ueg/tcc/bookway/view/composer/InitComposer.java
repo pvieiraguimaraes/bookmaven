@@ -1,5 +1,6 @@
 package br.ueg.tcc.bookway.view.composer;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
@@ -52,7 +53,7 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		if (retListText.isValid())
 			setAllMyTexts((List<Text>) retListText.getList());
 		setUpListTextInComponent(getAllMyTexts(), "panelMyTexts", component,
-				"MyText");
+				"MyText", true, 3);
 	}
 
 	private TextControl getControlText() {
@@ -73,10 +74,16 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	 *            , component da execução do composer
 	 * @param nameComp
 	 *            , nome do component que será criado
+	 * @param sorted, se os elementos que irão compor a lista serão sorteados
+	 * @param numberOfElements, numero de elementos que comporão a lista
 	 */
 	public void setUpListTextInComponent(List<Text> textsUser, String idParent,
-			Component comp, String nameComp) {
+			Component comp, String nameComp, boolean sorted, Integer numberOfElements) {
 		Component componentParent = getComponentById(comp, idParent);
+		if(sorted)
+			Collections.shuffle(textsUser);
+		if(numberOfElements != null)
+			textsUser = textsUser.subList(0, numberOfElements);
 		if (textsUser != null && componentParent != null) {
 			for (Text text : textsUser) {
 				if (nameComp.equalsIgnoreCase("ItemText"))
