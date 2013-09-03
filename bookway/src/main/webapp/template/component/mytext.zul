@@ -1,18 +1,24 @@
-<div height="100px">
-	<hlayout id="panelgeneral">
-		<vlayout id="subpanelleft">
-			<image id="imagetext" src="/images/bookavatar.png" />
-		</vlayout>
-		<vlayout id="subpanelrigth">
-			<label id="titleText" value="${arg.title}"
-				sclass="titleitemtext" />
-			<label id="descriptionText" value="${arg.description}"
-				sclass="descriptionitemtext" />
-		</vlayout>
-		<panel>
-			<panelchildren>
-				<toolbarbutton label="Detalhes" />
-			</panelchildren>
-		</panel>
-	</hlayout>
+<div height="95px">
+	<div sclass="mytext" height="67px" width="200px">
+		<hlayout id="panelgeneral">
+			<vlayout id="subpanelleft">
+				<image id="imagetext" src="/images/bookavatar.png" />
+			</vlayout>
+			<vlayout id="subpanelrigth">
+				<label id="titleText" value="${arg.title}"
+					sclass="titlemytext" />
+				<label id="descriptionText" value="${arg.description}"
+					sclass="descriptionmytext" maxlength="50"/>
+			</vlayout>
+		</hlayout>
+	</div>
+	<div sclass="mytextbuttons" height="26px" width="200px" align="right">
+		<hlayout>
+			<panel>
+				<panelchildren>
+					<toolbarbutton label="Detalhes" />
+				</panelchildren>
+			</panel>
+		</hlayout>
+	</div>
 </div>
