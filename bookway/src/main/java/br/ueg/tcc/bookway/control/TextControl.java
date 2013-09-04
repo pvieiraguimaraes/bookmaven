@@ -158,8 +158,8 @@ public class TextControl extends GenericControl<Text> {
 		Text text = (Text) data.get("entity");
 		UserBookway user = (UserBookway) data.get("userLogged");
 		String title = text.getTitle() == null ? "" : text.getTitle();
-		String sql = "FROM Text where userOwning != '" + user.getId()
-				+ "' and title like '%" + title + "%' and typeText = '"
+		String sql = "FROM Text where (userOwning != '" + user.getId() + "' or userOwning = null)"
+				+ " and title like '%" + title + "%' and typeText = '"
 				+ text.getTypeText() + "' and community = '"
 				+ text.isCommunity() + "'";
 		data.put("sql", sql);

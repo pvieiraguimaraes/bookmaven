@@ -14,6 +14,7 @@ import br.com.vexillum.util.SpringFactory;
 import br.com.vexillum.view.CRUDComposer;
 import br.ueg.tcc.bookway.control.TextControl;
 import br.ueg.tcc.bookway.model.Text;
+import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.view.macros.ItemText;
 import br.ueg.tcc.bookway.view.macros.MyText;
 
@@ -82,7 +83,7 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		Component componentParent = getComponentById(comp, idParent);
 		if(sorted)
 			Collections.shuffle(textsUser);
-		if(numberOfElements != null)
+		if(numberOfElements != null && textsUser.size() > numberOfElements)
 			textsUser = textsUser.subList(0, numberOfElements);
 		if (textsUser != null && componentParent != null) {
 			for (Text text : textsUser) {
@@ -95,8 +96,9 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	}
 
 	private ItemText createItemText(Text text) {
-		ItemText item = new ItemText();
-		item.setUser(text.getUserOwning().getName());
+		ItemText item = new ItemText((UserBookway) userLogged, text);
+		String userOwning = text.getUserOwning() != null ? text.getUserOwning().getName() : "";
+		item.setUser(userOwning);
 		item.setTitle(text.getTitle());
 		item.setDescription(text.getDescription());
 		return item;

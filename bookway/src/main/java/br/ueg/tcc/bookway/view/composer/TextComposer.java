@@ -359,5 +359,25 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 		Component resultSearch = getComponentById(component, "resultSearch");
 		Components.removeAllChildren(resultSearch);
 	}
+	
+	public void studyText(){
+		System.out.println("Estudando o texto");
+	}
+	
+	public void editText(){
+		System.out.println("Editando o texto");
+	}
+	
+	public void excludeText(){
+		System.out.println("Excluindo o texto");
+	}
+	
+	public void acquireText(){
+		System.out.println("Adquirindo o texto");
+	}
+	
+	public void addText(){
+		System.out.println("Adicionando o texto");
+	}
 
 }
