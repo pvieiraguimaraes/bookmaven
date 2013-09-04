@@ -10,8 +10,15 @@
 		</vlayout>
 	</hlayout>
 	<div id="panelbuttons" align="right">
-		<button sclass="btn btn-primary" label="Estudar" />
-		<button sclass="btn btn-primary" label="Editar" />
-		<button sclass="btn btn-primary" label="Excluir" />
+		<button id="btnStudy" sclass="btn btn-primary" label="Estudar"
+			onClick="controller.studyText()" visible="false"/>
+		<button id="btnEdit" sclass="btn btn-primary" label="Editar"
+			onClick="controller.editText()" visible="false"/>
+		<button id="btnExclude" sclass="btn btn-primary" label="Excluir"
+			onClick="controller.exludeText()" visible="false"/>
+		<button id="btnAdd" sclass="btn btn-primary" label="Adicionar"
+			onClick="controller.addText()" visible="false"/>
+		<button id="btnAcquire" sclass="btn btn-primary" label="Adquirir"
+			onClick="controller.acquireText()" visible="false"/>
 	</div>
 </div>
