@@ -8,17 +8,18 @@
 			<label id="titleText" value="${arg.title}" sclass="titleitemtext" />
 			<label id="descriptionText" value="${arg.description}" sclass="descriptionitemtext"/>
 		</vlayout>
+		<label id="idText" value="${arg.id}" visible="false"/>
 	</hlayout>
 	<div id="panelbuttons" align="right">
 		<button id="btnStudy" sclass="btn btn-primary" label="Estudar"
-			onClick="controller.studyText()" visible="false"/>
+			onClick="controller.studyText(idText.getValue())" visible="false"/>
 		<button id="btnEdit" sclass="btn btn-primary" label="Editar"
-			onClick="controller.editText()" visible="false"/>
+			onClick="controller.editText(idText.getValue())" visible="false"/>
 		<button id="btnExclude" sclass="btn btn-primary" label="Excluir"
-			onClick="controller.exludeText()" visible="false"/>
+			onClick="controller.excludeText(idText.getValue())" visible="false"/>
 		<button id="btnAdd" sclass="btn btn-primary" label="Adicionar"
-			onClick="controller.addText()" visible="false"/>
+			onClick="controller.addText(idText.getValue())" visible="false"/>
 		<button id="btnAcquire" sclass="btn btn-primary" label="Adquirir"
-			onClick="controller.acquireText()" visible="false"/>
+			onClick="controller.acquireText(idText.getValue())" visible="false"/>
 	</div>
 </div>

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Scope;
 import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Components;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -343,7 +344,8 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 	public void searchText() {
 		resetResultListText();
 		if (myTexts.isChecked()) {
-			setUpListTextInComponent(getAllMyTexts(), "resultSearch", component, "ItemText", false, null);
+			setUpListTextInComponent(getAllMyTexts(), "resultSearch",
+					component, "ItemText", false, null);
 		} else {
 			Return ret = new Return(true);
 			entity.setCommunity(false);
@@ -351,7 +353,8 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 			ret.concat(getControl().doAction("searchTexts"));
 			List<Text> list = getControl().substractListText(getAllMyTexts(),
 					(List<Text>) ret.getList());
-			setUpListTextInComponent(list, "resultSearch", component, "ItemText", false, null);
+			setUpListTextInComponent(list, "resultSearch", component,
+					"ItemText", false, null);
 		}
 	}
 
@@ -359,25 +362,45 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 		Component resultSearch = getComponentById(component, "resultSearch");
 		Components.removeAllChildren(resultSearch);
 	}
-	
-	public void studyText(){
-		System.out.println("Estudando o texto");
+
+	private Text getTextById(Long id) {
+		Return ret = new Return(true);
+		entity.setId(id);
+		ret.concat(getControl().doAction("searchEntitys"));
+		if (ret.isValid())
+			return (Text) ret.getList().get(0);
+		return null;
+	}
+
+	public void studyText(String id) {
+		Text text = getTextById(Long.parseLong(id));
+		if (text != null)
+			System.out.println("Estudando o texto: " + id);
+	}
+
+	public void editText(String id) {
+		Text text = getTextById(Long.parseLong(id));
+		entity = text;
+		Executions.sendRedirect("/pages/user/text.zul");
+	}
+
+	public void excludeText(String id) {
+		Text text = getTextById(Long.parseLong(id));
+		entity = text;
+		showDeleteConfirmation(messages.getKey("text_deletion_confirmation"));
 	}
 	
-	public void editText(){
-		System.out.println("Editando o texto");
+	@Override
+	public void efectiveAction() {
+		deleteText();
 	}
-	
-	public void excludeText(){
-		System.out.println("Excluindo o texto");
+
+	public void acquireText(String id) {
+		System.out.println("Adquirindo o texto: " + id);
 	}
-	
-	public void acquireText(){
-		System.out.println("Adquirindo o texto");
-	}
-	
-	public void addText(){
-		System.out.println("Adicionando o texto");
+
+	public void addText(String id) {
+		System.out.println("Adicionando o texto: " + id);
 	}
 
 }

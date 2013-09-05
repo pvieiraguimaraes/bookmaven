@@ -44,24 +44,11 @@ public class ConfigurationComposer extends
 	}
 
 	public void deleteAccount() {
-		showConfirmationDelete();
+		showConfirmationDelete(messages.getKey("account_deletion_confirmation"));
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void showConfirmationDelete() {
-		EventListener evt = new EventListener() {
-			public void onEvent(Event evt) throws InterruptedException {
-				if (evt.getName().equals("onYes")) {
-					efectiveDeleteAccount();
-				}
-			}
-		};
-		String mess = messages.getKey("account_deletion_confirmation");
-		Messagebox.show(mess, "Confirmação", Messagebox.YES | Messagebox.NO,
-				Messagebox.QUESTION, evt);
-	}
-	
-	private void efectiveDeleteAccount(){
+	@Override
+	public void efectiveAction() {
 		Return ret = new Return(true);
 		UserBookwayControl control = SpringFactory.getController(
 				"userBookwayControl", UserBookwayControl.class,

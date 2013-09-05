@@ -20,6 +20,8 @@ public class ItemText extends HtmlMacroComponent {
 	@Wire
 	private Label descriptionText;
 	@Wire
+	private Label idText;
+	@Wire
 	private Button btnStudy;
 	@Wire
 	private Button btnEdit;
@@ -32,17 +34,7 @@ public class ItemText extends HtmlMacroComponent {
 
 	public ItemText(UserBookway user, Text text) {
 		compose();
-//		createButtons();
 		configureButtonsInComponent(user, text);
-	}
-
-	private void createButtons() {
-		btnAcquire = new Button();
-		btnAdd = new Button();
-		btnEdit = new Button();
-		btnExclude = new Button();
-		btnStudy = new Button();
-
 	}
 
 	private void configureButtonsInComponent(UserBookway user, Text text) {
@@ -80,5 +72,13 @@ public class ItemText extends HtmlMacroComponent {
 
 	public void setDescription(String description) {
 		descriptionText.setValue(description);
+	}
+	
+	public String getId(){
+		return idText.getValue();
+	}
+	
+	public void setId(String id){
+		idText.setValue(id);
 	}
 }
