@@ -101,6 +101,7 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		item.setUser(userOwning);
 		item.setTitle(text.getTitle());
 		item.setDescription(text.getDescription());
+		item.setId(String.valueOf(text.getId()));
 		return item;
 	}
 
