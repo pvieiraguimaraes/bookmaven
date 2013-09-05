@@ -3,9 +3,6 @@ package br.ueg.tcc.bookway.view.composer;
 import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zul.Messagebox;
 
 import br.com.vexillum.model.Configuration;
 import br.com.vexillum.util.ReflectionUtils;
@@ -48,7 +45,7 @@ public class ConfigurationComposer extends
 	}
 
 	@Override
-	public void efectiveAction() {
+	public void efectiveDeleteAction() {
 		Return ret = new Return(true);
 		UserBookwayControl control = SpringFactory.getController(
 				"userBookwayControl", UserBookwayControl.class,

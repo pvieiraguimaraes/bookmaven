@@ -31,13 +31,16 @@ public class ItemText extends HtmlMacroComponent {
 	private Button btnAdd;
 	@Wire
 	private Button btnAcquire;
+	@Wire
+	private Button btnRemove;
 
-	public ItemText(UserBookway user, Text text) {
+	
+	public ItemText(UserBookway user, Text text, boolean has) {
 		compose();
-		configureButtonsInComponent(user, text);
+		configureButtonsInComponent(user, text, has);
 	}
 
-	private void configureButtonsInComponent(UserBookway user, Text text) {
+	private void configureButtonsInComponent(UserBookway user, Text text, boolean has) {
 		if (text.getUserOwning() == null)
 			btnAcquire.setVisible(true);
 		else {
@@ -45,6 +48,9 @@ public class ItemText extends HtmlMacroComponent {
 				btnExclude.setVisible(true);
 				btnEdit.setVisible(true);
 				btnStudy.setVisible(true);
+			} else if(has){
+				btnStudy.setVisible(true);
+				btnRemove.setVisible(true);
 			} else
 				btnAdd.setVisible(true);
 		}
