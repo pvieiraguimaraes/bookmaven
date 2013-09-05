@@ -12,6 +12,7 @@ import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.com.vexillum.view.CRUDComposer;
+import br.ueg.tcc.bookway.control.RelationshipTextUserControl;
 import br.ueg.tcc.bookway.control.TextControl;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
@@ -75,29 +76,36 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	 *            , component da execução do composer
 	 * @param nameComp
 	 *            , nome do component que será criado
-	 * @param sorted, se os elementos que irão compor a lista serão sorteados
-	 * @param numberOfElements, numero de elementos que comporão a lista
+	 * @param sorted
+	 *            , se os elementos que irão compor a lista serão sorteados
+	 * @param numberOfElements
+	 *            , numero de elementos que comporão a lista
 	 */
 	public void setUpListTextInComponent(List<Text> textsUser, String idParent,
-			Component comp, String nameComp, boolean sorted, Integer numberOfElements) {
+			Component comp, String nameComp, boolean sorted,
+			Integer numberOfElements) {
 		Component componentParent = getComponentById(comp, idParent);
-		if(sorted)
+		if (sorted)
 			Collections.shuffle(textsUser);
-		if(numberOfElements != null && textsUser.size() > numberOfElements)
+		if (numberOfElements != null && textsUser.size() > numberOfElements)
 			textsUser = textsUser.subList(0, numberOfElements);
 		if (textsUser != null && componentParent != null) {
 			for (Text text : textsUser) {
-				if (nameComp.equalsIgnoreCase("ItemText"))
-					componentParent.appendChild(createItemText(text));
-				else
+				if (nameComp.equalsIgnoreCase("ItemText")){
+					boolean has = getRelationshipTextUserControl().verifyUserHasText();
+					componentParent.appendChild(createItemText(text, has));
+				}
+				else 
 					componentParent.appendChild(createMyText(text));
+
 			}
 		}
 	}
 
-	private ItemText createItemText(Text text) {
-		ItemText item = new ItemText((UserBookway) userLogged, text);
-		String userOwning = text.getUserOwning() != null ? text.getUserOwning().getName() : "";
+	private ItemText createItemText(Text text, boolean has) {
+		ItemText item = new ItemText((UserBookway) userLogged, text, has);
+		String userOwning = text.getUserOwning() != null ? text.getUserOwning()
+				.getName() : "";
 		item.setUser(userOwning);
 		item.setTitle(text.getTitle());
 		item.setDescription(text.getDescription());
@@ -112,15 +120,19 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		return myText;
 	}
 
+	private RelationshipTextUserControl getRelationshipTextUserControl() {
+		return SpringFactory.getController("elationshipTextUserControl",
+				RelationshipTextUserControl.class,
+				ReflectionUtils.prepareDataForPersistence(this));
+	}
+
 	@Override
 	public G getControl() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public E getEntityObject() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

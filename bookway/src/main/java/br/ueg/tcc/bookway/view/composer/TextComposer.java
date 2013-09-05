@@ -26,6 +26,7 @@ import org.zkoss.zul.Textbox;
 import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
+import br.ueg.tcc.bookway.control.RelationshipTextUserControl;
 import br.ueg.tcc.bookway.control.TextControl;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.enums.TypeText;
@@ -85,6 +86,16 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 	private List<TypeText> listTypesText;
 
 	private String type;
+
+	private Text selectedText;
+
+	public Text getSelectedText() {
+		return selectedText;
+	}
+
+	public void setSelectedText(Text selectedText) {
+		this.selectedText = selectedText;
+	}
 
 	public boolean getSimple() {
 		return simple;
@@ -372,35 +383,92 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 		return null;
 	}
 
+	/**
+	 * Redireciona o usuário para a página de estudo do texto
+	 * 
+	 * @param id
+	 *            , do texto
+	 */
 	public void studyText(String id) {
 		Text text = getTextById(Long.parseLong(id));
 		if (text != null)
 			System.out.println("Estudando o texto: " + id);
 	}
 
+	/**
+	 * Abre tela para edição do texto em questão
+	 * 
+	 * @param id
+	 *            , do texto
+	 */
 	public void editText(String id) {
 		Text text = getTextById(Long.parseLong(id));
 		entity = text;
 		Executions.sendRedirect("/pages/user/text.zul");
 	}
 
+	/**
+	 * Exibe mensagem de confirmação de exclusão, e em caso afirmativo exclui o
+	 * texto do usuário removendo todos os itens relacionados a ele.
+	 * 
+	 * @param id
+	 *            , do texto
+	 */
 	public void excludeText(String id) {
 		Text text = getTextById(Long.parseLong(id));
 		entity = text;
 		showDeleteConfirmation(messages.getKey("text_deletion_confirmation"));
 	}
-	
+
 	@Override
-	public void efectiveAction() {
+	public void efectiveDeleteAction() {
 		deleteText();
 	}
 
+	/**
+	 * Realiza a conexão entre o texto e o usuário, quando um usuário adiquire
+	 * um texto este texto passa a pertencer a ele, podendo realizar quaisquer
+	 * alterações em seus dados
+	 * 
+	 * @param id
+	 *            , do texto
+	 */
 	public void acquireText(String id) {
 		System.out.println("Adquirindo o texto: " + id);
 	}
 
+	/**
+	 * Cria o relacionamento entre o texto e o usuário, dessa maneira o usuário
+	 * passa a ter acesso ao texto e poderá estuda-lo
+	 * 
+	 * @param id
+	 *            , do texto
+	 */
 	public void addText(String id) {
-		System.out.println("Adicionando o texto: " + id);
+		Return ret = new Return(true);
+		setSelectedText(getTextById(Long.parseLong(id)));
+		ret.concat(getRelationshipTextUserControl().addOrRemoveText("add"));
+		treatReturn(ret);
+	}
+
+	/**
+	 * Remove o texto do relacionamento com usuário e o usuário deixa de ter
+	 * permissão de acesso ao texto.
+	 * 
+	 * @param id
+	 *            , do texto
+	 */
+	public void removeText(String id) {
+		Return ret = new Return(true);
+		setSelectedText(getTextById(Long.parseLong(id)));
+		ret.concat(getRelationshipTextUserControl().addOrRemoveText("remove"));
+		treatReturn(ret);
+	}
+
+	private RelationshipTextUserControl getRelationshipTextUserControl() {
+		return SpringFactory.getController("relationshipTextUserControl",
+				RelationshipTextUserControl.class,
+				ReflectionUtils.prepareDataForPersistence(this));
 	}
 
 }
