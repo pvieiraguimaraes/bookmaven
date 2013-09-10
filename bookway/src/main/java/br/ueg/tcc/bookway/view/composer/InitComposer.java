@@ -1,5 +1,6 @@
 package br.ueg.tcc.bookway.view.composer;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,6 +27,15 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		extends CRUDComposer<E, G> {
 
 	private List<Text> allMyTexts;
+	private Text selectedText;
+
+	public Text getSelectedText() {
+		return selectedText;
+	}
+
+	public void setSelectedText(Text selectedText) {
+		this.selectedText = selectedText;
+	}
 
 	public List<Text> getAllMyTexts() {
 		return allMyTexts;
@@ -48,18 +58,28 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	@SuppressWarnings("unchecked")
 	public void createListTextUser() {
 		Return retListText = new Return(true);
-		retListText.concat(getControlText().doAction("listTextsUser"));
+		List<Text> listTextUser = new ArrayList<>();
+		retListText.concat(getControlText().listTextsUser());
+		if (retListText.isValid()) {
+			listTextUser = (List<Text>) retListText.getList();
+			retListText = new Return(true);
+			retListText.concat(getRelationControl().listTextAddOfUser());
+		}
 		if (retListText.isValid())
-			retListText.concat(getControlText()
-					.doAction("listTextsAddedByUser"));
-		if (retListText.isValid())
-			setAllMyTexts((List<Text>) retListText.getList());
+			listTextUser.addAll((List<Text>) retListText.getList());
+		setAllMyTexts(listTextUser);
 		setUpListTextInComponent(getAllMyTexts(), "panelMyTexts", component,
 				"MyText", true, 3);
 	}
 
 	private TextControl getControlText() {
 		return SpringFactory.getController("textControl", TextControl.class,
+				ReflectionUtils.prepareDataForPersistence(this));
+	}
+
+	private RelationshipTextUserControl getRelationControl() {
+		return SpringFactory.getController("relationshipTextUserControl",
+				RelationshipTextUserControl.class,
 				ReflectionUtils.prepareDataForPersistence(this));
 	}
 
@@ -91,18 +111,18 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 			textsUser = textsUser.subList(0, numberOfElements);
 		if (textsUser != null && componentParent != null) {
 			for (Text text : textsUser) {
-				if (nameComp.equalsIgnoreCase("ItemText")){
-					boolean has = getRelationshipTextUserControl().verifyUserHasText();
-					componentParent.appendChild(createItemText(text, has));
-				}
-				else 
+				if (nameComp.equalsIgnoreCase("ItemText"))
+					componentParent.appendChild(createItemText(text));
+				else
 					componentParent.appendChild(createMyText(text));
 
 			}
 		}
 	}
 
-	private ItemText createItemText(Text text, boolean has) {
+	private ItemText createItemText(Text text) {
+		setSelectedText(text);
+		boolean has = getRelationshipTextUserControl().verifyUserHasText();
 		ItemText item = new ItemText((UserBookway) userLogged, text, has);
 		String userOwning = text.getUserOwning() != null ? text.getUserOwning()
 				.getName() : "";
@@ -121,7 +141,7 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	}
 
 	private RelationshipTextUserControl getRelationshipTextUserControl() {
-		return SpringFactory.getController("elationshipTextUserControl",
+		return SpringFactory.getController("relationshipTextUserControl",
 				RelationshipTextUserControl.class,
 				ReflectionUtils.prepareDataForPersistence(this));
 	}
