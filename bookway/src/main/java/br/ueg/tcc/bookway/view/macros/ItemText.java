@@ -34,26 +34,25 @@ public class ItemText extends HtmlMacroComponent {
 	@Wire
 	private Button btnRemove;
 
-	
 	public ItemText(UserBookway user, Text text, boolean has) {
 		compose();
 		configureButtonsInComponent(user, text, has);
 	}
 
-	private void configureButtonsInComponent(UserBookway user, Text text, boolean has) {
+	private void configureButtonsInComponent(UserBookway user, Text text,
+			boolean has) {
 		if (text.getUserOwning() == null)
 			btnAcquire.setVisible(true);
-		else {
-			if (user == text.getUserOwning()) {
-				btnExclude.setVisible(true);
-				btnEdit.setVisible(true);
-				btnStudy.setVisible(true);
-			} else if(has){
-				btnStudy.setVisible(true);
-				btnRemove.setVisible(true);
-			} else
-				btnAdd.setVisible(true);
+		if (user == text.getUserOwning()) {
+			btnExclude.setVisible(true);
+			btnEdit.setVisible(true);
+			btnStudy.setVisible(true);
 		}
+		if (has) {
+			btnStudy.setVisible(true);
+			btnRemove.setVisible(true);
+		} else
+			btnAdd.setVisible(true);
 	}
 
 	public String getUser() {
@@ -79,12 +78,12 @@ public class ItemText extends HtmlMacroComponent {
 	public void setDescription(String description) {
 		descriptionText.setValue(description);
 	}
-	
-	public String getId(){
+
+	public String getId() {
 		return idText.getValue();
 	}
-	
-	public void setId(String id){
+
+	public void setId(String id) {
 		idText.setValue(id);
 	}
 }

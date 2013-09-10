@@ -1,10 +1,16 @@
 package br.ueg.tcc.bookway.control;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import br.com.vexillum.control.GenericControl;
+import br.com.vexillum.util.HibernateUtils;
+import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
+import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.model.RelationshipTextUser;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
@@ -20,18 +26,57 @@ public class RelationshipTextUserControl extends
 
 	public Return addOrRemoveText(String action) {
 		Return ret = new Return(true);
-		UserBookway user = (UserBookway) data.get("userLogged");
-		Text text = (Text) data.get("selectedText");
-		entity.setText(text);
-		entity.setUserBookway(user);
+		entity.setText((Text) data.get("selectedText"));
+		entity.setUserBookway((UserBookway) data.get("userLogged"));
 		if (action.equalsIgnoreCase("add"))
-			ret.concat(save());
+			ret.concat(doAction("saveEntity"));
 		else if (action.equalsIgnoreCase("remove"))
-			ret.concat(delete());
+			ret.concat(doAction("delete"));
 		return ret;
 	}
 
 	public boolean verifyUserHasText() {
+		Return ret = new Return(true);
+		Text text = (Text) data.get("selectedText");
+		Long userId = ((UserBookway) data.get("userLogged")).getId();
+		String hql = "FROM RelationshipTextUser WHERE userBookway ='" + userId
+				+ "' AND text = '" + text.getId() + "'";
+		data.put("sql", hql);
+		ret.concat(searchByHQL());
+		if(ret.getList() != null)
+			return true;
 		return false;
 	}
+
+	@SuppressWarnings("unchecked")
+	public Return listTextAddOfUser() {
+		Return ret = new Return(true);
+		Long userId = ((UserBookway) data.get("userLogged")).getId();
+		String hql = "FROM RelationshipTextUser WHERE userBookway ='" + userId
+				+ "'";
+		data.put("sql", hql);
+		ret.concat(searchByHQL());
+		ret.setList(converterRelationshipTextInText((List<RelationshipTextUser>) ret
+				.getList()));
+		return ret;
+	}
+
+	private List<Text> converterRelationshipTextInText(
+			List<RelationshipTextUser> list) {
+		List<Text> listText = new ArrayList<>();
+		Text text;
+		for (RelationshipTextUser relationshipTextUser : list) {
+			text = new Text();
+			text = getTextControl().getTextById(relationshipTextUser.getText().getId());
+			text = HibernateUtils.materializeProxy(text);
+			listText.add(text);
+		}
+		return listText;
+	}
+
+	public TextControl getTextControl() {
+		return SpringFactory.getController("textControl", TextControl.class,
+				ReflectionUtils.prepareDataForPersistence(this.data));
+	}
+	
 }

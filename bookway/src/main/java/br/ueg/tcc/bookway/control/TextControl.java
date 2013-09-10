@@ -118,6 +118,14 @@ public class TextControl extends GenericControl<Text> {
 			retDelete.concat(removeTextFromRepository(filePath));
 		return retDelete;
 	}
+	
+	public Text getTextById(Long id){
+		Return ret = new Return(true);
+		String sql = "FROM Text where id = '" + id + "'";
+		data.put("sql", sql);
+		ret.concat(searchByHQL());
+		return (Text) ret.getList().get(0);
+	}
 
 	public List<TypeText> initTypesText() {
 		return EnumUtils.getEnumList(TypeText.class);
@@ -163,7 +171,6 @@ public class TextControl extends GenericControl<Text> {
 				+ text.getTypeText() + "' and community = '"
 				+ text.isCommunity() + "'";
 		data.put("sql", sql);
-
 		ret.concat(searchByHQL());
 		return ret;
 	}
