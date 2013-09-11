@@ -47,12 +47,13 @@ public class ItemText extends HtmlMacroComponent {
 			btnExclude.setVisible(true);
 			btnEdit.setVisible(true);
 			btnStudy.setVisible(true);
+		} else {
+			if (has) {
+				btnStudy.setVisible(true);
+				btnRemove.setVisible(true);
+			} else
+				btnAdd.setVisible(true);
 		}
-		if (has) {
-			btnStudy.setVisible(true);
-			btnRemove.setVisible(true);
-		} else
-			btnAdd.setVisible(true);
 	}
 
 	public String getUser() {

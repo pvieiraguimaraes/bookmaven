@@ -13,27 +13,31 @@
 		<label id="idText" value="${arg.id}" visible="false" />
 	</hlayout>
 	<div align="right">
-		<div id="panelActionText">
-			<button id="btnStudy" sclass="btn btn-primary"
-				label="Estudar" onClick="controller.studyText(idText.getValue())"
-				visible="false" />
-			<button id="btnEdit" sclass="btn btn-primary" label="Editar"
-				onClick="controller.editText(idText.getValue())" visible="false" />
-			<button id="btnExclude" sclass="btn btn-primary"
-				label="Excluir" onClick="controller.excludeText(idText.getValue())"
-				visible="false" />
-			<button id="btnAcquire" sclass="btn btn-primary"
-				label="Adquirir" onClick="controller.acquireText(idText.getValue())"
-				visible="false" />
-		</div>
-		<div id="panelRelationText"
-			apply="br.ueg.tcc.bookway.view.composer.RelationshipTextComposer">
-			<button id="btnRemove" sclass="btn btn-primary"
-				label="Remover" onClick="controller.removeText(idText.getValue())"
-				visible="false" />
-			<button id="btnAdd" sclass="btn btn-primary"
-				label="Adicionar" onClick="controller.addText(idText.getValue())"
-				visible="false" />
-		</div>
+		<hlayout>
+			<div id="panelActionText">
+				<button id="btnStudy" sclass="btn btn-primary"
+					label="Estudar" onClick="controller.studyText(idText.getValue())"
+					visible="false" />
+				<button id="btnEdit" sclass="btn btn-primary"
+					label="Editar" onClick="controller.editText(idText.getValue())"
+					visible="false" />
+				<button id="btnExclude" sclass="btn btn-primary"
+					label="Excluir" onClick="controller.excludeText(idText.getValue())"
+					visible="false" />
+				<button id="btnAcquire" sclass="btn btn-primary"
+					label="Adquirir"
+					onClick="controller.acquireText(idText.getValue())"
+					visible="false" />
+			</div>
+			<div id="panelRelationText"
+				apply="br.ueg.tcc.bookway.view.composer.RelationshipTextComposer">
+				<button id="btnRemove" sclass="btn btn-primary"
+					label="Remover" onClick="controller.removeText(idText.getValue())"
+					visible="false" />
+				<button id="btnAdd" sclass="btn btn-primary"
+					label="Adicionar" onClick="controller.addText(idText.getValue())"
+					visible="false" />
+			</div>
+		</hlayout>
 	</div>
 </div>
