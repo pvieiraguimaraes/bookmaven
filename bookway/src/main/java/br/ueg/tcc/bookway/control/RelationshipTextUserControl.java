@@ -35,6 +35,10 @@ public class RelationshipTextUserControl extends
 		return ret;
 	}
 
+	/**Método que verifica se o usuário possui um determinado texto, ou seja
+	 * se existe relacionamento entre o texto dado e o usuário.
+	 * @return
+	 */
 	public boolean verifyUserHasText() {
 		Return ret = new Return(true);
 		Text text = (Text) data.get("selectedText");
@@ -47,7 +51,21 @@ public class RelationshipTextUserControl extends
 			return true;
 		return false;
 	}
+	
+	public boolean verifyTextBelongsAnyUser(){
+		Return ret = new Return(true);
+		Text text = (Text) data.get("selectedText");
+		String hql = "FROM RelationshipTextUser WHERE text ='" + text.getId();
+		data.put("sql", hql);
+		ret.concat(searchByHQL());
+		if(ret.getList() != null)
+			return true;
+		return false;
+	}
 
+	/**Método que retorna a lista de textos adicionados pelo usuário
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public Return listTextAddOfUser() {
 		Return ret = new Return(true);

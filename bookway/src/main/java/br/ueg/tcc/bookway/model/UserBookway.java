@@ -3,6 +3,7 @@ package br.ueg.tcc.bookway.model;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -11,8 +12,6 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import br.com.vexillum.model.UserBasic;
 import br.com.vexillum.model.annotations.Validate;
@@ -50,8 +49,7 @@ public class UserBookway extends UserBasic {
 	@OneToMany(mappedBy = "userOwning", fetch = FetchType.LAZY)
 	private List<Text> texts;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "userBookway")
-	@Cascade(CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "userBookway", cascade = CascadeType.ALL)
 	private List<RelationshipTextUser> textUser;
 
 	public List<RelationshipTextUser> getTextUser() {

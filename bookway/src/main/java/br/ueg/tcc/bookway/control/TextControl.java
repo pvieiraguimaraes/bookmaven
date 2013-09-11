@@ -146,16 +146,6 @@ public class TextControl extends GenericControl<Text> {
 	}
 
 	/**
-	 * Método servirá para buscar os textos que o usuário tem adicionado em sua
-	 * lista
-	 * 
-	 * @return lista de textos adicionados do usuário
-	 */
-	public Return listTextsAddedByUser() {
-		return new Return(true);
-	}
-
-	/**
 	 * Método retorna lista de acordo com titulo dado para todos os textos que
 	 * não são do usuário
 	 * 
@@ -201,7 +191,7 @@ public class TextControl extends GenericControl<Text> {
 		return ret;
 	}
 
-	private Return relocaleTextsRepository() {
+	private Return relocaleTextRepository() {
 		Return ret = new Return(true);
 		// TODO Metodo que servira para relocar um texto quando ele for adotado.
 		return ret;
@@ -231,6 +221,12 @@ public class TextControl extends GenericControl<Text> {
 			list.addAll(listAux);
 		}
 		return list;
+	}
+	
+	public Return updateUserOwnerText(){
+		entity.setUserOwning((UserBookway) data.get("userLogged"));
+		Return ret = update();
+		return ret;
 	}
 
 }

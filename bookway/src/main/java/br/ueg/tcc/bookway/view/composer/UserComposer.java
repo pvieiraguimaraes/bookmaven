@@ -89,7 +89,7 @@ public class UserComposer extends CRUDComposer<UserBookway, UserBookwayControl> 
 	}
 
 	public void updateAccount() {
-		treatReturn(getControl().updateAccount());
+		treatReturn(getControl().doAction("updateAccount"));
 	}
 
 	public void deleteAccount() {

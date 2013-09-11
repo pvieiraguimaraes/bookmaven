@@ -39,7 +39,6 @@ public class RelationshipTextComposer extends
 		entity.setText(getControl().getTextControl().getTextById(Long.parseLong(id)));
 		entity.setUserBookway((UserBookway) getUserLogged());
 		ret.concat(saveEntity());
-		loadBinder();
 		treatReturn(ret);
 	}
 
@@ -56,4 +55,5 @@ public class RelationshipTextComposer extends
 		ret.concat(getControl().addOrRemoveText("remove"));
 		treatReturn(ret);
 	}
+	
 }

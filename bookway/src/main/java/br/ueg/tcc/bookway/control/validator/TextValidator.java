@@ -5,6 +5,8 @@ import java.util.Map;
 
 import br.com.vexillum.control.validator.Validator;
 import br.com.vexillum.util.Return;
+import br.ueg.tcc.bookway.model.Text;
+import br.ueg.tcc.bookway.model.UserBookway;
 
 public class TextValidator extends Validator {
 
@@ -101,6 +103,7 @@ public class TextValidator extends Validator {
 
 	public Return validateDeleteText() {
 		Return retDelete = new Return(true);
+		boolean belong = (boolean) mapData.get("textBelongsAnyUser");
 		// TODO Verificar se existem usuário com este texto em seus estudos, se
 		// existir não permitir que seja excluido
 		return retDelete;

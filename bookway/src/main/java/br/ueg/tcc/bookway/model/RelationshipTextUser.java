@@ -14,11 +14,11 @@ import br.com.vexillum.model.CommonEntity;
 @Table(name = "texts_users")
 public class RelationshipTextUser extends CommonEntity {
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_text", insertable = true, updatable = true, nullable = false)
 	private Text text;
 	
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_user", insertable = true, updatable = true, nullable = false)
 	private UserBookway userBookway;
 

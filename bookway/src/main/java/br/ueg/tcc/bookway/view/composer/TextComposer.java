@@ -26,8 +26,10 @@ import org.zkoss.zul.Textbox;
 import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
+import br.ueg.tcc.bookway.control.RelationshipTextUserControl;
 import br.ueg.tcc.bookway.control.TextControl;
 import br.ueg.tcc.bookway.model.Text;
+import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.model.enums.TypeText;
 
 /**
@@ -85,7 +87,17 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 	private List<TypeText> listTypesText;
 
 	private String type;
-	
+
+	private boolean textBelongsAnyUser;
+
+	public boolean isTextBelongsAnyUser() {
+		return textBelongsAnyUser;
+	}
+
+	public void setTextBelongsAnyUser(boolean textBelongsAnyUser) {
+		this.textBelongsAnyUser = textBelongsAnyUser;
+	}
+
 	public boolean getSimple() {
 		return simple;
 	}
@@ -396,6 +408,8 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 	 */
 	public void excludeText(String id) {
 		Text text = getControl().getTextById(Long.parseLong(id));
+		setSelectedText(text);
+		setTextBelongsAnyUser(getRelationControl().verifyTextBelongsAnyUser());
 		entity = text;
 		showDeleteConfirmation(messages.getKey("text_deletion_confirmation"));
 	}
@@ -403,5 +417,20 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 	@Override
 	public void efectiveDeleteAction() {
 		deleteText();
+	}
+	
+	public void updateText(){
+		treatReturn(getControl().doAction("update"));
+	}
+	
+	public void acquireText(String id){
+		entity = getControl().getTextById(Long.parseLong(id));
+		entity.setUserOwning((UserBookway) getUserLogged());
+		treatReturn(getControl().doAction("updateUserOwnerText"));
+	}
+	
+	public RelationshipTextUserControl getRelationControl() {
+		return SpringFactory.getController("relationshipTextUserControl", RelationshipTextUserControl.class,
+				ReflectionUtils.prepareDataForPersistence(this));
 	}
 }
