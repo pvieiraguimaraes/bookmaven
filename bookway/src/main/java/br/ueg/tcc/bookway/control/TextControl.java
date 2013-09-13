@@ -113,7 +113,7 @@ public class TextControl extends GenericControl<Text> {
 	public Return deleteText() {
 		Return retDelete = new Return(true);
 		String filePath = entity.getFilePath();
-		retDelete.concat(doAction("delete"));
+		retDelete.concat(delete());
 		if (retDelete.isValid())
 			retDelete.concat(removeTextFromRepository(filePath));
 		return retDelete;
