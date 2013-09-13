@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.apache.commons.io.FileUtils;
+
 import br.com.vexillum.control.manager.ExceptionManager;
 
 /**
@@ -28,22 +30,36 @@ public class FolderUtils {
 
 	public static boolean deleteFileFolder(String directoryUser, String filePath) {
 		boolean result = false;
-		if ((new File(filePath)).exists()) {
-			result = (new File(filePath)).delete();
+		File dir = new File(filePath);
+		if (dir.exists()) {
+			try {
+				FileUtils.forceDelete(dir);
+				result = true;
+			} catch (IOException e) {
+				e.printStackTrace();
+				new ExceptionManager(e).treatException();
+			}
 		}
 		checkDiretoryUser(directoryUser);
 		return result;
 	}
-	
-	public static void checkDiretoryUser(String directoryUser){
+
+	public static void checkDiretoryUser(String directoryUser) {
 		File dir = new File(directoryUser);
-		if(dir.list() == null)
-			dir.delete();
+		try {
+			FileUtils.forceDelete(dir);
+		} catch (IOException e) {
+			new ExceptionManager(e).treatException();
+		}
 	}
-	
-	/**Método para mover um arquivo de um diretório para outro
-	 * @param srcPath, Caminho da origem do arquivo
-	 * @param dstPath, Caminho para onde vai o arquivo
+
+	/**
+	 * Método para mover um arquivo de um diretório para outro
+	 * 
+	 * @param srcPath
+	 *            , Caminho da origem do arquivo
+	 * @param dstPath
+	 *            , Caminho para onde vai o arquivo
 	 * @return
 	 */
 	public static boolean moveFile(String srcPath, String dstPath) {
@@ -66,6 +82,7 @@ public class FolderUtils {
 				e.printStackTrace();
 				return false;
 			}
-		} else return false;
+		} else
+			return false;
 	}
 }

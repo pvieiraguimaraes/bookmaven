@@ -251,10 +251,10 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 		fldLevel.setValue(null);
 	}
 
-	public void deleteText() {
+	public Return deleteText() {
 		Return retDelete = new Return(true);
 		retDelete.concat(getControl().doAction("deleteText"));
-		treatReturn(retDelete);
+		return retDelete;
 	}
 
 	private void getLevelsName() {

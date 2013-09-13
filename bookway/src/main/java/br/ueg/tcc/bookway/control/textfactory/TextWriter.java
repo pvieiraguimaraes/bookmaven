@@ -39,7 +39,9 @@ public class TextWriter extends TextBookwayIO {
 					+ separator + nameUser + separator + text.getTitle().trim()
 					+ new Date().getTime() + ".xml";
 			doc.setDocType(null);
-			outputter.output(doc, new FileWriter(fileName));
+			FileWriter writter = new FileWriter(fileName);
+			outputter.output(doc, writter);
+			writter.close();
 			List<String> list = new ArrayList<String>();
 			list.add(fileName);
 			retTxtInsert.setList(list);
