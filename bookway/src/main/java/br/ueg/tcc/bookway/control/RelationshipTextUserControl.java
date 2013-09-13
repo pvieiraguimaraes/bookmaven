@@ -53,12 +53,11 @@ public class RelationshipTextUserControl extends
 	}
 	
 	public boolean verifyTextBelongsAnyUser(){
-		Return ret = new Return(true);
 		Text text = (Text) data.get("selectedText");
-		String hql = "FROM RelationshipTextUser WHERE text ='" + text.getId();
+		String hql = "FROM RelationshipTextUser WHERE text ='" + text.getId() + "'";
 		data.put("sql", hql);
-		ret.concat(searchByHQL());
-		if(ret.getList() != null)
+		Return ret = searchByHQL();
+		if(ret.getList() != null && !ret.getList().isEmpty())
 			return true;
 		return false;
 	}
