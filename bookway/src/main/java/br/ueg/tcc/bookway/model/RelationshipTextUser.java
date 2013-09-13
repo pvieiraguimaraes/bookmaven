@@ -1,6 +1,5 @@
 package br.ueg.tcc.bookway.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -11,7 +10,7 @@ import br.com.vexillum.model.CommonEntity;
 
 @SuppressWarnings("serial")
 @Entity
-@Table(name = "texts_users")
+@Table(name = "relationship_texts")
 public class RelationshipTextUser extends CommonEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)

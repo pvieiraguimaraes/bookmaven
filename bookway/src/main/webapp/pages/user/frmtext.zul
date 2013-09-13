@@ -1,0 +1,40 @@
+<zk>
+	<window title="Alteração de Texto" mode="modal"
+		apply="br.ueg.tcc.bookway.view.composer.TextComposer"
+		closable="true">
+		<vlayout spacing="5px">
+			<hlayout spacing="70px">
+				<label value="Título" />
+				<textbox id="fldTitle"
+					value="@{controller.entity.title}" width="250px" />
+			</hlayout>
+			<hlayout spacing="45px">
+				<label value="Descrição" />
+				<textbox value="@{controller.entity.description}"
+					multiline="true" rows="4" width="250px" maxlength="250" />
+			</hlayout>
+			<hlayout id="protectedTextData" spacing="75px"
+				visible="false">
+				<label sclass="typetext" value="Tipo" />
+				<hlayout>
+					<combobox id="fldTypeText"
+						model="@{controller.listTypesText}"
+						onChange="controller.checkComboType()"
+						selectedItem="@{controller.entity.typeText}" width="250px">
+						<comboitem self="@{each=tipo}"
+							label="@{tipo.value}" value="@{tipo}" />
+					</combobox>
+					<checkbox id="chckCommunity"
+						value="@{controller.entity.community}" label="Comunitário" />
+				</hlayout>
+			</hlayout>
+			<label
+				value="*Atenção: O conteúdo do texto não poderá ser editado, 
+					deverá ser feito um novo cadastro" />
+			<div align="right">
+				<button label="Salvar" onClick="controller.saveText()"
+					sclass="btn btn-primary" />
+			</div>
+		</vlayout>
+	</window>
+</zk>

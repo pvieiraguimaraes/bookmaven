@@ -50,9 +50,32 @@ public class TextWriter extends TextBookwayIO {
 		return retTxtInsert;
 	}
 
-	public Return removeTextFromRepository(String directoryName) {
+	public Return removeTextFromRepository(String filePath) {
 		Return ret = new Return(true);
-		ret.setValid(FolderUtils.deleteFileFolder(directoryName));
+		String nameUser = ((UserBookway) textData.get("user")).getEmail();
+		String separator = System.getProperty("file.separator");
+		String path = configuration.getKey("PATH_REPOSITORY_TEXT");
+		String directoryUser = path + separator + nameUser;
+		ret.setValid(FolderUtils.deleteFileFolder(directoryUser, filePath));
+		return ret;
+	}
+
+	/**
+	 * Método para mover os arquivos dentro do repositório do usuário, para
+	 * mover para o ou do repositório público para colocar como destino ou
+	 * caminho "public"
+	 * 
+	 * @param srcPath
+	 * @param dstPath
+	 * @return
+	 */
+	public Return moveFile(String srcPath, String dstPath) {
+		Return ret = new Return(true);
+		if (dstPath.equalsIgnoreCase("public"))
+			dstPath = configuration.getKey("PATH_PUBLIC_REPOSITORY_TEXT");
+		if (srcPath.equalsIgnoreCase("public"))
+			srcPath = configuration.getKey("PATH_PUBLIC_REPOSITORY_TEXT");
+		ret.setValid(FolderUtils.moveFile(srcPath, dstPath));
 		return ret;
 	}
 

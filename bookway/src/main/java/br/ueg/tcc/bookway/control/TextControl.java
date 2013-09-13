@@ -187,13 +187,15 @@ public class TextControl extends GenericControl<Text> {
 
 	private Return removeTextFromRepository(String filePath) {
 		Return ret = new Return(true);
+		UserBookway user = ((UserBookway) data.get("userLogged"));
+		map.put("user", user);
 		ret.concat(txtWriter.removeTextFromRepository(filePath));
 		return ret;
 	}
 
-	private Return relocaleTextRepository() {
+	private Return relocaleTextRepository(String srcPath, String dstPath) {
 		Return ret = new Return(true);
-		// TODO Metodo que servira para relocar um texto quando ele for adotado.
+		ret.concat(txtWriter.moveFile(srcPath, dstPath));
 		return ret;
 	}
 

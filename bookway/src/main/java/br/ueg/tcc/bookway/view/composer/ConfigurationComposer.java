@@ -41,11 +41,10 @@ public class ConfigurationComposer extends
 	}
 
 	public void deleteAccount() {
-		showConfirmationDelete(messages.getKey("account_deletion_confirmation"));
+		showActionConfirmation(messages.getKey("account_deletion_confirmation"), "deleteAccountUser");
 	}
 
-	@Override
-	public void efectiveDeleteAction() {
+	public void deleteAccountUser() {
 		Return ret = new Return(true);
 		UserBookwayControl control = SpringFactory.getController(
 				"userBookwayControl", UserBookwayControl.class,

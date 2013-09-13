@@ -1,6 +1,11 @@
 package br.ueg.tcc.bookway.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import br.com.vexillum.control.manager.ExceptionManager;
 
@@ -21,11 +26,46 @@ public class FolderUtils {
 		}
 	}
 
-	public static boolean deleteFileFolder(String directoryName) {
-		if (new File(directoryName).exists()){
-			(new File(directoryName)).delete();
-			return true;
+	public static boolean deleteFileFolder(String directoryUser, String filePath) {
+		boolean result = false;
+		if ((new File(filePath)).exists()) {
+			result = (new File(filePath)).delete();
 		}
-		return false;
+		checkDiretoryUser(directoryUser);
+		return result;
+	}
+	
+	public static void checkDiretoryUser(String directoryUser){
+		File dir = new File(directoryUser);
+		if(dir.list() == null)
+			dir.delete();
+	}
+	
+	/**Método para mover um arquivo de um diretório para outro
+	 * @param srcPath, Caminho da origem do arquivo
+	 * @param dstPath, Caminho para onde vai o arquivo
+	 * @return
+	 */
+	public static boolean moveFile(String srcPath, String dstPath) {
+		InputStream in;
+		OutputStream out;
+		if (new File(srcPath).exists()) {
+			try {
+				in = new FileInputStream(srcPath);
+				out = new FileOutputStream(dstPath);
+				// Transfer bytes from in to out
+				byte[] buf = new byte[1024];
+				int len;
+				while ((len = in.read(buf)) > 0) {
+					out.write(buf, 0, len);
+				}
+				in.close();
+				out.close();
+				return true;
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+		} else return false;
 	}
 }

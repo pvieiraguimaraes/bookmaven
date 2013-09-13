@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Scope;
 import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Components;
-import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -88,9 +87,19 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 
 	private String type;
 
+	private boolean updateText = false;
+
+	public boolean isUpdateText() {
+		return updateText;
+	}
+
+	public void setUpdateText(boolean updateText) {
+		this.updateText = updateText;
+	}
+
 	private boolean textBelongsAnyUser;
 
-	public boolean isTextBelongsAnyUser() {
+	public boolean getTextBelongsAnyUser() {
 		return textBelongsAnyUser;
 	}
 
@@ -176,8 +185,12 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
-		initListTypeText();
-		super.doAfterCompose(comp);
+		if (isUpdateText())
+			entity = getSelectedText();
+		else {
+			initListTypeText();
+			super.doAfterCompose(comp);
+		}
 		loadBinder();
 	}
 
@@ -241,6 +254,7 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 	public void deleteText() {
 		Return retDelete = new Return(true);
 		retDelete.concat(getControl().doAction("deleteText"));
+		treatReturn(retDelete);
 	}
 
 	private void getLevelsName() {
@@ -395,8 +409,9 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 	 */
 	public void editText(String id) {
 		Text text = getControl().getTextById(Long.parseLong(id));
-		entity = text;
-		Executions.sendRedirect("/pages/user/text.zul");
+		setSelectedText(text);
+		setUpdateText(true);
+		callModalWindow("/pages/user/frmtext.zul");
 	}
 
 	/**
@@ -409,28 +424,36 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 	public void excludeText(String id) {
 		Text text = getControl().getTextById(Long.parseLong(id));
 		setSelectedText(text);
-		setTextBelongsAnyUser(getRelationControl().verifyTextBelongsAnyUser());
+		boolean has = getRelationControl().verifyTextBelongsAnyUser();
+		setTextBelongsAnyUser(has);
 		entity = text;
-		showDeleteConfirmation(messages.getKey("text_deletion_confirmation"));
+		if (!has)
+			showActionConfirmation(
+					messages.getKey("text_deletion_confirmation"), "deleteText");
+		else
+			showActionConfirmation(
+					messages.getKey("text_disconnection_confirmation"),
+					"disconnectionUserOfText");
 	}
 
-	@Override
-	public void efectiveDeleteAction() {
-		deleteText();
+	public void disconnectionUserOfText() {
+		entity.setUserOwning(null);
+		updateText();
 	}
-	
-	public void updateText(){
+
+	public void updateText() {
 		treatReturn(getControl().doAction("update"));
 	}
-	
-	public void acquireText(String id){
+
+	public void acquireText(String id) {
 		entity = getControl().getTextById(Long.parseLong(id));
 		entity.setUserOwning((UserBookway) getUserLogged());
 		treatReturn(getControl().doAction("updateUserOwnerText"));
 	}
-	
+
 	public RelationshipTextUserControl getRelationControl() {
-		return SpringFactory.getController("relationshipTextUserControl", RelationshipTextUserControl.class,
+		return SpringFactory.getController("relationshipTextUserControl",
+				RelationshipTextUserControl.class,
 				ReflectionUtils.prepareDataForPersistence(this));
 	}
 }
