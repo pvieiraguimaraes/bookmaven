@@ -10,7 +10,7 @@
 			<label id="descriptionText" value="${arg.description}"
 				sclass="descriptionitemtext" />
 		</vlayout>
-		<label id="idText" value="${arg.id}" visible="false" />
+		<label id="idText" value="${arg.idText}" visible="false" />
 	</hlayout>
 	<div align="right">
 		<hlayout>

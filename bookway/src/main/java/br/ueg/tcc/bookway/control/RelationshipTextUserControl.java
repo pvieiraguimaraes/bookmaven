@@ -26,12 +26,23 @@ public class RelationshipTextUserControl extends
 
 	public Return addOrRemoveText(String action) {
 		Return ret = new Return(true);
-		entity.setText((Text) data.get("selectedText"));
+		Text text = HibernateUtils.materializeProxy((Text) data.get("selectedText"));
+		entity.setText(text);
 		entity.setUserBookway((UserBookway) data.get("userLogged"));
 		if (action.equalsIgnoreCase("add"))
 			ret.concat(doAction("saveEntity"));
 		else if (action.equalsIgnoreCase("remove"))
-			ret.concat(doAction("delete"));
+			ret.concat(doAction("deleteRelationshipText"));
+		return ret;
+	}
+	
+	public Return deleteRelationshipText(){
+		Long userId = entity.getUserBookway().getId();
+		Long textId = entity.getText().getId();
+		String sql = "DELETE FROM RelationshipTextUser WHERE userBookway ='" + userId
+				+ "' AND text = '" + textId + "'";
+		data.put("sql", sql);
+		Return ret = executeByHQL();
 		return ret;
 	}
 
@@ -47,7 +58,7 @@ public class RelationshipTextUserControl extends
 				+ "' AND text = '" + text.getId() + "'";
 		data.put("sql", hql);
 		ret.concat(searchByHQL());
-		if(ret.getList() != null)
+		if(ret.getList() != null && !ret.getList().isEmpty())
 			return true;
 		return false;
 	}
@@ -85,7 +96,6 @@ public class RelationshipTextUserControl extends
 		for (RelationshipTextUser relationshipTextUser : list) {
 			text = new Text();
 			text = getTextControl().getTextById(relationshipTextUser.getText().getId());
-			text = HibernateUtils.materializeProxy(text);
 			listText.add(text);
 		}
 		return listText;

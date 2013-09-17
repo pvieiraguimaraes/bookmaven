@@ -436,18 +436,13 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 					"disconnectionUserOfText");
 	}
 
-	public void disconnectionUserOfText() {
-		entity.setUserOwning(null);
-		updateText();
-	}
-
-	public void updateText() {
-		treatReturn(getControl().doAction("update"));
+	public Return disconnectionUserOfText() {
+		Return ret = getControl().doAction("disconnectionUserOfText");
+		return ret;
 	}
 
 	public void acquireText(String id) {
 		entity = getControl().getTextById(Long.parseLong(id));
-		entity.setUserOwning((UserBookway) getUserLogged());
 		treatReturn(getControl().doAction("updateUserOwnerText"));
 	}
 
