@@ -9,14 +9,18 @@ import org.apache.commons.lang3.EnumUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
+import br.com.vexillum.configuration.Properties;
 import br.com.vexillum.control.GenericControl;
+import br.com.vexillum.util.HibernateUtils;
 import br.com.vexillum.util.Message;
 import br.com.vexillum.util.Return;
+import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.textfactory.TextReader;
 import br.ueg.tcc.bookway.control.textfactory.TextWriter;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.model.enums.TypeText;
+import br.ueg.tcc.bookway.utils.FolderUtils;
 
 @Service
 @Scope("prototype")
@@ -25,10 +29,13 @@ public class TextControl extends GenericControl<Text> {
 	private TextWriter txtWriter;
 	private TextReader txtReader;
 	HashMap<String, Object> map;
+	private Properties configuration;
 
 	public TextControl() {
 		super(Text.class);
 		map = new HashMap<>();
+		configuration = SpringFactory.getInstance().getBean("configProperties",
+				Properties.class);
 		txtWriter = new TextWriter(map);
 		txtReader = new TextReader(map);
 	}
@@ -124,7 +131,8 @@ public class TextControl extends GenericControl<Text> {
 		String sql = "FROM Text where id = '" + id + "'";
 		data.put("sql", sql);
 		ret.concat(searchByHQL());
-		return (Text) ret.getList().get(0);
+		Text text = HibernateUtils.materializeProxy((Text) ret.getList().get(0));
+		return text;
 	}
 
 	public List<TypeText> initTypesText() {
@@ -192,6 +200,17 @@ public class TextControl extends GenericControl<Text> {
 		ret.concat(txtWriter.removeTextFromRepository(filePath));
 		return ret;
 	}
+	
+	public Return disconnectionUserOfText(){
+		entity.setUserOwning(null);
+		String localeText = entity.getFilePath();
+		String filePath = getFilePath(entity);
+		entity.setFilePath(filePath);
+		Return ret = update();
+		if(ret.isValid())
+			relocaleTextRepository(localeText, getFilePath(entity));
+		return ret;
+	}
 
 	private Return relocaleTextRepository(String srcPath, String dstPath) {
 		Return ret = new Return(true);
@@ -226,9 +245,28 @@ public class TextControl extends GenericControl<Text> {
 	}
 	
 	public Return updateUserOwnerText(){
+		String localeText = getFilePath(entity);
 		entity.setUserOwning((UserBookway) data.get("userLogged"));
+		entity.setFilePath(getFilePath(entity));
 		Return ret = update();
+		if(ret.isValid()){
+			FolderUtils.createFolder(
+					configuration.getKey("PATH_REPOSITORY_TEXT"), entity.getUserOwning().getEmail());
+			relocaleTextRepository(localeText, entity.getFilePath());
+		}
 		return ret;
+	}
+	
+	private String getNameText(Text text, String separator){
+		String aux = (text.getFilePath()).substring((text.getFilePath()).lastIndexOf(separator), text.getFilePath().length());
+		return aux;
+	}
+	
+	private String getFilePath(Text text){
+		String separator = System.getProperty("file.separator");
+		String path = text.getUserOwning() != null ? text.getUserOwning().getEmail() : "public";
+		String name = configuration.getKey("PATH_REPOSITORY_TEXT") + separator + path  + getNameText(text, separator); 
+		return name;
 	}
 
 }

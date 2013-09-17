@@ -45,11 +45,13 @@ public class FolderUtils {
 	}
 
 	public static void checkDiretoryUser(String directoryUser) {
-		File dir = new File(directoryUser);
-		try {
-			FileUtils.forceDelete(dir);
-		} catch (IOException e) {
-			new ExceptionManager(e).treatException();
+		if (directoryUser != null) {
+			File dir = new File(directoryUser);
+			try {
+				FileUtils.forceDelete(dir);
+			} catch (IOException e) {
+				new ExceptionManager(e).treatException();
+			}
 		}
 	}
 
@@ -77,6 +79,7 @@ public class FolderUtils {
 				}
 				in.close();
 				out.close();
+				deleteFileFolder(null, srcPath);
 				return true;
 			} catch (IOException e) {
 				e.printStackTrace();

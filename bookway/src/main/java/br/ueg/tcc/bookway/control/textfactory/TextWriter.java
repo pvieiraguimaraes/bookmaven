@@ -75,8 +75,6 @@ public class TextWriter extends TextBookwayIO {
 		Return ret = new Return(true);
 		if (dstPath.equalsIgnoreCase("public"))
 			dstPath = configuration.getKey("PATH_PUBLIC_REPOSITORY_TEXT");
-		if (srcPath.equalsIgnoreCase("public"))
-			srcPath = configuration.getKey("PATH_PUBLIC_REPOSITORY_TEXT");
 		ret.setValid(FolderUtils.moveFile(srcPath, dstPath));
 		return ret;
 	}

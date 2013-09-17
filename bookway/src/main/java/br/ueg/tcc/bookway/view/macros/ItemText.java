@@ -80,11 +80,11 @@ public class ItemText extends HtmlMacroComponent {
 		descriptionText.setValue(description);
 	}
 
-	public String getId() {
+	public String getIdText() {
 		return idText.getValue();
 	}
 
-	public void setId(String id) {
+	public void setIdText(String id) {
 		idText.setValue(id);
 	}
 }
