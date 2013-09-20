@@ -1,13 +1,47 @@
-<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<?page title="Bookway" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
+
 <zk>
-<cardlayout id="card" width="300px" height="300px" selectedIndex="1">
-    <window title="Window Component" border="normal"
-     width="200px">width: 200px</window>
-    <window title="Window Component" border="normal"
-     width="300px">width: 300px</window>
-    <window title="Window Component" border="normal"
-     width="400px">width: 400px</window>
-</cardlayout>
-<button onClick="card.previous()">previous</button>
-<button onClick="card.next()">next</button>
+	<div self="@{define(content)}" hflex="1" vflex="1" align="center">
+		<tabbox width="90%" height="90%">
+			<tabs id="tabs">
+				<tab label="Teste1" />
+				<tab label="Teste2" />
+				<tab label="Teste3" />
+			</tabs>
+			<tabpanels>
+				<tabpanel>
+					<cardlayout id="card" width="80%" height="90%"
+						selectedIndex="1">
+						<window title="Window Component" border="normal"
+							width="100%" height="100%">
+							width: 200px
+						</window>
+						<window title="Window Component" border="normal"
+							width="300px">
+							width: 300px
+						</window>
+						<window title="Window Component" border="normal"
+							width="400px">
+							width: 400px
+						</window>
+					</cardlayout>
+					<button onClick="card.previous()">previous</button>
+					<button onClick="card.next()">next</button>
+					<image src="/images/arrow-left.png"
+						onClick="card.previous()" />
+					<image src="/images/arrow-rigth.png"
+						onClick="card.next()" />
+				</tabpanel>
+				<tabpanel>
+					<window title="TESTE" width="200px" height="50px">
+						Fazendo teste
+					</window>
+				</tabpanel>
+				<tabpanel>
+					Nada
+				</tabpanel>
+			</tabpanels>
+		</tabbox>
+	</div>
 </zk>
