@@ -28,7 +28,6 @@ import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.RelationshipTextUserControl;
 import br.ueg.tcc.bookway.control.TextControl;
 import br.ueg.tcc.bookway.model.Text;
-import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.model.enums.TypeText;
 
 /**
