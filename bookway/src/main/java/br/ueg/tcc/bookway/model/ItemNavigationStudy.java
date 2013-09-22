@@ -3,10 +3,19 @@ package br.ueg.tcc.bookway.model;
 import br.com.vexillum.model.CommonEntity;
 
 @SuppressWarnings("serial")
-public class ItemNavigationStudy extends CommonEntity{
+public class ItemNavigationStudy extends CommonEntity {
 
+	private Text text;
 	private LevelText levelText;
 	private ElementText elementText;
+
+	public Text getText() {
+		return text;
+	}
+
+	public void setText(Text text) {
+		this.text = text;
+	}
 
 	public LevelText getLevelText() {
 		return levelText;

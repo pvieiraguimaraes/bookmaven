@@ -40,7 +40,7 @@ public class Text extends CommonEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "elementRoot_id")
-	private LevelText levelsText;
+	private LevelText rootLevelText;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_userOwning", insertable = true, updatable = true)
@@ -105,12 +105,12 @@ public class Text extends CommonEntity {
 		this.filePath = filePath;
 	}
 
-	public LevelText getLevelsText() {
-		return levelsText;
+	public LevelText getRootLevelText() {
+		return rootLevelText;
 	}
 
-	public void setLevelsText(LevelText levelsText) {
-		this.levelsText = levelsText;
+	public void setRootLevelText(LevelText rootLevelText) {
+		this.rootLevelText = rootLevelText;
 	}
 
 	public UserBookway getUserOwning() {

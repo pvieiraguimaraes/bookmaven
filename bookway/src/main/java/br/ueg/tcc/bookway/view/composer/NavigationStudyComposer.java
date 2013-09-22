@@ -10,7 +10,8 @@ import br.com.vexillum.util.SpringFactory;
 import br.com.vexillum.view.CRUDComposer;
 import br.ueg.tcc.bookway.control.NavigationStudyControl;
 import br.ueg.tcc.bookway.model.ItemNavigationStudy;
-import br.ueg.tcc.bookway.view.events.NavigationStudyListener;
+import br.ueg.tcc.bookway.model.LevelText;
+import br.ueg.tcc.bookway.model.Text;
 
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
@@ -22,13 +23,6 @@ public class NavigationStudyComposer extends
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
 		loadBinder();
-	}
-
-	private void initPanelStudy() {
-		getComponentById("panelStudy").addEventListener(
-				"onScroll",
-				new NavigationStudyListener());
-
 	}
 
 	@Override
@@ -43,6 +37,15 @@ public class NavigationStudyComposer extends
 		return new ItemNavigationStudy();
 	}
 
+	
+	/**Método que captura o texto que será estudado pelo usuário
+	 * @param id, do texto
+	 */
+	public void studyText(String id) {
+		Text text = getControl().getTextById(Long.parseLong(id));
+		LevelText level = text.getRootLevelText();
+	}
+	
 	public void addItemStudy() {
 		System.out.println("Entrou no metodo");
 		Window win = new Window();
@@ -50,9 +53,4 @@ public class NavigationStudyComposer extends
 		getComponentById("panelStudy").appendChild(win);
 		System.out.println("Saiu do metodo");
 	}
-	
-	public void teste(){
-		System.out.println("funciona cara!");
-	}
-
 }

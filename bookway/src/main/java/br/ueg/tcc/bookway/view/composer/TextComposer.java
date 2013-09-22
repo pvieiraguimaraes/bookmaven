@@ -389,18 +389,6 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 	}
 
 	/**
-	 * Redireciona o usuário para a página de estudo do texto
-	 * 
-	 * @param id
-	 *            , do texto
-	 */
-	public void studyText(String id) {
-		Text text = getControl().getTextById(Long.parseLong(id));
-		if (text != null)
-			System.out.println("Estudando o texto: " + id);
-	}
-
-	/**
 	 * Abre tela para edição do texto em questão
 	 * 
 	 * @param id
