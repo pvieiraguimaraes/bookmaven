@@ -14,7 +14,6 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.input.sax.XMLReaders;
-import org.jdom2.output.XMLOutputter;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -300,7 +299,7 @@ public class TextReader extends TextBookwayIO {
 			Document document = (Document) textData.get("document");
 			Text text = (Text) textData.get("text");
 			Element rootElement = document.getRootElement();
-			text.setLevelsText(extractLevelsText(rootElement, text));
+			text.setRootLevelText(extractLevelsText(rootElement, text));
 			textData.put("text", text);
 		} catch (Exception e) {
 			retMapp.setValid(false);

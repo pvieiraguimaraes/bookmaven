@@ -1,9 +1,10 @@
 <?page title="Bookway" contentType="text/html;charset=UTF-8"?>
 <?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
+<?component name="itemstudy" macroURI="/template/component/itemstudy.zul" class="br.ueg.tcc.bookway.view.macros.ItemStudy"?>
 
 <zk>
 	<div self="@{define(content)}" hflex="1" vflex="1" align="center">
-		<tabbox width="90%" height="90%">
+		<tabbox id="tabboxStudy" width="90%" height="90%">
 			<tabs id="tabs">
 				<tab label="Teste1" />
 				<tab label="Teste2" />
@@ -11,23 +12,15 @@
 			</tabs>
 			<tabpanels>
 				<tabpanel>
-					<cardlayout id="card" width="80%" height="90%"
-						selectedIndex="1">
-						<window title="Window Component" border="normal"
-							width="100%" height="100%">
-							width: 200px
-						</window>
-						<window title="Window Component" border="normal"
-							width="300px">
-							width: 300px
-						</window>
-						<window title="Window Component" border="normal"
-							width="400px">
-							width: 400px
-						</window>
+					<cardlayout id="card" width="80%" height="90%">
+						<itemstudy content="INICIOJIUDHAIASDFLASNFLASDNFOSA3DNFLSANFASLASL2DFJASLKFFIM"/>
+						<itemstudy content="INICIOJIUDHAIASDFLASNFLASDNFOSA3DNFLSANFASLASL2DFJASLKFFIM"/>
+						<panel>
+							<panelchildren>
+								INICIOJIUDHAIASDFLASNFLASDNFOSA3DNFLSANFASLASL2DFJASLKFFIMINICIOJIUDHAIASDFLASNFLASDNFOSA3DNFLSANFASLASL2DFJASLKFFIM
+							</panelchildren>
+						</panel>
 					</cardlayout>
-					<button onClick="card.previous()">previous</button>
-					<button onClick="card.next()">next</button>
 					<image src="/images/arrow-left.png"
 						onClick="card.previous()" />
 					<image src="/images/arrow-rigth.png"
@@ -38,9 +31,7 @@
 						Fazendo teste
 					</window>
 				</tabpanel>
-				<tabpanel>
-					Nada
-				</tabpanel>
+				<tabpanel>Nada</tabpanel>
 			</tabpanels>
 		</tabbox>
 	</div>

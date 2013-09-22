@@ -1,0 +1,5 @@
+<div width="100%" height="50px">
+	<hlayout id="panelgeneral">
+		<label id="contentElement" value="${arg.contentElement}" />
+	</hlayout>
+</div>

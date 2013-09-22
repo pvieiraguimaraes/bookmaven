@@ -14,10 +14,12 @@
 	</hlayout>
 	<div align="right">
 		<hlayout>
-			<div id="panelActionText">
+			<div id="panelStudyText" apply="br.ueg.tcc.bookway.view.composer.NavigationStudyComposer">
 				<button id="btnStudy" sclass="btn btn-primary"
 					label="Estudar" onClick="controller.studyText(idText.getValue())"
 					visible="false" />
+			</div>
+			<div id="panelActionText">
 				<button id="btnEdit" sclass="btn btn-primary"
 					label="Editar" onClick="controller.editText(idText.getValue())"
 					visible="false" />
