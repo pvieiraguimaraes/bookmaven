@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Scope;
 import org.zkoss.util.media.Media;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Components;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -32,7 +33,7 @@ import br.ueg.tcc.bookway.model.enums.TypeText;
 
 /**
  * @author Pedro
- * 
+ *
  */
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
@@ -87,6 +88,16 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 	private String type;
 
 	private boolean updateText = false;
+	
+	private Text studyText2;
+	
+	public Text getStudyText2() {
+		return studyText2;
+	}
+
+	public void setStudyText2(Text studyText2) {
+		this.studyText2 = studyText2;
+	}
 
 	public boolean isUpdateText() {
 		return updateText;
@@ -370,7 +381,7 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 		resetResultListText();
 		if (myTexts.isChecked()) {
 			setUpListTextInComponent(getAllMyTexts(), "resultSearch",
-					component, "ItemText", false, null);
+					getComponent(), "ItemText", false, null);
 		} else {
 			Return ret = new Return(true);
 			entity.setCommunity(false);
@@ -378,13 +389,13 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 			ret.concat(getControl().doAction("searchTexts"));
 			List<Text> list = getControl().substractListText(getAllMyTexts(),
 					(List<Text>) ret.getList());
-			setUpListTextInComponent(list, "resultSearch", component,
+			setUpListTextInComponent(list, "resultSearch", getComponent(),
 					"ItemText", false, null);
 		}
 	}
 
 	private void resetResultListText() {
-		Component resultSearch = getComponentById(component, "resultSearch");
+		Component resultSearch = getComponentById(getComponent(), "resultSearch");
 		Components.removeAllChildren(resultSearch);
 	}
 
@@ -399,6 +410,15 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 		setSelectedText(text);
 		setUpdateText(true);
 		callModalWindow("/pages/user/frmtext.zul");
+	}
+	
+	/**Método que captura o texto que será estudado pelo usuário
+	 * @param id, do texto
+	 */
+	public void studyText(String id) {
+		Text text = getControl().getTextById(Long.parseLong(id));
+		session.setAttribute("textStudy", text);
+		Executions.sendRedirect("/pages/user/study.zul");
 	}
 
 	/**

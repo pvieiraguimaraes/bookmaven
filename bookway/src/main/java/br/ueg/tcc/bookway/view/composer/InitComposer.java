@@ -68,7 +68,7 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		if (retListText.isValid())
 			listTextUser.addAll((List<Text>) retListText.getList());
 		setAllMyTexts(listTextUser);
-		setUpListTextInComponent(getAllMyTexts(), "panelMyTexts", component,
+		setUpListTextInComponent(getAllMyTexts(), "panelMyTexts", getComponent(),
 				"MyText", true, 3);
 	}
 

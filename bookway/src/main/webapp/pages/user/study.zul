@@ -3,36 +3,7 @@
 <?component name="itemstudy" macroURI="/template/component/itemstudy.zul" class="br.ueg.tcc.bookway.view.macros.ItemStudy"?>
 
 <zk>
-	<div self="@{define(content)}" hflex="1" vflex="1" align="center">
-		<tabbox id="tabboxStudy" width="90%" height="90%">
-			<tabs id="tabs">
-				<tab label="Teste1" />
-				<tab label="Teste2" />
-				<tab label="Teste3" />
-			</tabs>
-			<tabpanels>
-				<tabpanel>
-					<cardlayout id="card" width="80%" height="90%">
-						<itemstudy content="INICIOJIUDHAIASDFLASNFLASDNFOSA3DNFLSANFASLASL2DFJASLKFFIM"/>
-						<itemstudy content="INICIOJIUDHAIASDFLASNFLASDNFOSA3DNFLSANFASLASL2DFJASLKFFIM"/>
-						<panel>
-							<panelchildren>
-								INICIOJIUDHAIASDFLASNFLASDNFOSA3DNFLSANFASLASL2DFJASLKFFIMINICIOJIUDHAIASDFLASNFLASDNFOSA3DNFLSANFASLASL2DFJASLKFFIM
-							</panelchildren>
-						</panel>
-					</cardlayout>
-					<image src="/images/arrow-left.png"
-						onClick="card.previous()" />
-					<image src="/images/arrow-rigth.png"
-						onClick="card.next()" />
-				</tabpanel>
-				<tabpanel>
-					<window title="TESTE" width="200px" height="50px">
-						Fazendo teste
-					</window>
-				</tabpanel>
-				<tabpanel>Nada</tabpanel>
-			</tabpanels>
-		</tabbox>
+	<div self="@{define(content)}" hflex="1" vflex="1" align="center" apply="br.ueg.tcc.bookway.view.composer.NavigationStudyComposer">
+		<tabbox id="panelStudy" width="90%" height="90%"></tabbox>
 	</div>
 </zk>
