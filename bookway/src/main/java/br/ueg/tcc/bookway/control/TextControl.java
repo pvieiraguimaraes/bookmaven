@@ -113,7 +113,7 @@ public class TextControl extends GenericControl<Text> {
 
 	public Return insertTextIntoDataBase() {
 		Return retInsert = new Return(true);
-		retInsert.concat(doAction("save"));
+		retInsert.concat(save());
 		return retInsert;
 	}
 

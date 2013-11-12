@@ -118,7 +118,7 @@ public class UserComposer extends CRUDComposer<UserBookway, UserBookwayControl> 
 		Return ret = new Return(true);
 		ret.concat(getControl().doAction("changePasswordUser"));
 		if(ret.isValid())
-			getComponentById(component, "frmChangePassword").detach();
+			getComponentById(getComponent(), "frmChangePassword").detach();
 		treatReturn(ret);
 	}
 }
