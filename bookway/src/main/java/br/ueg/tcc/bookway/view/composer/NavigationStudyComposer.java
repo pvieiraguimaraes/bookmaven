@@ -89,11 +89,12 @@ public class NavigationStudyComposer extends
 	private Component createTabPanelStudy(Text text) {
 		Tabpanel tabpanel = new Tabpanel();
 		tabpanel.setSclass("tabpanelstudy");
+		
 		LevelText rootLevel = HibernateUtils.materializeProxy(getControl()
 				.getLevelText(text.getRootLevelText().getId()));
 
 		tabpanel = (Tabpanel) mappingElementsAndChildren(rootLevel, tabpanel);
-
+//		panelActions panel com os butões
 		return tabpanel;
 	}
 

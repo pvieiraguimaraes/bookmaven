@@ -4,6 +4,12 @@
 
 <zk>
 	<div self="@{define(content)}" hflex="1" vflex="1" align="center" apply="br.ueg.tcc.bookway.view.composer.NavigationStudyComposer">
+		<div id="panelActions" visible="false">
+			<button label="Anotar"/>
+			<button label="Tag"/>
+			<button label="Marcar"/>
+			<button label="Compartilhar"/>
+		</div>
 		<tabbox id="panelStudy" width="90%" height="90%"></tabbox>
 	</div>
 </zk>

@@ -71,7 +71,7 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 	public Return registerUser() {
 		Return retRegister = new Return(true);
 		entity = createUserBookway();
-		retRegister.concat(doAction("save"));
+		retRegister.concat(save());
 		if (retRegister.isValid()) {
 			sendValidationEmailAccount(entity.getEmail(), entity.getName(),
 					entity.getVerificationCode());
@@ -150,9 +150,9 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 
 	public Return updateAccount() {
 		Return retUpdate = new Return(true);
-		retUpdate.concat(doAction("update"));
+		retUpdate.concat(update());
 		if (retUpdate.isValid())
-			Executions.sendRedirect("/paginas/user/index.zul");
+			Executions.sendRedirect("/pages/user/index.zul");
 		return retUpdate;
 	}
 
