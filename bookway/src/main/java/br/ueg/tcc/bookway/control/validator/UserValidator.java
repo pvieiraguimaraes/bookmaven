@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import br.com.vexillum.control.validator.Validator;
+import br.com.vexillum.util.DateCalc;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.UserBookwayControl;
@@ -18,11 +19,9 @@ public class UserValidator extends Validator {
 	public Return validateRegisterUser() {
 		Return retCheck = new Return(true);
 		retCheck.concat(validateModel());
-		if (retCheck.isValid()) {
-			retCheck.concat(existsEmail());
-			if (retCheck.isValid())
-				retCheck.concat(equalsSenha());
-		}
+		retCheck.concat(existsEmail());
+		retCheck.concat(equalsSenha());
+		retCheck.concat(permitedAge());
 		return retCheck;
 	}
 
@@ -39,6 +38,16 @@ public class UserValidator extends Validator {
 			ret.concat(creatReturn("email",
 					getValidationMessage("email", "exists", true)));
 		}
+		return ret;
+	}
+	
+	private Return permitedAge(){
+		Return ret = new Return(true);
+		
+		Integer age = DateCalc.calculateAge(((UserBookway) entity).getBirthDate());
+		if(age < 18)
+			ret.concat(creatReturn("birthDate",
+					getValidationMessage("birthdate", "permited", false)));
 		return ret;
 	}
 
@@ -59,25 +68,23 @@ public class UserValidator extends Validator {
 		String actualPassword = (String) mapData.get("actualPassword");
 		String newPassword = (String) mapData.get("newPassword");
 		String confirmNewPassword = (String) mapData.get("confirmNewPassword");
+		
 		if (actualPassword.equalsIgnoreCase(""))
 			ret.concat(creatReturn("actualPassword",
 					getValidationMessage("", "notnull", false)));
-		else if (newPassword.equalsIgnoreCase(""))
+		if (newPassword.equalsIgnoreCase(""))
 			ret.concat(creatReturn("newPassword",
 					getValidationMessage("", "notnull", false)));
-		else if (confirmNewPassword.equalsIgnoreCase(""))
+		if (confirmNewPassword.equalsIgnoreCase(""))
 			ret.concat(creatReturn("confirmNewPassword",
 					getValidationMessage("", "notnull", false)));
-		else {
-			if (!equalsFields(password, actualPassword).isValid()) {
+		if (!equalsFields(password, actualPassword).isValid()) 
 				ret.concat(creatReturn("actualPassword",
 						getValidationMessage("actualPassword", "equals", false)));
-			}
-			if (!equalsFields(newPassword, confirmNewPassword).isValid()) {
+		if (!equalsFields(newPassword, confirmNewPassword).isValid())
 				ret.concat(creatReturn("confirmNewPassword",
 						getValidationMessage("password", "equals", false)));
-			}
-		}
+
 		return ret;
 	}
 }
