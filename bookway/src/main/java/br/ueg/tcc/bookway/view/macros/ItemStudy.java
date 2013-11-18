@@ -10,11 +10,34 @@ import org.zkoss.zul.Label;
 public class ItemStudy extends HtmlMacroComponent {
 
 	@Wire
-	private Label contentElement;
+	public Label contentElement;
+	
+	@Wire
+	private Label idText;
+	
+	@Wire
+	private Label idLevel;
 	
 	public ItemStudy() {
 		compose();
 	}
+	
+	public String getIdText() {
+		return this.idText.getValue();
+	}
+
+	public void setIdText(String idText) {
+		this.idText.setValue(idText);
+	}
+
+	public String getIdLevel() {
+		return this.idLevel.getValue();
+	}
+
+	public void setIdLevel(String idLevel) {
+		this.idLevel.setValue(idLevel);
+	}
+
 
 	public String getContent() {
 		return this.contentElement.getValue();
