@@ -3,13 +3,12 @@ package br.ueg.tcc.bookway.view.composer;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jws.soap.SOAPBinding.Style;
-
 import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zul.Slider;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Tabbox;
 import org.zkoss.zul.Tabpanel;
@@ -111,11 +110,24 @@ public class NavigationStudyComposer extends
 	private Component createTabPanelStudy(Text text) {
 		Tabpanel tabpanel = new Tabpanel();
 		tabpanel.setSclass("tabpanelstudy");
-
+		tabpanel.setStyle("text-align: justify;");
 		LevelText rootLevel = HibernateUtils.materializeProxy(getControl()
 				.getLevelText(text.getRootLevelText().getId()));
 
 		tabpanel = (Tabpanel) mappingElementsAndChildren(rootLevel, tabpanel);
+		
+//		Slider slideStudy = new Slider();
+//		slideStudy.appendChild(tabpanel);
+//		
+//		slideStudy.addEventListener(Events.ON_SCROLL, new EventListener() {
+//			@Override
+//			public void onEvent(Event event) throws Exception {
+//				
+//				System.out.println("Rolando");
+//			}
+//		});
+		//TODO Ver como colocar o eventos ScroolEvent para funcionar aqui.
+		
 		return tabpanel;
 	}
 
