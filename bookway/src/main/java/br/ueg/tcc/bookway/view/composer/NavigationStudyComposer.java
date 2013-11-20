@@ -126,7 +126,7 @@ public class NavigationStudyComposer extends
 //				System.out.println("Rolando");
 //			}
 //		});
-		//TODO Ver como colocar o eventos ScroolEvent para funcionar aqui.
+		//TODO Ver como colocar os eventos ScroolEvent para funcionar aqui.
 		
 		return tabpanel;
 	}
