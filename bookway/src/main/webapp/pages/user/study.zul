@@ -11,5 +11,13 @@
 			<button label="Compartilhar"/>
 		</div>
 		<tabbox id="panelStudy" width="90%" height="auto" style="padding-top: 50px;"></tabbox>
+		<grid>
+			<rows>
+				<group><textbox id="txtbox" onOK="lbl.setValue(txtbox.getValue());txtbox.setVisible(false);lbl.setVisible(true)"/><label id="lbl" visible="false"/></group>
+					<row>
+					<textbox id="txtbox2" width="90%" multiline="true" maxlength="600" onOK="txtbox2.setDisabled(true)"/>
+				</row>
+			</rows>
+		</grid>
 	</div>
 </zk>
