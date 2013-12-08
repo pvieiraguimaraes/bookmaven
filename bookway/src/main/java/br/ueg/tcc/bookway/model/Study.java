@@ -8,7 +8,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import br.com.vexillum.model.CommonEntity;
+import br.com.vexillum.model.annotations.ValidatorClass;
 
+@ValidatorClass(validatorClass = "br.ueg.tcc.bookway.control.validator.StudyValidator")
 @SuppressWarnings("serial")
 @Entity
 public class Study extends CommonEntity {

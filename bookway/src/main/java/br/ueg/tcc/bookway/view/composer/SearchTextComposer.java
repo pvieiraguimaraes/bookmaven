@@ -1,5 +1,7 @@
 package br.ueg.tcc.bookway.view.composer;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
@@ -13,8 +15,11 @@ import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.RelationshipTextUserControl;
+import br.ueg.tcc.bookway.control.StudyControl;
 import br.ueg.tcc.bookway.control.TextControl;
+import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.Text;
+import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.model.enums.TypeText;
 
 /**
@@ -33,7 +38,8 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
 		String page = Executions.getCurrent().getDesktop().getRequestPath();
-		if(myTexts != null && page.equalsIgnoreCase("/pages/user/alltexts.zul")){
+		if (myTexts != null
+				&& page.equalsIgnoreCase("/pages/user/alltexts.zul")) {
 			myTexts.setChecked(true);
 			searchText();
 		}
@@ -98,7 +104,32 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 	public void studyText(String id) {
 		Text text = getControl().getTextById(Long.parseLong(id));
 		session.setAttribute("textStudy", text);
+		createObjectStudy(text);
+	
 		Executions.sendRedirect("/pages/user/study.zul");
+	}
+
+	private void createObjectStudy(Text text) {
+		Study study = new Study();
+		study.setDateStudy(new Date());
+		study.setText(text);
+		study.setUserBookway((UserBookway) getUserLogged());
+		
+		HashMap<String, Object> newMap = new HashMap<>();
+		newMap.put("entity", study);
+		
+		StudyControl control = SpringFactory.getController("studyControl",
+				StudyControl.class, newMap);
+		
+		Return ret = control.doAction("save");
+		
+		if(ret.isValid())
+			putStudyInSession(study);
+	}
+
+	private void putStudyInSession(Study study) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/**
@@ -127,7 +158,7 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 		retDelete.concat(getControl().doAction("deleteText"));
 		return retDelete;
 	}
-	
+
 	public Return disconnectionUserOfText() {
 		Return ret = getControl().doAction("disconnectionUserOfText");
 		return ret;

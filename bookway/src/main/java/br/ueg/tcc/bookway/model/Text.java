@@ -49,6 +49,9 @@ public class Text extends CommonEntity {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "text", cascade = CascadeType.ALL)
 	private List<RelationshipTextUser> textUser;
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "text", cascade = CascadeType.ALL)
+	private List<Study> study;
+
 	public List<RelationshipTextUser> getTextUser() {
 		return textUser;
 	}
@@ -121,8 +124,12 @@ public class Text extends CommonEntity {
 		this.userOwning = userOwning;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public List<Study> getStudy() {
+		return study;
+	}
+
+	public void setStudy(List<Study> study) {
+		this.study = study;
 	}
 
 }
