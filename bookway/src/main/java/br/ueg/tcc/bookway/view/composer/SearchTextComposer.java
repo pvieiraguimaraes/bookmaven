@@ -123,21 +123,21 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 		
 		Return ret = control.doAction("save");
 		
+		study = control.getThisStudy(study);
+		
 		if(ret.isValid())
 			putStudyInSession(study);
 	}
 
 	private void putStudyInSession(Study study) {
-		// TODO Auto-generated method stub
-		
+		session.setAttribute("study", study);
 	}
 
 	/**
 	 * Exibe mensagem de confirmação de exclusão, e em caso afirmativo exclui o
 	 * texto do usuário removendo todos os itens relacionados a ele.
 	 * 
-	 * @param id
-	 *            , do texto
+	 * @param id, do texto
 	 */
 	public void excludeText(String id) {
 		Text text = getControl().getTextById(Long.parseLong(id));
