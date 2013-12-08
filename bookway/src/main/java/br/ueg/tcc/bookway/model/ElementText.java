@@ -1,10 +1,14 @@
 package br.ueg.tcc.bookway.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import javax.persistence.OneToMany;
 
 import br.com.vexillum.model.CommonEntity;
 
@@ -22,6 +26,9 @@ public class ElementText extends CommonEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_level", insertable = true, updatable = true)
 	private LevelText idLevel;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "lastElementStop", cascade = CascadeType.ALL)
+	private List<Study> studys;
 
 	public String getName() {
 		return name;
@@ -47,8 +54,12 @@ public class ElementText extends CommonEntity {
 		this.idLevel = idLevel;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+	public List<Study> getStudys() {
+		return studys;
+	}
+
+	public void setStudys(List<Study> studys) {
+		this.studys = studys;
 	}
 
 }

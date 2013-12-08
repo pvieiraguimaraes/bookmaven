@@ -12,7 +12,6 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
-
 import br.com.vexillum.model.UserBasic;
 import br.com.vexillum.model.annotations.Validate;
 import br.com.vexillum.model.annotations.ValidatorClass;
@@ -51,6 +50,9 @@ public class UserBookway extends UserBasic {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "userBookway", cascade = CascadeType.ALL)
 	private List<RelationshipTextUser> textUser;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "userBookway", cascade = CascadeType.ALL)
+	private List<Study> studys;
 
 	public List<RelationshipTextUser> getTextUser() {
 		return textUser;
@@ -122,6 +124,14 @@ public class UserBookway extends UserBasic {
 
 	public void setTexts(List<Text> texts) {
 		this.texts = texts;
+	}
+
+	public List<Study> getStudys() {
+		return studys;
+	}
+
+	public void setStudys(List<Study> studys) {
+		this.studys = studys;
 	}
 
 }
