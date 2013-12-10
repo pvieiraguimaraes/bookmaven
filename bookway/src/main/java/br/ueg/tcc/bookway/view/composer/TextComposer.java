@@ -26,7 +26,7 @@ import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.TextControl;
 import br.ueg.tcc.bookway.model.Text;
-import br.ueg.tcc.bookway.model.enums.TypeText;
+import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 
 /**
  * @author Pedro
@@ -80,7 +80,7 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 	private String stream;
 	private ArrayList<String> levels;
 
-	private List<TypeText> listTypesText;
+	private List<TypePrivacy> listTypesText;
 
 	private String type;
 
@@ -136,11 +136,11 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 		this.pagesForChapter = pagesForChapter;
 	}
 
-	public List<TypeText> getListTypesText() {
+	public List<TypePrivacy> getListTypesText() {
 		return listTypesText;
 	}
 
-	public void setListTypesText(List<TypeText> listTypesText) {
+	public void setListTypesText(List<TypePrivacy> listTypesText) {
 		this.listTypesText = listTypesText;
 	}
 
@@ -344,7 +344,7 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 	}
 
 	public void checkComboType() {
-		if (fldTypeText.getSelectedItem().getValue().equals(TypeText.PRIVADO)) {
+		if (fldTypeText.getSelectedItem().getValue().equals(TypePrivacy.PRIVADO)) {
 			chckCommunity.setChecked(false);
 			chckCommunity.setDisabled(true);
 		} else

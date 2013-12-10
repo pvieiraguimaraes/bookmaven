@@ -74,8 +74,4 @@ public class LevelText extends CommonEntity {
 		this.elements = elements;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 }

@@ -19,7 +19,7 @@ import br.ueg.tcc.bookway.control.textfactory.TextReader;
 import br.ueg.tcc.bookway.control.textfactory.TextWriter;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
-import br.ueg.tcc.bookway.model.enums.TypeText;
+import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 import br.ueg.tcc.bookway.utils.FolderUtils;
 
 @Service
@@ -135,8 +135,8 @@ public class TextControl extends GenericControl<Text> {
 		return text;
 	}
 
-	public List<TypeText> initTypesText() {
-		return EnumUtils.getEnumList(TypeText.class);
+	public List<TypePrivacy> initTypesText() {
+		return EnumUtils.getEnumList(TypePrivacy.class);
 	}
 
 	/**

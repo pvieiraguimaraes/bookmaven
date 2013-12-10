@@ -20,7 +20,7 @@ import br.ueg.tcc.bookway.control.TextControl;
 import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
-import br.ueg.tcc.bookway.model.enums.TypeText;
+import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 
 /**
  * @author Pedro
@@ -67,7 +67,7 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 		} else {
 			Return ret = new Return(true);
 			entity.setCommunity(false);
-			entity.setTypeText(TypeText.PUBLICO);
+			entity.setTypeText(TypePrivacy.PUBLICO);
 			ret.concat(getControl().doAction("searchTexts"));
 			List<Text> list = getControl().substractListText(getAllMyTexts(),
 					(List<Text>) ret.getList());
