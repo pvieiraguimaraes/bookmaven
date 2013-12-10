@@ -16,7 +16,7 @@ import br.com.vexillum.model.CommonEntity;
 import br.com.vexillum.model.annotations.SearchField;
 import br.com.vexillum.model.annotations.Validate;
 import br.com.vexillum.model.annotations.ValidatorClass;
-import br.ueg.tcc.bookway.model.enums.TypeText;
+import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 
 @ValidatorClass(validatorClass = "br.ueg.tcc.bookway.control.validator.TextValidator")
 @Entity
@@ -34,7 +34,7 @@ public class Text extends CommonEntity {
 
 	@Validate(notNull = true)
 	@Enumerated(EnumType.STRING)
-	private TypeText typeText;
+	private TypePrivacy typeText;
 	private boolean community;
 	private String filePath;
 
@@ -84,11 +84,11 @@ public class Text extends CommonEntity {
 		this.insertDate = insertDate;
 	}
 
-	public TypeText getTypeText() {
+	public TypePrivacy getTypeText() {
 		return typeText;
 	}
 
-	public void setTypeText(TypeText typeText) {
+	public void setTypeText(TypePrivacy typeText) {
 		this.typeText = typeText;
 	}
 
