@@ -1,5 +1,6 @@
 package br.ueg.tcc.bookway.model;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 import br.com.vexillum.model.annotations.Validate;
@@ -7,6 +8,7 @@ import br.com.vexillum.model.annotations.ValidatorClass;
 
 @ValidatorClass(validatorClass = "br.ueg.tcc.bookway.control.validator.AnnotationValidator")
 @SuppressWarnings("serial")
+@DiscriminatorValue("A")
 @Entity
 public class Annotation extends ItensOfStudy {
 

@@ -1,13 +1,16 @@
 package br.ueg.tcc.bookway.model;
 
 import javax.persistence.DiscriminatorValue;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import br.com.vexillum.model.annotations.Validate;
+import br.com.vexillum.model.annotations.ValidatorClass;
 
+@ValidatorClass(validatorClass = "br.ueg.tcc.bookway.control.validator.MarkingValidator")
 @SuppressWarnings("serial")
 @Entity
 @DiscriminatorValue("M")
