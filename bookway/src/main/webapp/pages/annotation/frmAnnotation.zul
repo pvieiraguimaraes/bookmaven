@@ -25,8 +25,7 @@
 				</row>
 				<row spans="4">
 					<div align="right">
-						<button label="Salvar"
-							onClick='controller.doAction("saveEntity")'
+						<button label="Salvar" onClick='controller.doAction("saveEntity")'
 							sclass="btn btn-primary" />
 					</div>
 				</row>
