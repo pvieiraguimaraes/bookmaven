@@ -1,5 +1,8 @@
 package br.ueg.tcc.bookway.view.composer;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Component;
 
@@ -8,6 +11,7 @@ import br.com.vexillum.util.SpringFactory;
 import br.com.vexillum.view.CRUDComposer;
 import br.ueg.tcc.bookway.control.AnnotationControl;
 import br.ueg.tcc.bookway.model.Annotation;
+import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
@@ -32,5 +36,8 @@ public class AnnotationComposer extends
 	public Annotation getEntityObject() {
 		return new Annotation();
 	}
-
+	
+	public List<TypePrivacy> getListTypesPrivacy(){
+		return Arrays.asList(TypePrivacy.values());
+	}
 }
