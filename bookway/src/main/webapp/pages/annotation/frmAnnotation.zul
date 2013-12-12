@@ -1,22 +1,36 @@
 <zk>
-	<window title="Cadastro de Anotação" mode="modal"
-		apply="br.ueg.tcc.bookway.view.composer.AnnotationComposer"	closable="true">
-		<vlayout spacing="5px">
-			<hlayout spacing="70px">
-				<label value="Título" />
-				<textbox id="fldTitle"
-					value="@{controller.entity.title}" width="250px" />
-				<label value="Tipo" />
-				<combobox id="fldTypePrivacy" model="@{controller.listTypesPrivacy}"
-						selectedItem="@{controller.entity.typePrivacy}" />					
-			</hlayout>
-			<hlayout spacing="20px">
-				<textbox value="@{controller.entity.content}"
-					multiline="true" rows="4" maxlength="2000" />
-			</hlayout>
-			<div align="right">
-				<button label="Salvar" onClick='controller.doAction("saveEntity")' sclass="btn btn-primary" />
-			</div>
-		</vlayout>
+	<window title="Cadastro de Anotação" mode="modal" position="center"
+		apply="br.ueg.tcc.bookway.view.composer.AnnotationComposer"
+		closable="true">
+		<grid hflex="min" sclass="nostyle">
+			<columns>
+				<column />
+				<column />
+				<column />
+				<column />
+			</columns>
+			<rows>
+				<row>
+					<label value="Título" />
+					<textbox id="fldTitle" maxlength="200"
+						value="@{controller.entity.title}" />
+					<label value="Tipo" />
+					<combobox id="fldTypePrivacy" width="80px"
+						model="@{controller.listTypesPrivacy}"
+						selectedItem="@{controller.entity.typePrivacy}" />
+				</row>
+				<row spans="4">
+					<textbox value="@{controller.entity.content}" width="100%"
+						multiline="true" rows="4" maxlength="2000" />
+				</row>
+				<row spans="4">
+					<div align="right">
+						<button label="Salvar"
+							onClick='controller.doAction("saveEntity")'
+							sclass="btn btn-primary" />
+					</div>
+				</row>
+			</rows>
+		</grid>
 	</window>
 </zk>
