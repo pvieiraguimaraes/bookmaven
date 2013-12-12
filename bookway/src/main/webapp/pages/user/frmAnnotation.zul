@@ -1,0 +1,22 @@
+<zk>
+	<window title="Cadastro de Anotação" mode="modal"
+		apply="br.ueg.tcc.bookway.view.composer.AnnotationComposer"	closable="true">
+		<vlayout spacing="5px">
+			<hlayout spacing="70px">
+				<label value="Título" />
+				<textbox id="fldTitle"
+					value="@{controller.entity.title}" width="250px" />
+				<label value="Tipo" />
+				<combobox id="fldTypePrivacy" model="@{controller.listTypesText}"
+						selectedItem="@{controller.entity.typePrivacy}" />					
+			</hlayout>
+			<hlayout spacing="20px">
+				<textbox value="@{controller.entity.content}"
+					multiline="true" rows="4" maxlength="2000" />
+			</hlayout>
+			<div align="right">
+				<button label="Salvar" onClick='controller.doAction("saveEntity")' sclass="btn btn-primary" />
+			</div>
+		</vlayout>
+	</window>
+</zk>

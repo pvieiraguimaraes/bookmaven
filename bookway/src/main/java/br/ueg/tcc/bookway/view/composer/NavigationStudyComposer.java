@@ -1,6 +1,7 @@
 package br.ueg.tcc.bookway.view.composer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
@@ -16,12 +17,16 @@ import org.zkoss.zul.Tabs;
 
 import br.com.vexillum.util.HibernateUtils;
 import br.com.vexillum.util.ReflectionUtils;
+import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.com.vexillum.view.CRUDComposer;
+import br.ueg.tcc.bookway.control.AnnotationControl;
 import br.ueg.tcc.bookway.control.NavigationStudyControl;
+import br.ueg.tcc.bookway.model.Annotation;
 import br.ueg.tcc.bookway.model.ElementText;
 import br.ueg.tcc.bookway.model.ItemNavigationStudy;
 import br.ueg.tcc.bookway.model.LevelText;
+import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.view.macros.ItemStudy;
 
@@ -114,19 +119,19 @@ public class NavigationStudyComposer extends
 				.getLevelText(text.getRootLevelText().getId()));
 
 		tabpanel = (Tabpanel) mappingElementsAndChildren(rootLevel, tabpanel);
-		
-//		Slider slideStudy = new Slider();
-//		slideStudy.appendChild(tabpanel);
-//		
-//		slideStudy.addEventListener(Events.ON_SCROLL, new EventListener() {
-//			@Override
-//			public void onEvent(Event event) throws Exception {
-//				
-//				System.out.println("Rolando");
-//			}
-//		});
-		//TODO Ver como colocar os eventos ScroolEvent para funcionar aqui.
-		
+
+		// Slider slideStudy = new Slider();
+		// slideStudy.appendChild(tabpanel);
+		//
+		// slideStudy.addEventListener(Events.ON_SCROLL, new EventListener() {
+		// @Override
+		// public void onEvent(Event event) throws Exception {
+		//
+		// System.out.println("Rolando");
+		// }
+		// });
+		// TODO Ver como colocar os eventos ScroolEvent para funcionar aqui.
+
 		return tabpanel;
 	}
 
@@ -217,5 +222,15 @@ public class NavigationStudyComposer extends
 	private void changeVisibilityPanelAction(boolean visibility) {
 		Component panel = getComponentById(component, "panelActions");
 		panel.setVisible(visibility);
+	}
+
+	public void insertAnnotation() {
+		Study study = (Study) session.getAttribute("study");
+		
+		HashMap<String, Object> newMap = new HashMap<>();
+		newMap.put("entity", study);
+		
+		AnnotationControl control = SpringFactory.getController("annotationControl",
+				AnnotationControl.class, ReflectionUtils.prepareDataForPersistence(this));
 	}
 }
