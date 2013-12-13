@@ -124,12 +124,12 @@
 			<version>2.0.2</version>
 		</dependency>
 		
-		<!-- SONAR Analizador e Auditor de software -->
+		<!-- SONAR Analizador e Auditor de software 
 		<dependency>
 			<groupId>org.codehaus.sonar</groupId>
 			<artifactId>sonar-core</artifactId>
 			<version>4.0</version>
-		</dependency>
+		</dependency>-->
 	</dependencies>
 	<build>
 		<finalName>${project.artifactId}</finalName>
