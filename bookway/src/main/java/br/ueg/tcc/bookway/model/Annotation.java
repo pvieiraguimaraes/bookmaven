@@ -12,10 +12,10 @@ import br.com.vexillum.model.annotations.ValidatorClass;
 @Entity
 public class Annotation extends ItensOfStudy {
 
-	@Validate(max = 200, min = 3, notNull = true)
+	@Validate(max = 200, min = 3)
 	private String title;
 
-	@Validate(max = 2000, min = 3, notNull = true)
+	@Validate(max = 2000, min = 3)
 	private String content;
 
 	public String getTitle() {

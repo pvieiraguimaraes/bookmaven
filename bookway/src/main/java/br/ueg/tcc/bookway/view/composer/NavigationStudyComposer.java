@@ -223,14 +223,4 @@ public class NavigationStudyComposer extends
 		Component panel = getComponentById(component, "panelActions");
 		panel.setVisible(visibility);
 	}
-
-	public void insertAnnotation() {
-		Study study = (Study) session.getAttribute("study");
-		
-		HashMap<String, Object> newMap = new HashMap<>();
-		newMap.put("entity", study);
-		
-		AnnotationControl control = SpringFactory.getController("annotationControl",
-				AnnotationControl.class, ReflectionUtils.prepareDataForPersistence(this));
-	}
 }

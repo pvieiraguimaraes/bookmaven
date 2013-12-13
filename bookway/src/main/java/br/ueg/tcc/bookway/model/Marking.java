@@ -19,14 +19,13 @@ import br.com.vexillum.model.annotations.ValidatorClass;
 @DiscriminatorValue("M")
 public class Marking extends ItensOfStudy {
 
-	@Validate(notNull = true, max = 20, min = 2)
+	@Validate(max = 20, min = 2)
 	private String name;
 
-	@Validate(notNull = true)
 	private String color;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_user", insertable = true, updatable = false, nullable = false)
+	@JoinColumn(name = "id_user", insertable = true, updatable = false, nullable = true)
 	private UserBookway userBookway;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "marking", cascade = CascadeType.ALL)

@@ -40,4 +40,5 @@ public class AnnotationComposer extends
 	public List<TypePrivacy> getListTypesPrivacy(){
 		return Arrays.asList(TypePrivacy.values());
 	}
+	
 }
