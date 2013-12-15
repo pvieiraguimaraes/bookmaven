@@ -14,6 +14,8 @@
 	<security:http auto-config="true">
 		<security:intercept-url pattern="/pages/user/**"
 			access="ROLE_USER" />
+			<security:intercept-url pattern="/pages/annotation/**"
+			access="ROLE_USER" />
 		<security:intercept-url pattern="/pages/**"
 			access="ROLE_ANONYMOUS" />
 		<security:form-login login-page="/pages/login.zul"

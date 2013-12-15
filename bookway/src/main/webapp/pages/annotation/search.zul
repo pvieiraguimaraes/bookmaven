@@ -1,40 +1,42 @@
+<?page title="Pesquisa de Anotação" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
+
 <zk>
-	<window title="Pesquisa de Anotação" mode="modal"
-		apply="br.ueg.tcc.bookway.view.composer.AnnotationComposer"
-		closable="true">
-		<vlayout spacing="5px">
-			<hlayout spacing="70px">
-				<label value="Título" />
-				<textbox id="fldTitle"
-					value="@{controller.entity.title}" width="250px" />
-			</hlayout>
-			<hlayout spacing="45px">
-				<label value="Descrição" />
-				<textbox value="@{controller.entity.description}"
-					multiline="true" rows="4" width="250px" maxlength="250" />
-			</hlayout>
-			<hlayout id="protectedTextData" spacing="75px"
-				visible="false">
-				<label sclass="typetext" value="Tipo" />
-				<hlayout>
-					<combobox id="fldTypeText"
-						model="@{controller.listTypesText}"
-						onChange="controller.checkComboType()"
-						selectedItem="@{controller.entity.typeText}" width="250px">
-						<comboitem self="@{each=tipo}"
-							label="@{tipo.value}" value="@{tipo}" />
-					</combobox>
-					<checkbox id="chckCommunity"
-						value="@{controller.entity.community}" label="Comunitário" />
-				</hlayout>
-			</hlayout>
-			<label
-				value="*Atenção: O conteúdo do texto não poderá ser editado, 
-					deverá ser feito um novo cadastro" />
-			<div align="right">
-				<button label="Salvar" onClick="controller.saveText()"
-					sclass="btn btn-primary" />
-			</div>
-		</vlayout>
-	</window>
+	<div self="@{define(content)}" align="center" sclass="searchant" apply="br.ueg.tcc.bookway.view.composer.AnnotationComposer">
+		<grid hflex="min" sclass="nostyle">
+			<rows>
+				<row>
+					<label value="Texto" />
+					<combobox id="fldText" model="@{controller.listTypesText}" />
+				</row>
+				<row>
+					<label value="Título" />
+					<textbox value="@{controller.entity.title}"  maxlength="250" />
+				</row>
+				<row align="right" spans="2">
+					<div align="right">
+						<button label="Pesquisar" onClick="controller.searchAnnotation()" sclass="btn btn-primary" />
+					</div>
+				</row>
+			</rows>		
+		</grid>
+		<listbox id="resultList" model="@{controller.listEntity}" width="500px"
+					selectedItem="@{controller.selectedEntity}" hflex="min"
+					onAfterRender='self.clearSelection();' 
+					mold="paging" pageSize='5' visible="false">
+			<listhead>
+				<listheader label="Título" width="100px"/>
+				<listheader label="Texto" width="300px"/>
+				<listheader label="Ação" width="100px"/>
+			</listhead>
+			<listitem self="@{each=ent}">
+			 	<listcell label="@{itm.title}"/>
+			 	<listcell label="@{itm.content}"/>
+			 	<listcell>
+			 		<button/>
+			 		<button/>
+			 	</listcell>
+			</listitem>
+		</listbox>
+	</div>
 </zk>

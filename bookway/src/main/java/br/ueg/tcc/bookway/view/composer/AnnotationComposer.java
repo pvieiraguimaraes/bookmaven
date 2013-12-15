@@ -9,7 +9,6 @@ import org.zkoss.zk.ui.Component;
 import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
-import br.com.vexillum.view.CRUDComposer;
 import br.ueg.tcc.bookway.control.AnnotationControl;
 import br.ueg.tcc.bookway.model.Annotation;
 import br.ueg.tcc.bookway.model.enums.TypePrivacy;
@@ -18,7 +17,7 @@ import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 @org.springframework.stereotype.Component
 @Scope("prototype")
 public class AnnotationComposer extends
-		CRUDComposer<Annotation, AnnotationControl> {
+		InitComposer<Annotation, AnnotationControl> {
 
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
