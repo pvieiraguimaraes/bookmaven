@@ -1,5 +1,5 @@
 <zk>
-	<window title="Cadastro de Anotação" mode="modal" position="center"
+	<window id="frmAnnotation" title="Cadastro de Anotação" mode="modal" position="center"
 		apply="br.ueg.tcc.bookway.view.composer.AnnotationComposer"
 		closable="true">
 		<grid hflex="min" sclass="nostyle">

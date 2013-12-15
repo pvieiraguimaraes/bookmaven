@@ -1,6 +1,6 @@
 <zk>
-	<window title="Alteração de Texto" mode="modal"
-		apply="br.ueg.tcc.bookway.view.composer.TextComposer"
+	<window title="Pesquisa de Anotação" mode="modal"
+		apply="br.ueg.tcc.bookway.view.composer.AnnotationComposer"
 		closable="true">
 		<vlayout spacing="5px">
 			<hlayout spacing="70px">

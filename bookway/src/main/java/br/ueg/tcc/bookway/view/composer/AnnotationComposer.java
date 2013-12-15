@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Component;
 
 import br.com.vexillum.util.ReflectionUtils;
+import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.com.vexillum.view.CRUDComposer;
 import br.ueg.tcc.bookway.control.AnnotationControl;
@@ -39,6 +40,14 @@ public class AnnotationComposer extends
 	
 	public List<TypePrivacy> getListTypesPrivacy(){
 		return Arrays.asList(TypePrivacy.values());
+	}
+	
+	@Override
+	public Return saveEntity() {
+		Return ret = super.saveEntity();
+		if(ret.isValid())
+			getComponentById("frmAnnotation").detach();
+		return ret;
 	}
 	
 }
