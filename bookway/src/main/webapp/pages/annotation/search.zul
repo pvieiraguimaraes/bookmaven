@@ -2,12 +2,12 @@
 <?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
 
 <zk>
-	<div self="@{define(content)}" align="center" sclass="searchant" apply="br.ueg.tcc.bookway.view.composer.AnnotationComposer">
+	<div self="@{define(content)}" align="center" sclass="searchant" apply="br.ueg.tcc.bookway.view.composer.AnnotationComposer" onCreate="controller.loadListText()">
 		<grid hflex="min" sclass="nostyle">
 			<rows>
 				<row>
 					<label value="Texto" />
-					<combobox id="fldText" model="@{controller.listTypesText}" />
+					<combobox id="fldText" model="@{controller.allMyTexts}" selectedItem="@{controller.selectedText}" />
 				</row>
 				<row>
 					<label value="Título" />
