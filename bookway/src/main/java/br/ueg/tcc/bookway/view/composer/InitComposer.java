@@ -15,6 +15,7 @@ import br.com.vexillum.util.SpringFactory;
 import br.com.vexillum.view.CRUDComposer;
 import br.ueg.tcc.bookway.control.RelationshipTextUserControl;
 import br.ueg.tcc.bookway.control.TextControl;
+import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.view.macros.ItemText;
@@ -28,6 +29,15 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 
 	private List<Text> allMyTexts;
 	private Text selectedText;
+	private List<Study> myStudies;
+	
+	public List<Study> getMyStudies() {
+		return myStudies;
+	}
+
+	public void setMyStudies(List<Study> myStudies) {
+		this.myStudies = myStudies;
+	}
 
 	public Text getSelectedText() {
 		return selectedText;

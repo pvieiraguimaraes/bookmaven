@@ -1,11 +1,14 @@
 package br.ueg.tcc.bookway.model;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import br.com.vexillum.model.CommonEntity;
 import br.com.vexillum.model.annotations.ValidatorClass;
@@ -28,6 +31,9 @@ public class Study extends CommonEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_lastelementstop", insertable = true, updatable = false, nullable = true)
 	private ElementText lastElementStop;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "study", cascade = CascadeType.ALL)
+	private List<ItensOfStudy> itensOfStudies;
 
 	public Text getText() {
 		return text;
@@ -59,6 +65,14 @@ public class Study extends CommonEntity {
 
 	public void setLastElementStop(ElementText lastElementStop) {
 		this.lastElementStop = lastElementStop;
+	}
+
+	public List<ItensOfStudy> getItensOfStudies() {
+		return itensOfStudies;
+	}
+
+	public void setItensOfStudies(List<ItensOfStudy> itensOfStudies) {
+		this.itensOfStudies = itensOfStudies;
 	}
 
 }

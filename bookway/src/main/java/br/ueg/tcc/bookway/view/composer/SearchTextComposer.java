@@ -105,7 +105,6 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 		Text text = getControl().getTextById(Long.parseLong(id));
 		session.setAttribute("textStudy", text);
 		createObjectStudy(text);
-	
 		Executions.sendRedirect("/pages/user/study.zul");
 	}
 

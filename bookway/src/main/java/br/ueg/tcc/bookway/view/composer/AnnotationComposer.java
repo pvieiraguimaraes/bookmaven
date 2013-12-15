@@ -10,7 +10,11 @@ import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.AnnotationControl;
+import br.ueg.tcc.bookway.control.StudyControl;
 import br.ueg.tcc.bookway.model.Annotation;
+import br.ueg.tcc.bookway.model.Study;
+import br.ueg.tcc.bookway.model.Text;
+import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 
 @SuppressWarnings("serial")
@@ -22,6 +26,8 @@ public class AnnotationComposer extends
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
+		setMyStudies(getStudyControl().getMyStudies(
+				(UserBookway) getUserLogged()));
 		loadBinder();
 	}
 
@@ -36,17 +42,45 @@ public class AnnotationComposer extends
 	public Annotation getEntityObject() {
 		return new Annotation();
 	}
-	
-	public List<TypePrivacy> getListTypesPrivacy(){
+
+	public List<TypePrivacy> getListTypesPrivacy() {
 		return Arrays.asList(TypePrivacy.values());
 	}
-	
+
 	@Override
 	public Return saveEntity() {
+		Study study = (Study) session.getAttribute("study");
+		entity.setStudy(study);
 		Return ret = super.saveEntity();
-		if(ret.isValid())
+		if (ret.isValid())
 			getComponentById("frmAnnotation").detach();
 		return ret;
 	}
-	
+
+	public void loadListText() {
+		List<Study> studies = getMyStudies();
+		List<Text> texts = getAllMyTexts();
+
+		for (Study study : studies) {
+			Text text = study.getText();
+			if (!texts.contains(text)) {
+				texts.remove(text);
+			}
+		}
+
+		setAllMyTexts(texts);
+	}
+
+	private StudyControl getStudyControl() {
+		StudyControl control = SpringFactory.getController("studyControl",
+				StudyControl.class,
+				ReflectionUtils.prepareDataForPersistence(this));
+		return control;
+	}
+
+	public Return searchAnnotation() {
+		Return ret = getControl().doAction("searchAnnotation");
+		return ret;
+	}
+
 }

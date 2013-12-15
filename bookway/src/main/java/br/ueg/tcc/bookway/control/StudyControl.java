@@ -1,12 +1,14 @@
 package br.ueg.tcc.bookway.control;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import br.com.vexillum.control.GenericControl;
 import br.ueg.tcc.bookway.model.Study;
+import br.ueg.tcc.bookway.model.UserBookway;
 
 @Service
 @Scope("prototype")
@@ -24,5 +26,12 @@ public class StudyControl extends GenericControl<Study> {
 		data.put("sql", sql);
 		Study stu = (Study) searchByHQL().getList().get(0);
 		return stu;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Study> getMyStudies(UserBookway user){
+		String sql = "FROM Study WHERE id_user = '" + user.getId() + "'";
+		data.put("sql", sql);
+		return (List<Study>) searchByHQL().getList();
 	}
 }
