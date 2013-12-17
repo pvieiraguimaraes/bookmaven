@@ -23,6 +23,16 @@ import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 public class AnnotationComposer extends
 		InitComposer<Annotation, AnnotationControl> {
 
+	private String title;
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
@@ -78,8 +88,14 @@ public class AnnotationComposer extends
 		return control;
 	}
 
+	@SuppressWarnings("unchecked")
 	public Return searchAnnotation() {
 		Return ret = getControl().doAction("searchAnnotation");
+		if(ret.isValid() && !ret.getList().isEmpty()){
+			setListEntity((List<Annotation>) ret.getList());
+			getComponentById("resultList").setVisible(true);
+			loadBinder();
+		}
 		return ret;
 	}
 

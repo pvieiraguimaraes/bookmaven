@@ -131,5 +131,10 @@ public class Text extends CommonEntity {
 	public void setStudy(List<Study> study) {
 		this.study = study;
 	}
+	
+	@Override
+	public String toString() {
+		return this.getUserOwning().getName() + " - " + this.getTitle();
+	}
 
 }

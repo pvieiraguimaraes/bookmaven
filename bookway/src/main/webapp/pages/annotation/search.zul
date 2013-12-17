@@ -11,7 +11,7 @@
 				</row>
 				<row>
 					<label value="Título" />
-					<textbox value="@{controller.entity.title}"  maxlength="250" />
+					<textbox value="@{controller.title}"  maxlength="250" />
 				</row>
 				<row align="right" spans="2">
 					<div align="right">
@@ -20,21 +20,21 @@
 				</row>
 			</rows>		
 		</grid>
-		<listbox id="resultList" model="@{controller.listEntity}" width="500px"
+		<listbox id="resultList" model="@{controller.listEntity}" width="620px"
 					selectedItem="@{controller.selectedEntity}" hflex="min"
 					onAfterRender='self.clearSelection();' 
 					mold="paging" pageSize='5' visible="false">
 			<listhead>
-				<listheader label="Título" width="100px"/>
-				<listheader label="Texto" width="300px"/>
-				<listheader label="Ação" width="100px"/>
+				<listheader label="Título" width="150px"/>
+				<listheader label="Texto" width="350px"/>
+				<listheader label="Ação" width="120px"/>
 			</listhead>
-			<listitem self="@{each=ent}">
+			<listitem self="@{each=itm}">
 			 	<listcell label="@{itm.title}"/>
 			 	<listcell label="@{itm.content}"/>
 			 	<listcell>
-			 		<button/>
-			 		<button/>
+			 		<button label="Alterar"/>
+			 		<button label="Excluir"/>
 			 	</listcell>
 			</listitem>
 		</listbox>
