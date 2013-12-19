@@ -12,7 +12,6 @@ import br.com.vexillum.model.ICommonEntity;
 import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
-import br.com.vexillum.view.CRUDComposer;
 import br.ueg.tcc.bookway.control.RelationshipTextUserControl;
 import br.ueg.tcc.bookway.control.TextControl;
 import br.ueg.tcc.bookway.model.Study;
@@ -24,8 +23,8 @@ import br.ueg.tcc.bookway.view.macros.MyText;
 @SuppressWarnings({ "serial" })
 @org.springframework.stereotype.Component
 @Scope("prototype")
-public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
-		extends CRUDComposer<E, G> {
+public abstract class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
+		extends BaseComposer<E, G> {
 
 	private List<Text> allMyTexts;
 	private Text selectedText;
@@ -155,15 +154,4 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 				RelationshipTextUserControl.class,
 				ReflectionUtils.prepareDataForPersistence(this));
 	}
-
-	@Override
-	public G getControl() {
-		return null;
-	}
-
-	@Override
-	public E getEntityObject() {
-		return null;
-	}
-
 }

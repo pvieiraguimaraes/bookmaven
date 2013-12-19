@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zul.Listbox;
 
 import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
@@ -63,7 +64,7 @@ public class AnnotationComposer extends
 		entity.setStudy(study);
 		Return ret = super.saveEntity();
 		if (ret.isValid())
-			getComponentById("frmAnnotation").detach();
+			getComponentById("winAnnotation").detach();
 		return ret;
 	}
 
@@ -97,6 +98,26 @@ public class AnnotationComposer extends
 			loadBinder();
 		}
 		return ret;
+	}
+	
+	public void editAnnotation(){
+		Listbox listbox = (Listbox)getComponentById("resultList");
+		int index = listbox.getSelectedItem().getIndex();
+		Annotation selectedItem = (Annotation) listbox.getModel().getElementAt(index);
+		entity = selectedItem;
+		callModalWindow("/pages/annotation/modalAnnotation.zul");
+		loadBinder();
+	}
+
+	@Override
+	protected String getUpdatePage() {
+		return "/pages/annotation/modalAnnotation.zul";
+	}
+
+	@Override
+	protected String getDeactivationMessage() {
+		//TODO Verificar o texto desta mensagem com o que foi colocado na doc
+		return "Tem certeza que deseja excluir está anotação e todos seus itens?";
 	}
 
 }

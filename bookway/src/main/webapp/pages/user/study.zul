@@ -5,7 +5,7 @@
 <zk>
 	<div self="@{define(content)}" hflex="1" vflex="1" align="center" apply="br.ueg.tcc.bookway.view.composer.NavigationStudyComposer">
 		<div id="panelActions" visible="false" style="width: 100%;margin-left: auto;margin-right: auto;position: fixed;">
-			<button label="Anotar" apply="br.ueg.tcc.bookway.view.composer.AnnotationComposer" onClick='controller.callModalWindow("/pages/annotation/frmAnnotation.zul")'/>
+			<button label="Anotar" apply="br.ueg.tcc.bookway.view.composer.AnnotationComposer" onClick='controller.callModalWindow("/pages/annotation/insert.zul")'/>
 			<button label="Tag"/>
 			<button label="Marcar"/>
 			<button label="Compartilhar"/>

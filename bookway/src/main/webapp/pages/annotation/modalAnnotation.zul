@@ -1,0 +1,5 @@
+<window id="modalWindow" title="Alteração de Anotação" border="normal"
+	position="center, center" closable="true"
+	apply="${annotationComposer}">
+	<include src="/pages/annotation/frmAnnotation.zul" />
+</window>

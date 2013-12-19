@@ -29,7 +29,7 @@ import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
 @Scope("prototype")
-public class SearchTextComposer extends InitComposer<Text, TextControl> {
+public abstract class SearchTextComposer extends InitComposer<Text, TextControl> {
 
 	@Wire
 	public Checkbox myTexts;
@@ -173,4 +173,5 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 				RelationshipTextUserControl.class,
 				ReflectionUtils.prepareDataForPersistence(this));
 	}
+
 }

@@ -15,7 +15,7 @@
 				</row>
 				<row align="right" spans="2">
 					<div align="right">
-						<button label="Pesquisar" onClick="controller.searchAnnotation()" sclass="btn btn-primary" />
+						<button label="Pesquisar" onClick='controller.doAction("searchAnnotation")' sclass="btn btn-primary" />
 					</div>
 				</row>
 			</rows>		
@@ -33,7 +33,12 @@
 			 	<listcell label="@{itm.title}"/>
 			 	<listcell label="@{itm.content}"/>
 			 	<listcell>
-			 		<button label="Alterar"/>
+			 		<button label="Alterar">
+			 			<attribute name="onClick">
+			 				resultList.setSelectedItem((Listitem)self.getParent().getParent());
+			 				controller.editAnnotation();
+			 			</attribute>
+			 		</button>
 			 		<button label="Excluir"/>
 			 	</listcell>
 			</listitem>
