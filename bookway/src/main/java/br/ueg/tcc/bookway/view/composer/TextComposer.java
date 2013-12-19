@@ -360,4 +360,16 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 		loadBinder();
 	}
 
+	@Override
+	protected String getUpdatePage() {
+		// TODO Implementar a edição do texto aqui menos o conteúdo.
+		return null;
+	}
+
+	@Override
+	protected String getDeactivationMessage() {
+		// TODO Adicionar a mensagem para quando for desativar.
+		return null;
+	}
+
 }

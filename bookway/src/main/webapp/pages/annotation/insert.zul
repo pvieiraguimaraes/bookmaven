@@ -1,0 +1,5 @@
+<zk>
+	<window id="winAnnotation" hflex="min" closable="true" title="Cadastro de Anotação" apply="br.ueg.tcc.bookway.view.composer.AnnotationComposer">
+		<include src="/pages/annotation/frmAnnotation.zul"/>
+	</window>
+</zk>
