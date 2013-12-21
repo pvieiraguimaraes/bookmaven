@@ -7,11 +7,10 @@ import org.zkoss.zul.Window;
 import br.com.vexillum.control.GenericControl;
 import br.com.vexillum.model.ICommonEntity;
 import br.com.vexillum.util.Return;
-import br.com.vexillum.view.CRUDComposer;
 
 @SuppressWarnings("serial")
 public abstract class BaseComposer<E extends ICommonEntity, G extends GenericControl<E>>
-		extends CRUDComposer<E, G> {
+		extends InitComposer<E, G> {
 
 	protected BaseComposer<E, G> parentComposer;
 

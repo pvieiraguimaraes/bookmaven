@@ -1,4 +1,6 @@
 <zk>
+	<?xel-method prefix="c" name="getProperty" class="br.com.vexillum.view.GenericComposer" signature="java.lang.String getProperty(java.lang.String)"?>
+	<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 	<style src="/css/cerulean.css" />
 	<style src="/css/bookway.css" />
 	<borderlayout hflex="1" vflex="1">
