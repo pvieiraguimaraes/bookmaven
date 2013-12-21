@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Listitem;
 
 import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
@@ -22,7 +23,7 @@ import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 @org.springframework.stereotype.Component
 @Scope("prototype")
 public class AnnotationComposer extends
-		InitComposer<Annotation, AnnotationControl> {
+		BaseComposer<Annotation, AnnotationControl> {
 
 	private String title;
 
@@ -39,6 +40,7 @@ public class AnnotationComposer extends
 		super.doAfterCompose(comp);
 		setMyStudies(getStudyControl().getMyStudies(
 				(UserBookway) getUserLogged()));
+		getSelectedEntityFromListbox();
 		loadBinder();
 	}
 
@@ -60,10 +62,10 @@ public class AnnotationComposer extends
 
 	@Override
 	public Return saveEntity() {
-		Study study = (Study) session.getAttribute("study");
-		entity.setStudy(study);
+		if(!update && entity.getStudy() == null)	
+			entity.setStudy((Study) session.getAttribute("study"));
 		Return ret = super.saveEntity();
-		if (ret.isValid())
+		if (ret.isValid() && !update)
 			getComponentById("winAnnotation").detach();
 		return ret;
 	}
@@ -92,21 +94,32 @@ public class AnnotationComposer extends
 	@SuppressWarnings("unchecked")
 	public Return searchAnnotation() {
 		Return ret = getControl().doAction("searchAnnotation");
-		if(ret.isValid() && !ret.getList().isEmpty()){
+		if (ret.isValid() && !ret.getList().isEmpty()) {
 			setListEntity((List<Annotation>) ret.getList());
 			getComponentById("resultList").setVisible(true);
 			loadBinder();
 		}
 		return ret;
 	}
-	
-	public void editAnnotation(){
-		Listbox listbox = (Listbox)getComponentById("resultList");
-		int index = listbox.getSelectedItem().getIndex();
-		Annotation selectedItem = (Annotation) listbox.getModel().getElementAt(index);
-		entity = selectedItem;
+
+	public void editAnnotation() {
+		getSelectedEntityFromListbox();
 		callModalWindow("/pages/annotation/modalAnnotation.zul");
 		loadBinder();
+	}
+
+	private void getSelectedEntityFromListbox() {
+		Listbox listbox = (Listbox) getComponentById("resultList");
+		int index = 0;
+		if (listbox != null) {
+			Listitem selectedItem = listbox.getSelectedItem();
+			if (selectedItem != null) {
+				index = selectedItem.getIndex();
+				Annotation ant = (Annotation) listbox.getModel().getElementAt(
+						index);
+				selectedEntity = ant;
+			}
+		}
 	}
 
 	@Override
@@ -116,7 +129,6 @@ public class AnnotationComposer extends
 
 	@Override
 	protected String getDeactivationMessage() {
-		//TODO Verificar o texto desta mensagem com o que foi colocado na doc
 		return "Tem certeza que deseja excluir está anotação e todos seus itens?";
 	}
 

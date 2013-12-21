@@ -55,17 +55,5 @@ public class RelationshipTextComposer extends
 		ret.concat(getControl().addOrRemoveText("remove"));
 		treatReturn(ret);
 	}
-
-	@Override
-	protected String getUpdatePage() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected String getDeactivationMessage() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 }

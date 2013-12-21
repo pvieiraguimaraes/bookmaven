@@ -2,7 +2,7 @@
 <?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
 
 <zk>
-	<div self="@{define(content)}" align="center" sclass="searchant" apply="br.ueg.tcc.bookway.view.composer.AnnotationComposer" onCreate="controller.loadListText()">
+	<div self="@{define(content)}" align="center" sclass="searchant" apply="br.ueg.tcc.bookway.view.composer.AnnotationComposer" onCreate='controller.loadListText();'>
 		<grid hflex="min" sclass="nostyle">
 			<rows>
 				<row>
@@ -23,7 +23,7 @@
 		<listbox id="resultList" model="@{controller.listEntity}" width="620px"
 					selectedItem="@{controller.selectedEntity}" hflex="min"
 					onAfterRender='self.clearSelection();' 
-					mold="paging" pageSize='5' visible="false">
+					mold="paging" pageSize='10' visible="false">
 			<listhead>
 				<listheader label="Título" width="150px"/>
 				<listheader label="Texto" width="350px"/>
