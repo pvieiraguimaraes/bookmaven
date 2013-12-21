@@ -23,7 +23,7 @@ import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 @org.springframework.stereotype.Component
 @Scope("prototype")
 public class AnnotationComposer extends
-		BaseComposer<Annotation, AnnotationControl> {
+		InitComposer<Annotation, AnnotationControl> {
 
 	private String title;
 
@@ -107,6 +107,22 @@ public class AnnotationComposer extends
 		callModalWindow("/pages/annotation/modalAnnotation.zul");
 		loadBinder();
 	}
+	
+	public void deleteAnnotation(){
+		getSelectedEntityFromListbox();
+		entity = getSelectedEntity();
+		showActionConfirmation(getDeactivationMessage(), "deleteThisAnnotation");		
+		loadBinder();
+	}
+	
+	public Return deleteThisAnnotation(){
+		Annotation thisAnot = entity;
+		Return ret = getControl().doAction("delete");
+		if(ret.isValid())
+			listEntity.remove(thisAnot);
+		loadBinder();
+		return ret;
+	}
 
 	private void getSelectedEntityFromListbox() {
 		Listbox listbox = (Listbox) getComponentById("resultList");
@@ -129,7 +145,7 @@ public class AnnotationComposer extends
 
 	@Override
 	protected String getDeactivationMessage() {
-		return "Tem certeza que deseja excluir está anotação e todos seus itens?";
+		return "Deseja realmente excluir esta anotação?";
 	}
 
 }
