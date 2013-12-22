@@ -15,7 +15,8 @@
 						<toolbarbutton image="/images/book.png"
 							label="Meus Textos" onClick='Executions.sendRedirect("/pages/user/alltexts.zul")' />
 						<toolbarbutton image="/images/tag-white.png"
-							label="Marcações e Tags" />
+							label="Marcações e Tags" 
+							onClick='Executions.sendRedirect("/pages/marking/search.zul")' />
 						<toolbarbutton image="/images/user-group.png"
 							label="Meus Amigos" />
 						<toolbarbutton image="/images/configuration.png"

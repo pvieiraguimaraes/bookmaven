@@ -1,7 +1,13 @@
 package br.ueg.tcc.bookway.view.composer;
 
-import org.springframework.context.annotation.Scope;
+import java.util.List;
 
+import org.springframework.context.annotation.Scope;
+import org.zkoss.zk.ui.Component;
+
+import br.com.vexillum.util.ReflectionUtils;
+import br.com.vexillum.util.Return;
+import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.MarkingControl;
 import br.ueg.tcc.bookway.model.Marking;
 
@@ -10,28 +16,60 @@ import br.ueg.tcc.bookway.model.Marking;
 @Scope("prototype")
 public class MarkingComposer extends BaseComposer<Marking, MarkingControl> {
 
+	private String tagValue;
+
+	public String getTagValue() {
+		return tagValue;
+	}
+
+	public void setTagValue(String tagValue) {
+		this.tagValue = tagValue;
+	}
+
+	@Override
+	public void doAfterCompose(Component comp) throws Exception {
+		super.doAfterCompose(comp);
+		loadBinder();
+	}
+
 	@Override
 	protected String getUpdatePage() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected String getDeactivationMessage() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public MarkingControl getControl() {
-		// TODO Auto-generated method stub
-		return null;
+		return SpringFactory.getController("markingControl",
+				MarkingControl.class,
+				ReflectionUtils.prepareDataForPersistence(this));
 	}
 
 	@Override
 	public Marking getEntityObject() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Marking();
 	}
 
+	@SuppressWarnings("unchecked")
+	public Return searchMarking() {
+		Return ret = getControl().doAction("searchMarking");
+		if (ret.isValid() && !ret.getList().isEmpty()) {
+			setListEntity((List<Marking>) ret.getList());
+			getComponentById("resultList").setVisible(true);
+			loadBinder();
+		}
+		return ret;
+	}
+
+	public void editMarking() {
+
+	}
+
+	public void deleteMarking() {
+
+	}
 }
