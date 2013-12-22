@@ -1,0 +1,5 @@
+<window id="modalWindow" title="Alteração de Marcação" border="normal"
+	position="center, center" closable="true"
+	apply="br.ueg.tcc.bookway.view.composer.MarkingComposer">
+	<include src="/pages/marking/frmMarking.zul" />
+</window>

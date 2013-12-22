@@ -1,21 +1,22 @@
-<?page title="Pesquisa de Anotação" contentType="text/html;charset=UTF-8"?>
+<?page title="Pesquisa de Marcações/Tags" contentType="text/html;charset=UTF-8"?>
 <?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
 
 <zk>
-	<div self="@{define(content)}" align="center" sclass="searchant" apply="br.ueg.tcc.bookway.view.composer.AnnotationComposer" onCreate='controller.loadListText();'>
+	<div self="@{define(content)}" align="center" sclass="searchant" apply="br.ueg.tcc.bookway.view.composer.MarkingComposer">
 		<grid hflex="min" sclass="nostyle">
 			<rows>
 				<row>
-					<label value="Texto" />
-					<combobox id="fldText" model="@{controller.allMyTexts}" selectedItem="@{controller.selectedText}" />
+					<label value="Nome:" />
+					<textbox id="fldName" value="@{controller.entity.name}" />
 				</row>
 				<row>
-					<label value="Título" />
-					<textbox value="@{controller.title}"  maxlength="250" />
+					<label value="Tag:" />
+					<textbox value="@{controller.tagValue}" />
 				</row>
 				<row align="right" spans="2">
 					<div align="right">
-						<button label="Pesquisar" onClick='controller.doAction("searchAnnotation")' sclass="btn btn-primary" />
+						<button label="Nova" onClick='controller.callModalWindow("/pages/marking/insert.zul")' sclass="btn btn-primary" />
+						<button label="Pesquisar" onClick='controller.doAction("searchMarking")' sclass="btn btn-primary" />
 					</div>
 				</row>
 			</rows>		
@@ -25,24 +26,24 @@
 					onAfterRender='self.clearSelection();' 
 					mold="paging" pageSize='10' visible="false">
 			<listhead>
-				<listheader label="Título" width="150px"/>
-				<listheader label="Texto" width="350px"/>
+				<listheader label="Nome" width="150px"/>
+				<listheader label="Cor" width="350px"/>
 				<listheader label="Ação" width="120px"/>
 			</listhead>
 			<listitem self="@{each=itm}">
-			 	<listcell label="@{itm.title}"/>
-			 	<listcell label="@{itm.content}"/>
+			 	<listcell label="@{itm.name}"/>
+			 	<listcell label="@{itm.color}"/>
 			 	<listcell>
 			 		<button label="Alterar">
 			 			<attribute name="onClick">
 			 				resultList.setSelectedItem((Listitem)self.getParent().getParent());
-			 				controller.editAnnotation();
+			 				controller.editMarking();
 			 			</attribute>
 			 		</button>
 			 		<button label="Excluir">
 				 		<attribute name="onClick">
 							resultList.setSelectedItem((Listitem) self.getParent().getParent());
-							controller.deleteAnnotation();
+							controller.deleteMarking();
 						</attribute>
 			 		</button>
 			 	</listcell>
