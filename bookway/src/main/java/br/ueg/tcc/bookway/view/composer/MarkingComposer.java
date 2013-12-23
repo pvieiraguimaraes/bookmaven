@@ -17,7 +17,7 @@ import br.ueg.tcc.bookway.model.Marking;
 public class MarkingComposer extends BaseComposer<Marking, MarkingControl> {
 
 	private String tagValue;
-
+	
 	public String getTagValue() {
 		return tagValue;
 	}
@@ -71,5 +71,9 @@ public class MarkingComposer extends BaseComposer<Marking, MarkingControl> {
 
 	public void deleteMarking() {
 
+	}
+	
+	public void addTagInList(){
+		
 	}
 }

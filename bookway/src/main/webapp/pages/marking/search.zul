@@ -7,7 +7,7 @@
 			<rows>
 				<row>
 					<label value="Nome:" />
-					<textbox id="fldName" value="@{controller.entity.name}" />
+					<textbox id="fldName" value="@{controller.entity.name}"/>
 				</row>
 				<row>
 					<label value="Tag:" />
