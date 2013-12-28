@@ -3,15 +3,18 @@
 
 <zk>
 	<div self="@{define(content)}" align="center" sclass="searchant" apply="br.ueg.tcc.bookway.view.composer.AnnotationComposer" onCreate='controller.loadListText();'>
-		<grid hflex="min" sclass="nostyle">
+		<grid sclass="nostyle" hflex="min">
+			<columns>
+				<column/><column/>
+			</columns>
 			<rows>
 				<row>
 					<label value="Texto" />
-					<combobox id="fldText" model="@{controller.allMyTexts}" selectedItem="@{controller.selectedText}" />
+					<combobox id="fldText" width="200px" model="@{controller.allMyTexts}" selectedItem="@{controller.selectedText}" />
 				</row>
 				<row>
 					<label value="Título" />
-					<textbox value="@{controller.title}"  maxlength="250" />
+					<textbox value="@{controller.title}" width="185px" maxlength="250" />
 				</row>
 				<row align="right" spans="2">
 					<div align="right">
