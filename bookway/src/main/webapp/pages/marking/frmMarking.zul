@@ -11,14 +11,14 @@
 			</row>
 			<row spans="1,1,2">
 				<label value="Tag:" />
-				<textbox id="fldTag" />
+				<textbox id="fldTag" value="@{controller.tagValue}" />
 				<button image="/images/add.png" width="35px"
 					onClick="controller.addTagInList()" />
 			</row>
 		</rows>
 	</grid>
 	<div align="center">
-		<listbox id="fldlstTags" width="300px" visible="true">
+		<listbox id="fldlstTags" width="300px" visible="false">
 			<listhead>
 				<listheader align="center" label="Nome" />
 				<listheader width="30px" />
