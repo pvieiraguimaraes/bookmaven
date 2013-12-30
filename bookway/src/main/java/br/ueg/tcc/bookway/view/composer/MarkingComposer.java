@@ -10,6 +10,7 @@ import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.MarkingControl;
 import br.ueg.tcc.bookway.model.Marking;
+import br.ueg.tcc.bookway.model.TagsOfMarking;
 
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
@@ -17,7 +18,7 @@ import br.ueg.tcc.bookway.model.Marking;
 public class MarkingComposer extends BaseComposer<Marking, MarkingControl> {
 
 	private String tagValue;
-	
+
 	public String getTagValue() {
 		return tagValue;
 	}
@@ -72,8 +73,17 @@ public class MarkingComposer extends BaseComposer<Marking, MarkingControl> {
 	public void deleteMarking() {
 
 	}
-	
-	public void addTagInList(){
+
+	public void addTagInList() {
 		
+		checkTagsOfMarking();
+	}
+
+	private void checkTagsOfMarking() {
+		List<TagsOfMarking> tagsOfMarkings = entity.getTagsOfMarkings();
+		if (!tagsOfMarkings.isEmpty())
+			getComponentById("fldlstTags").setVisible(true);
+		else
+			getComponentById("fldlstTags").setVisible(false);
 	}
 }

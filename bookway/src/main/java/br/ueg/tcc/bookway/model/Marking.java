@@ -1,5 +1,6 @@
 package br.ueg.tcc.bookway.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -31,6 +32,10 @@ public class Marking extends ItensOfStudy {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "marking", cascade = CascadeType.ALL)
 	private List<TagsOfMarking> tagsOfMarkings;
 
+	public Marking() {
+		tagsOfMarkings = new ArrayList<TagsOfMarking>();
+	}
+	
 	public String getName() {
 		return name;
 	}

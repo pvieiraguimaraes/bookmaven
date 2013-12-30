@@ -3,15 +3,18 @@
 
 <zk>
 	<div self="@{define(content)}" align="center" sclass="searchant" apply="br.ueg.tcc.bookway.view.composer.MarkingComposer">
-		<grid hflex="min" sclass="nostyle">
+		<grid width="300px" sclass="nostyle">
+			<columns>
+				<column width="50px"/><column/>
+			</columns>
 			<rows>
 				<row>
 					<label value="Nome:" />
-					<textbox id="fldName" value="@{controller.entity.name}"/>
+					<textbox id="fldName" width="200px" value="@{controller.entity.name}"/>
 				</row>
 				<row>
 					<label value="Tag:" />
-					<textbox value="@{controller.tagValue}" />
+					<textbox value="@{controller.tagValue}" width="200px" />
 				</row>
 				<row align="right" spans="2">
 					<div align="right">
