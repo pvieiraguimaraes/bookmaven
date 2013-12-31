@@ -13,16 +13,30 @@
 				<label value="Tag:" />
 				<textbox id="fldTag" value="@{controller.tagValue}" />
 				<button image="/images/add.png" width="35px"
-					onClick="controller.addTagInList()" />
+					onClick='controller.doAction("addTagInList");' />
 			</row>
 		</rows>
 	</grid>
-	<div align="center">
-		<listbox id="fldlstTags" width="300px" visible="false">
+	<div align="center" style="padding-bottom: 5px">
+		<listbox id="fldlstTags" model="@{controller.entity.tagsOfMarkings}" 
+			width="300px" selectedItem="@{controller.tagSelected}" hflex="min"
+			onAfterRender='self.clearSelection();' mold="paging" pageSize='5'
+			visible="false">
 			<listhead>
 				<listheader align="center" label="Nome" />
 				<listheader width="30px" />
 			</listhead>
+			<listitem self="@{each=itm}">
+				<listcell label="@{itm.name}" />
+				<listcell>
+					<image src="/images/close.png">
+						<attribute name="onClick">
+							resultList.setSelectedItem((Listitem) self.getParent().getParent());
+							controller.deleteMarking();
+						</attribute>
+					</image>
+				</listcell>
+			</listitem>
 		</listbox>
 	</div>
 	<div align="right">

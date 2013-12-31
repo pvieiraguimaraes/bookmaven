@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Component;
 
+import br.com.vexillum.util.Message;
 import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
@@ -18,6 +19,16 @@ import br.ueg.tcc.bookway.model.TagsOfMarking;
 public class MarkingComposer extends BaseComposer<Marking, MarkingControl> {
 
 	private String tagValue;
+
+	private TagsOfMarking tagSelected;
+
+	public TagsOfMarking getTagSelected() {
+		return tagSelected;
+	}
+
+	public void setTagSelected(TagsOfMarking tagSelected) {
+		this.tagSelected = tagSelected;
+	}
 
 	public String getTagValue() {
 		return tagValue;
@@ -74,9 +85,36 @@ public class MarkingComposer extends BaseComposer<Marking, MarkingControl> {
 
 	}
 
-	public void addTagInList() {
-		
-		checkTagsOfMarking();
+	public Return addTagInList() {
+		Return ret = new Return(true);
+		TagsOfMarking tag;
+		if (tagValue != null && !tagValue.equalsIgnoreCase("")) {
+			List<TagsOfMarking> tags = entity.getTagsOfMarkings();
+			if (!tags.isEmpty()) {
+				boolean flag = false;
+				for (TagsOfMarking tagsOfMarking : tags) {
+					if (tagsOfMarking.getName().equalsIgnoreCase(tagValue)) {
+						flag = true;
+					}
+					if (!flag) {
+						tag = new TagsOfMarking();
+						tag.setName(tagValue);
+						tags.add(tag);
+						checkTagsOfMarking();
+						return ret;
+					} else {
+						ret.setValid(false);
+						ret.addMessage(new Message("tag", messages
+								.getKey("tag_exists_in_marking_false")));
+					}
+
+				}
+			}
+		} else {
+			ret.setValid(false);
+			ret.addMessage(new Message("tag", messages.getKey("notnull_false")));
+		}
+		return ret;
 	}
 
 	private void checkTagsOfMarking() {
