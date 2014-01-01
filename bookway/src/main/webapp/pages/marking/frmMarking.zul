@@ -1,17 +1,26 @@
 <zk>
 	<grid hflex="min" sclass="nostyle">
+		<columns>
+			<column/><column width="150px"/><column/><column/>
+		</columns>
 		<rows>
-			<row>
+			<row spans="1,3">
 				<label value="Nome" />
-				<textbox id="fldName" maxlength="200"
+				<textbox id="fldName" maxlength="200" width="210px"
 					value="@{controller.entity.name}" />
+			</row>
+			<row>
+				<label value="Tipo" />
+				<combobox id="fldTypePrivacy" width="120px"
+					model="@{controller.listTypesPrivacy}"
+					selectedItem="@{controller.entity.typePrivacy}" />
 				<label value="Cor:" />
 				<colorbox id="fldColor" width="30px" height="25px"
 					value="@{controller.entity.color}" />
 			</row>
-			<row spans="1,1,2">
+			<row spans="1,2,1">
 				<label value="Tag:" />
-				<textbox id="fldTag" value="@{controller.tagValue}" />
+				<textbox id="fldTag" value="@{controller.tagValue}" width="160px" />
 				<button image="/images/add.png" width="35px"
 					onClick='controller.doAction("addTagInList");' />
 			</row>
@@ -19,7 +28,7 @@
 	</grid>
 	<div align="center" style="padding-bottom: 5px">
 		<listbox id="fldlstTags" model="@{controller.entity.tagsOfMarkings}" 
-			width="300px" selectedItem="@{controller.tagSelected}" hflex="min"
+			width="220px" selectedItem="@{controller.tagSelected}" hflex="min"
 			onAfterRender='self.clearSelection();' mold="paging" pageSize='5'
 			visible="false">
 			<listhead>
@@ -27,12 +36,14 @@
 				<listheader width="30px" />
 			</listhead>
 			<listitem self="@{each=itm}">
-				<listcell label="@{itm.name}" />
+				<listcell>
+					<textbox value="@{itm.name}" style="text-align: center" width="160px"/>
+				</listcell>
 				<listcell>
 					<image src="/images/close.png">
 						<attribute name="onClick">
 							resultList.setSelectedItem((Listitem) self.getParent().getParent());
-							controller.deleteMarking();
+							controller.removeTagFromMarking();
 						</attribute>
 					</image>
 				</listcell>
