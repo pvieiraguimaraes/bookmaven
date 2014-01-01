@@ -1,5 +1,6 @@
 package br.ueg.tcc.bookway.view.composer;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
@@ -12,6 +13,7 @@ import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.MarkingControl;
 import br.ueg.tcc.bookway.model.Marking;
 import br.ueg.tcc.bookway.model.TagsOfMarking;
+import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
@@ -38,6 +40,10 @@ public class MarkingComposer extends BaseComposer<Marking, MarkingControl> {
 		this.tagValue = tagValue;
 	}
 
+	public List<TypePrivacy> getListTypesPrivacy() {
+		return Arrays.asList(TypePrivacy.values());
+	}
+	
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
@@ -85,6 +91,10 @@ public class MarkingComposer extends BaseComposer<Marking, MarkingControl> {
 
 	}
 
+	public void removeTagFromMarking() {
+
+	}
+
 	public Return addTagInList() {
 		Return ret = new Return(true);
 		TagsOfMarking tag;
@@ -96,19 +106,25 @@ public class MarkingComposer extends BaseComposer<Marking, MarkingControl> {
 					if (tagsOfMarking.getName().equalsIgnoreCase(tagValue)) {
 						flag = true;
 					}
-					if (!flag) {
-						tag = new TagsOfMarking();
-						tag.setName(tagValue);
-						tags.add(tag);
-						checkTagsOfMarking();
-						return ret;
-					} else {
-						ret.setValid(false);
-						ret.addMessage(new Message("tag", messages
-								.getKey("tag_exists_in_marking_false")));
-					}
-
 				}
+				if (!flag) {
+					tag = new TagsOfMarking();
+					tag.setName(tagValue);
+					tags.add(tag);
+					checkTagsOfMarking();
+					return ret;
+				} else {
+					ret.setValid(false);
+					ret.addMessage(new Message("tag", messages
+							.getKey("tag_exists_in_marking_false")));
+				}
+
+			} else {
+				tag = new TagsOfMarking();
+				tag.setName(tagValue);
+				tags.add(tag);
+				checkTagsOfMarking();
+				return ret;
 			}
 		} else {
 			ret.setValid(false);
@@ -119,6 +135,7 @@ public class MarkingComposer extends BaseComposer<Marking, MarkingControl> {
 
 	private void checkTagsOfMarking() {
 		List<TagsOfMarking> tagsOfMarkings = entity.getTagsOfMarkings();
+		setTagValue(null);
 		if (!tagsOfMarkings.isEmpty())
 			getComponentById("fldlstTags").setVisible(true);
 		else
