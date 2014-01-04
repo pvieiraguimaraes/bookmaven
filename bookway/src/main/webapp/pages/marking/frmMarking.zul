@@ -1,26 +1,19 @@
 <zk>
 	<grid hflex="min" sclass="nostyle">
 		<columns>
-			<column/><column width="150px"/><column/><column/>
+			<column/><column/><column/><column/>
 		</columns>
 		<rows>
-			<row spans="1,3">
+			<row>
 				<label value="Nome" />
 				<textbox id="fldName" maxlength="200" width="210px"
 					value="@{controller.entity.name}" />
-			</row>
-			<row>
-				<label value="Tipo" />
-				<combobox id="fldTypePrivacy" width="120px"
-					model="@{controller.listTypesPrivacy}"
-					selectedItem="@{controller.entity.typePrivacy}" />
 				<label value="Cor:" />
-				<colorbox id="fldColor" width="30px" height="25px"
-					value="@{controller.entity.color}" />
+				<colorbox id="fldColor" width="30px" height="25px" />
 			</row>
 			<row spans="1,2,1">
 				<label value="Tag:" />
-				<textbox id="fldTag" value="@{controller.tagValue}" width="160px" />
+				<textbox id="fldTag" value="@{controller.tagValue}" width="210px" />
 				<button image="/images/add.png" width="35px"
 					onClick='controller.doAction("addTagInList");' />
 			</row>
@@ -42,7 +35,7 @@
 				<listcell>
 					<image src="/images/close.png">
 						<attribute name="onClick">
-							resultList.setSelectedItem((Listitem) self.getParent().getParent());
+							fldlstTags.setSelectedItem((Listitem)self.getParent().getParent());
 							controller.removeTagFromMarking();
 						</attribute>
 					</image>

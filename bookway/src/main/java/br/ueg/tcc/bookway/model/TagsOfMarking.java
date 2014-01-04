@@ -15,15 +15,15 @@ public class TagsOfMarking extends CommonEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_marking", insertable = true, updatable = false, nullable = false)
-	private Marking marking;
+	private MarkingOfUser marking;
 
 	private String name;
 
-	public Marking getMarking() {
+	public MarkingOfUser getMarking() {
 		return marking;
 	}
 
-	public void setMarking(Marking marking) {
+	public void setMarking(MarkingOfUser marking) {
 		this.marking = marking;
 	}
 

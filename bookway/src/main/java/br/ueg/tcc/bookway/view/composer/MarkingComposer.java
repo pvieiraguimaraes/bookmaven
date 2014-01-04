@@ -5,20 +5,24 @@ import java.util.List;
 
 import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zkex.zul.Colorbox;
+import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Listitem;
 
 import br.com.vexillum.util.Message;
 import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.MarkingControl;
-import br.ueg.tcc.bookway.model.Marking;
+import br.ueg.tcc.bookway.model.MarkingOfUser;
 import br.ueg.tcc.bookway.model.TagsOfMarking;
+import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
 @Scope("prototype")
-public class MarkingComposer extends BaseComposer<Marking, MarkingControl> {
+public class MarkingComposer extends BaseComposer<MarkingOfUser, MarkingControl> {
 
 	private String tagValue;
 
@@ -68,15 +72,15 @@ public class MarkingComposer extends BaseComposer<Marking, MarkingControl> {
 	}
 
 	@Override
-	public Marking getEntityObject() {
-		return new Marking();
+	public MarkingOfUser getEntityObject() {
+		return new MarkingOfUser();
 	}
 
 	@SuppressWarnings("unchecked")
 	public Return searchMarking() {
 		Return ret = getControl().doAction("searchMarking");
 		if (ret.isValid() && !ret.getList().isEmpty()) {
-			setListEntity((List<Marking>) ret.getList());
+			setListEntity((List<MarkingOfUser>) ret.getList());
 			getComponentById("resultList").setVisible(true);
 			loadBinder();
 		}
@@ -92,7 +96,19 @@ public class MarkingComposer extends BaseComposer<Marking, MarkingControl> {
 	}
 
 	public void removeTagFromMarking() {
-
+		Listbox listbox = (Listbox) getComponentById("fldlstTags");
+		int index = 0;
+		if (listbox != null) {
+			Listitem selectedItem = listbox.getSelectedItem();
+			if (selectedItem != null) {
+				index = selectedItem.getIndex();
+				TagsOfMarking tag = (TagsOfMarking) listbox.getModel().getElementAt(
+						index);
+				entity.getTagsOfMarkings().remove(tag);
+			}
+		}
+		checkTagsOfMarking();
+		loadBinder();
 	}
 
 	public Return addTagInList() {
@@ -110,6 +126,7 @@ public class MarkingComposer extends BaseComposer<Marking, MarkingControl> {
 				if (!flag) {
 					tag = new TagsOfMarking();
 					tag.setName(tagValue);
+					tag.setMarking(entity);
 					tags.add(tag);
 					checkTagsOfMarking();
 					return ret;
@@ -123,6 +140,7 @@ public class MarkingComposer extends BaseComposer<Marking, MarkingControl> {
 				tag = new TagsOfMarking();
 				tag.setName(tagValue);
 				tags.add(tag);
+				tag.setMarking(entity);
 				checkTagsOfMarking();
 				return ret;
 			}
@@ -140,5 +158,13 @@ public class MarkingComposer extends BaseComposer<Marking, MarkingControl> {
 			getComponentById("fldlstTags").setVisible(true);
 		else
 			getComponentById("fldlstTags").setVisible(false);
+	}
+	
+	@Override
+	public Return saveEntity() {
+		Colorbox colorbox = (Colorbox) getComponentById("fldColor");
+		entity.setColor(colorbox.getColor());
+		entity.setUserBookway((UserBookway) getUserLogged());
+		return super.saveEntity();
 	}
 }

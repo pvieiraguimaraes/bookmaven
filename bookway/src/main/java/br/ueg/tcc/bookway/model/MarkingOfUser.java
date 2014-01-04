@@ -3,22 +3,23 @@ package br.ueg.tcc.bookway.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
+import br.com.vexillum.model.CommonEntity;
 import br.com.vexillum.model.annotations.Validate;
 import br.com.vexillum.model.annotations.ValidatorClass;
 
 @ValidatorClass(validatorClass = "br.ueg.tcc.bookway.control.validator.MarkingValidator")
 @SuppressWarnings("serial")
 @Entity
-@DiscriminatorValue("M")
-public class Marking extends ItensOfStudy {
+public class MarkingOfUser extends CommonEntity {
 
 	@Validate(max = 20, min = 2)
 	private String name;
@@ -29,13 +30,18 @@ public class Marking extends ItensOfStudy {
 	@JoinColumn(name = "id_user", insertable = true, updatable = false, nullable = true)
 	private UserBookway userBookway;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "marking", cascade = CascadeType.ALL)
+	@Cascade(CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "marking", orphanRemoval = true)
 	private List<TagsOfMarking> tagsOfMarkings;
+	
+	@Cascade(CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "markingOfUser", orphanRemoval = true)
+	private List<MarkingUsed> markingUseds;
 
-	public Marking() {
+	public MarkingOfUser() {
 		tagsOfMarkings = new ArrayList<TagsOfMarking>();
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -66,6 +72,14 @@ public class Marking extends ItensOfStudy {
 
 	public void setTagsOfMarkings(List<TagsOfMarking> tagsOfMarkings) {
 		this.tagsOfMarkings = tagsOfMarkings;
+	}
+
+	public List<MarkingUsed> getMarkingUseds() {
+		return markingUseds;
+	}
+
+	public void setMarkingUseds(List<MarkingUsed> markingUseds) {
+		this.markingUseds = markingUseds;
 	}
 
 }

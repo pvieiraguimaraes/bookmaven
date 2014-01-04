@@ -55,7 +55,7 @@ public class UserBookway extends UserBasic {
 	private List<Study> studys;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "userBookway", cascade = CascadeType.ALL)
-	private List<Marking> markings;
+	private List<MarkingOfUser> markings;
 	
 	public List<RelationshipTextUser> getTextUser() {
 		return textUser;
