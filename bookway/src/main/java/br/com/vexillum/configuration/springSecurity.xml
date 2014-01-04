@@ -8,7 +8,7 @@
 	<jee:jndi-lookup id="dataSource" jndi-name="java:jboss/datasources/BookwayDS" />
 
 	<!-- 	Provider da Arquitetura padrao -->
-    <bean id="VXAuthenticatorProvider" class="br.com.vexillum.control.security.AuthenticatorProvider"/>
+    <bean id="VXAuthenticatorProvider" class="br.ueg.tcc.bookway.security.BookwayAuthenticatorProvider"/>
     
 	<!-- Parte do Spring Security -->
 	<security:http auto-config="true">

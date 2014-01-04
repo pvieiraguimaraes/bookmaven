@@ -8,15 +8,15 @@ import org.springframework.stereotype.Service;
 
 import br.com.vexillum.control.GenericControl;
 import br.com.vexillum.util.Return;
-import br.ueg.tcc.bookway.model.Marking;
+import br.ueg.tcc.bookway.model.MarkingOfUser;
 import br.ueg.tcc.bookway.model.TagsOfMarking;
 
 @Service
 @Scope("prototype")
-public class MarkingControl extends GenericControl<Marking> {
+public class MarkingControl extends GenericControl<MarkingOfUser> {
 
 	public MarkingControl() {
-		super(Marking.class);
+		super(MarkingOfUser.class);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -24,7 +24,7 @@ public class MarkingControl extends GenericControl<Marking> {
 		String name = entity.getName();
 		String tagValue = (String) data.get("tagValue");
 
-		List<Marking> markings = new ArrayList<Marking>();
+		List<MarkingOfUser> markings = new ArrayList<MarkingOfUser>();
 		List<TagsOfMarking> tags = new ArrayList<TagsOfMarking>();
 		
 		String sql = "FROM Marking WHERE ";
@@ -32,7 +32,7 @@ public class MarkingControl extends GenericControl<Marking> {
 		if (name != null) {
 			sql += "name LIKE '%" + name + "%'";
 			data.put("sql", sql);
-			markings.addAll((List<Marking>) searchByHQL().getList());
+			markings.addAll((List<MarkingOfUser>) searchByHQL().getList());
 		}
 		
 		if (tagValue != null){
@@ -43,7 +43,7 @@ public class MarkingControl extends GenericControl<Marking> {
 		
 		if(tags != null && !tags.isEmpty()){
 			for (TagsOfMarking tagsOfMarking : tags) {
-				Marking mark = tagsOfMarking.getMarking();
+				MarkingOfUser mark = tagsOfMarking.getMarking();
 				if(!markings.contains(mark))
 					markings.add(mark);
 			}
