@@ -56,7 +56,26 @@ public class UserBookway extends UserBasic {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "userBookway", cascade = CascadeType.ALL)
 	private List<MarkingOfUser> markings;
-	
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "userBookway", cascade = CascadeType.ALL)
+	private List<TagsOfMarking> tagsOfMarkings;
+
+	public List<MarkingOfUser> getMarkings() {
+		return markings;
+	}
+
+	public void setMarkings(List<MarkingOfUser> markings) {
+		this.markings = markings;
+	}
+
+	public List<TagsOfMarking> getTagsOfMarkings() {
+		return tagsOfMarkings;
+	}
+
+	public void setTagsOfMarkings(List<TagsOfMarking> tagsOfMarkings) {
+		this.tagsOfMarkings = tagsOfMarkings;
+	}
+
 	public List<RelationshipTextUser> getTextUser() {
 		return textUser;
 	}

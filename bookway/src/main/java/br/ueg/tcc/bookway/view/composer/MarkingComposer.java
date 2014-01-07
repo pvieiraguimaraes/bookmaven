@@ -8,6 +8,7 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zkex.zul.Colorbox;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
+import org.zkoss.zul.Window;
 
 import br.com.vexillum.util.Message;
 import br.com.vexillum.util.ReflectionUtils;
@@ -22,7 +23,8 @@ import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
 @Scope("prototype")
-public class MarkingComposer extends BaseComposer<MarkingOfUser, MarkingControl> {
+public class MarkingComposer extends
+		BaseComposer<MarkingOfUser, MarkingControl> {
 
 	private String tagValue;
 
@@ -47,21 +49,23 @@ public class MarkingComposer extends BaseComposer<MarkingOfUser, MarkingControl>
 	public List<TypePrivacy> getListTypesPrivacy() {
 		return Arrays.asList(TypePrivacy.values());
 	}
-	
+
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
+		checkTagsOfMarking();
+		checkListEntity();
 		loadBinder();
 	}
 
 	@Override
 	protected String getUpdatePage() {
-		return null;
+		return "/pages/marking/modalMarking.zul";
 	}
 
 	@Override
 	protected String getDeactivationMessage() {
-		return null;
+		return "Deseja realmente excluir esta marcação e suas tags?";
 	}
 
 	@Override
@@ -88,11 +92,49 @@ public class MarkingComposer extends BaseComposer<MarkingOfUser, MarkingControl>
 	}
 
 	public void editMarking() {
-
+		getSelectedEntityFromListbox();
+		callModalWindow("/pages/marking/modalMarking.zul");
+		loadBinder();
 	}
 
 	public void deleteMarking() {
+		getSelectedEntityFromListbox();
+		entity = getSelectedEntity();
+		showActionConfirmation(getDeactivationMessage(), "deleteThisMarking");
+		loadBinder();
+	}
 
+	public Return deleteThisMarking() {
+		MarkingOfUser markingOfUser = entity;
+		Return ret = getControl().doAction("delete");
+		if (ret.isValid()){
+			listEntity.remove(markingOfUser);
+			resetForm();
+		}
+		checkListEntity();
+		loadBinder();
+		return ret;
+	}
+
+	@Override
+	public void resetForm() {
+		tagValue = null;
+		selectedEntity = null;
+		super.resetForm();
+	}
+	
+	private void getSelectedEntityFromListbox() {
+		Listbox listbox = (Listbox) getComponentById("resultList");
+		int index = 0;
+		if (listbox != null) {
+			Listitem selectedItem = listbox.getSelectedItem();
+			if (selectedItem != null) {
+				index = selectedItem.getIndex();
+				MarkingOfUser mark = (MarkingOfUser) listbox.getModel()
+						.getElementAt(index);
+				selectedEntity = mark;
+			}
+		}
 	}
 
 	public void removeTagFromMarking() {
@@ -102,8 +144,8 @@ public class MarkingComposer extends BaseComposer<MarkingOfUser, MarkingControl>
 			Listitem selectedItem = listbox.getSelectedItem();
 			if (selectedItem != null) {
 				index = selectedItem.getIndex();
-				TagsOfMarking tag = (TagsOfMarking) listbox.getModel().getElementAt(
-						index);
+				TagsOfMarking tag = (TagsOfMarking) listbox.getModel()
+						.getElementAt(index);
 				entity.getTagsOfMarkings().remove(tag);
 			}
 		}
@@ -127,6 +169,7 @@ public class MarkingComposer extends BaseComposer<MarkingOfUser, MarkingControl>
 					tag = new TagsOfMarking();
 					tag.setName(tagValue);
 					tag.setMarking(entity);
+					tag.setUserBookway((UserBookway) getUserLogged());
 					tags.add(tag);
 					checkTagsOfMarking();
 					return ret;
@@ -154,17 +197,34 @@ public class MarkingComposer extends BaseComposer<MarkingOfUser, MarkingControl>
 	private void checkTagsOfMarking() {
 		List<TagsOfMarking> tagsOfMarkings = entity.getTagsOfMarkings();
 		setTagValue(null);
-		if (!tagsOfMarkings.isEmpty())
-			getComponentById("fldlstTags").setVisible(true);
-		else
-			getComponentById("fldlstTags").setVisible(false);
+		Component comp = getComponentById("fldlstTags");
+		if (comp != null) {
+			if (!tagsOfMarkings.isEmpty())
+				comp.setVisible(true);
+			else
+				comp.setVisible(false);
+		}
 	}
 	
+	private void checkListEntity(){
+		Component comp = getComponentById("resultList");
+		if(comp != null && listEntity != null){
+			if(listEntity.isEmpty())
+				comp.setVisible(false);
+			else
+				comp.setVisible(true);
+		}
+	}
+
 	@Override
 	public Return saveEntity() {
 		Colorbox colorbox = (Colorbox) getComponentById("fldColor");
 		entity.setColor(colorbox.getColor());
 		entity.setUserBookway((UserBookway) getUserLogged());
-		return super.saveEntity();
+		Return ret = super.saveEntity();
+		if (ret.isValid())
+			((Window) getComponentById(component, "modalWindow")).detach();
+		loadBinder();
+		return ret;
 	}
 }

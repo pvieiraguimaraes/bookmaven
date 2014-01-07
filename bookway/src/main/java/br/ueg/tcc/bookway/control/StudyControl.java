@@ -28,6 +28,14 @@ public class StudyControl extends GenericControl<Study> {
 		return stu;
 	}
 	
+	public Study getThisStudy() {
+		String sql = "FROM Study where text = '" + entity.getText().getId() + "' and userBookway = '"
+				+ entity.getUserBookway().getId() + "'";
+		data.put("sql", sql);
+		Study stu = (Study) searchByHQL().getList().get(0);
+		return stu;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<Study> getMyStudies(UserBookway user){
 		String sql = "FROM Study WHERE id_user = '" + user.getId() + "'";

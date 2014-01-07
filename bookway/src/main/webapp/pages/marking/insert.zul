@@ -1,5 +1,5 @@
 <zk>
-	<window id="winMarking" hflex="min" closable="true" title="Cadastro de Marcação" apply="br.ueg.tcc.bookway.view.composer.MarkingComposer">
+	<window id="modalWindow" hflex="min" closable="true" title="Cadastro de Marcação" apply="br.ueg.tcc.bookway.view.composer.MarkingComposer">
 		<include src="/pages/marking/frmMarking.zul"/>
 	</window>
 </zk>

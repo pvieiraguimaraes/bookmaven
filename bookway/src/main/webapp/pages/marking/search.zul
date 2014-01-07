@@ -29,8 +29,8 @@
 					onAfterRender='self.clearSelection();' 
 					mold="paging" pageSize='10' visible="false">
 			<listhead>
-				<listheader label="Nome" width="150px"/>
-				<listheader label="Cor" width="350px"/>
+				<listheader label="Nome" width="350px"/>
+				<listheader label="Cor" width="150px"/>
 				<listheader label="Ação" width="120px"/>
 			</listhead>
 			<listitem self="@{each=itm}">

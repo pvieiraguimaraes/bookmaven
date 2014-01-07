@@ -1,7 +1,6 @@
 package br.ueg.tcc.bookway.view.composer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
@@ -17,12 +16,9 @@ import org.zkoss.zul.Tabs;
 
 import br.com.vexillum.util.HibernateUtils;
 import br.com.vexillum.util.ReflectionUtils;
-import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.com.vexillum.view.CRUDComposer;
-import br.ueg.tcc.bookway.control.AnnotationControl;
 import br.ueg.tcc.bookway.control.NavigationStudyControl;
-import br.ueg.tcc.bookway.model.Annotation;
 import br.ueg.tcc.bookway.model.ElementText;
 import br.ueg.tcc.bookway.model.ItemNavigationStudy;
 import br.ueg.tcc.bookway.model.LevelText;
@@ -43,16 +39,25 @@ public class NavigationStudyComposer extends
 	private final String UNDER_ON = "text-decoration: underline;";
 	private final String UNDER_OFF = "text-decoration: none;";
 
-	private Text textStudy;
-
 	private List<LevelText> itensSelected;
+	
+	private Study study;
+	private Boolean continueStudy;
 
-	public Text getTextStudy() {
-		return textStudy;
+	public Boolean getContinueStudy() {
+		return continueStudy;
 	}
 
-	public void setTextStudy(Text textStudy) {
-		this.textStudy = textStudy;
+	public void setContinueStudy(Boolean continueStudy) {
+		this.continueStudy = continueStudy;
+	}
+
+	public Study getStudy() {
+		return study;
+	}
+
+	public void setStudy(Study study) {
+		this.study = study;
 	}
 
 	public List<LevelText> getItensSelected() {
@@ -66,9 +71,10 @@ public class NavigationStudyComposer extends
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
-		textStudy = (Text) session.getAttribute("textStudy");
-		// TODO Verificar aqui depois a continuação do estudo do texto
-		if (textStudy != null)
+		study = (Study) session.getAttribute("study");
+		continueStudy = (Boolean) session.getAttribute("continueStudy");
+		
+		if (study != null)
 			createAmbientStudy();
 		if (itensSelected == null)
 			itensSelected = new ArrayList<>();
@@ -83,11 +89,11 @@ public class NavigationStudyComposer extends
 		Tabs tabs = tabbox.getTabs();
 		if (tabs == null)
 			tabs = new Tabs();
-		tabs.appendChild(createTabStudy(getTextStudy()));
+		tabs.appendChild(createTabStudy(getStudy().getText()));
 		Tabpanels tabpanels = tabbox.getTabpanels();
 		if (tabpanels == null)
 			tabpanels = new Tabpanels();
-		tabpanels.appendChild(createTabPanelStudy(getTextStudy()));
+		tabpanels.appendChild(createTabPanelStudy(getStudy()));
 		tabbox.appendChild(tabs);
 		tabbox.appendChild(tabpanels);
 
@@ -111,13 +117,21 @@ public class NavigationStudyComposer extends
 		return tab;
 	}
 
-	private Component createTabPanelStudy(Text text) {
+	private Component createTabPanelStudy(Study study) {
 		Tabpanel tabpanel = new Tabpanel();
 		tabpanel.setSclass("tabpanelstudy");
 		tabpanel.setStyle("text-align: justify;");
-		LevelText rootLevel = HibernateUtils.materializeProxy(getControl()
-				.getLevelText(text.getRootLevelText().getId()));
-
+		
+		LevelText rootLevel;
+		
+		if (continueStudy)
+			rootLevel = HibernateUtils.materializeProxy(getControl()
+					.getLevelText(
+							study.getLastElementStop().getIdLevel().getId()));
+		else
+			rootLevel = HibernateUtils.materializeProxy(getControl()
+					.getLevelText(study.getText().getRootLevelText().getId()));
+		
 		tabpanel = (Tabpanel) mappingElementsAndChildren(rootLevel, tabpanel);
 
 		// Slider slideStudy = new Slider();
