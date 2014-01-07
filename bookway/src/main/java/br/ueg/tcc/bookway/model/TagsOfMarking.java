@@ -19,6 +19,18 @@ public class TagsOfMarking extends CommonEntity {
 
 	private String name;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_user", insertable = true, updatable = false, nullable = true)
+	private UserBookway userBookway;
+	
+	public UserBookway getUserBookway() {
+		return userBookway;
+	}
+
+	public void setUserBookway(UserBookway userBookway) {
+		this.userBookway = userBookway;
+	}
+
 	public MarkingOfUser getMarking() {
 		return marking;
 	}

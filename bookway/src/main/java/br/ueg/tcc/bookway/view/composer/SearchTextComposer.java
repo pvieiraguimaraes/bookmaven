@@ -34,6 +34,26 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 	@Wire
 	public Checkbox myTexts;
 
+	private Boolean continueStudy = false;
+
+	private Study study;
+	
+	public Study getStudy() {
+		return study;
+	}
+
+	public void setStudy(Study study) {
+		this.study = study;
+	}
+
+	public Boolean getContinueStudy() {
+		return continueStudy;
+	}
+
+	public void setContinueStudy(Boolean continueStudy) {
+		this.continueStudy = continueStudy;
+	}
+
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
@@ -103,29 +123,56 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 	 */
 	public void studyText(String id) {
 		Text text = getControl().getTextById(Long.parseLong(id));
-		session.setAttribute("textStudy", text);
-		createObjectStudy(text);
+		setStudy(checksExistenceStudy(text));
+		
+		if (study != null) {
+			if(study.getLastElementStop() != null)
+				showActionConfirmation("Deseja continuar o estudo de onde parou?",
+						"continueStudy");
+		} else
+			setStudy(createStudy(text));
+		
+		putStudyInSession(getStudy());
 		Executions.sendRedirect("/pages/user/study.zul");
 	}
 
-	private void createObjectStudy(Text text) {
+	private Study createStudy(Text text) {
 		Study study = new Study();
 		study.setDateStudy(new Date());
 		study.setText(text);
 		study.setUserBookway((UserBookway) getUserLogged());
-		
+
 		HashMap<String, Object> newMap = new HashMap<>();
 		newMap.put("entity", study);
-		
+
 		StudyControl control = SpringFactory.getController("studyControl",
 				StudyControl.class, newMap);
 		
 		Return ret = control.doAction("save");
+
+		if (ret.isValid())
+			return control.getThisStudy(study);
+		return null;
+	}
+
+	private Study checksExistenceStudy(Text text) {
+		Study study = new Study();
+		study.setText(text);
+		study.setUserBookway((UserBookway) getUserLogged());
+
+		HashMap<String, Object> newMap = new HashMap<>();
+		newMap.put("entity", study);
+
+		StudyControl control = SpringFactory.getController("studyControl",
+				StudyControl.class, newMap);
 		
-		study = control.getThisStudy(study);
-		
-		if(ret.isValid())
-			putStudyInSession(study);
+		return control.getThisStudy();
+	}
+
+	public Return continueStudy() {
+		setContinueStudy(true);
+		session.setAttribute("continueStudy", getContinueStudy());
+		return new Return(true);
 	}
 
 	private void putStudyInSession(Study study) {
@@ -136,7 +183,8 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 	 * Exibe mensagem de confirmação de exclusão, e em caso afirmativo exclui o
 	 * texto do usuário removendo todos os itens relacionados a ele.
 	 * 
-	 * @param id, do texto
+	 * @param id
+	 *            , do texto
 	 */
 	public void excludeText(String id) {
 		Text text = getControl().getTextById(Long.parseLong(id));
