@@ -29,7 +29,7 @@ public class Study extends CommonEntity {
 	private Date dateStudy;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_lastelementstop", insertable = true, updatable = false, nullable = true)
+	@JoinColumn(name = "id_lastelementstop", insertable = true, updatable = true, nullable = true)
 	private ElementText lastElementStop;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "study", cascade = CascadeType.ALL)

@@ -2,6 +2,6 @@
 	<hlayout id="panelgeneral">
 		<label id="contentElement" value="${arg.contentElement}" />
 		<label id="idText" value="${arg.idText}" visible="false"/>
-		<label id="idLevel" value="${arg.idLevel}" visible="false"/>
+		<label id="idElement" value="${arg.idElement}" visible="false"/>
 	</hlayout>
 </div>

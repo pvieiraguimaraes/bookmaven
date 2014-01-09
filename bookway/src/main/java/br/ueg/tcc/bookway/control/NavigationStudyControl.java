@@ -36,6 +36,13 @@ public class NavigationStudyControl extends GenericControl<ItemNavigationStudy> 
 		return getTextControl().getTextById(idText);
 	}
 	
+	public ElementText getElementText(Long idElement){
+		String sql = "FROM ElementText WHERE id = '" + idElement + "'";
+		data.put("sql", sql);
+		Return ret = searchByHQL();
+		return (ElementText) ret.getList().get(0);
+	}
+	
 	public LevelText getLevelText(Long idLevel){
 		String sql = "FROM LevelText WHERE id = '" + idLevel + "'";
 		data.put("sql", sql);

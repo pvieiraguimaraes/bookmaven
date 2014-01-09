@@ -1,6 +1,5 @@
 package br.ueg.tcc.bookway.view.composer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
@@ -17,7 +16,6 @@ import org.zkoss.zul.Tabs;
 import br.com.vexillum.util.HibernateUtils;
 import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.SpringFactory;
-import br.com.vexillum.view.CRUDComposer;
 import br.ueg.tcc.bookway.control.NavigationStudyControl;
 import br.ueg.tcc.bookway.model.ElementText;
 import br.ueg.tcc.bookway.model.ItemNavigationStudy;
@@ -34,39 +32,10 @@ import br.ueg.tcc.bookway.view.macros.ItemStudy;
 @org.springframework.stereotype.Component
 @Scope("prototype")
 public class NavigationStudyComposer extends
-		CRUDComposer<ItemNavigationStudy, NavigationStudyControl> {
+		BaseComposer<ItemNavigationStudy, NavigationStudyControl> {
 
 	private final String UNDER_ON = "text-decoration: underline;";
 	private final String UNDER_OFF = "text-decoration: none;";
-
-	private List<LevelText> itensSelected;
-	
-	private Study study;
-	private Boolean continueStudy;
-
-	public Boolean getContinueStudy() {
-		return continueStudy;
-	}
-
-	public void setContinueStudy(Boolean continueStudy) {
-		this.continueStudy = continueStudy;
-	}
-
-	public Study getStudy() {
-		return study;
-	}
-
-	public void setStudy(Study study) {
-		this.study = study;
-	}
-
-	public List<LevelText> getItensSelected() {
-		return itensSelected;
-	}
-
-	public void setItensSelected(List<LevelText> itensSelected) {
-		this.itensSelected = itensSelected;
-	}
 
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
@@ -76,8 +45,6 @@ public class NavigationStudyComposer extends
 		
 		if (study != null)
 			createAmbientStudy();
-		if (itensSelected == null)
-			itensSelected = new ArrayList<>();
 		loadBinder();
 	}
 
@@ -173,15 +140,15 @@ public class NavigationStudyComposer extends
 			Component compMaster) {
 		ItemStudy itemStudy;
 		if (elements != null) {
+			//TODO Aqui deve ser feito a verificação do tipo do ElementText e conforme diferença de tipo exibir diferente
 			for (ElementText elementText : elements) {
 				Long idText = HibernateUtils.materializeProxy(elementText
 						.getIdLevel().getIdText().getId());
-				Long idLevel = HibernateUtils.materializeProxy(elementText
-						.getIdLevel().getId());
+				Long idLevel = HibernateUtils.materializeProxy(elementText.getId());
 				itemStudy = new ItemStudy();
 				itemStudy.setContent(elementText.getValue());
 				itemStudy.setIdText(idText.toString());
-				itemStudy.setIdLevel(idLevel.toString());
+				itemStudy.setIdElement(idLevel.toString());
 
 				itemStudy.addEventListener(Events.ON_CLICK,
 						new EventListener() {
@@ -217,12 +184,12 @@ public class NavigationStudyComposer extends
 	}
 
 	private void addItemInListItensSelected(ItemStudy itemStudy) {
-		LevelText levelText = getControl().getLevelText(
-				Long.parseLong(itemStudy.getIdLevel()));
-		if (getItensSelected().contains(levelText))
-			getItensSelected().remove(levelText);
+		ElementText elementText = getControl().getElementText(
+				Long.parseLong(itemStudy.getIdElement()));
+		if (getItensSelected().contains(elementText))
+			getItensSelected().remove(elementText);
 		else
-			getItensSelected().add(levelText);
+			getItensSelected().add(elementText);
 
 	}
 
@@ -236,5 +203,17 @@ public class NavigationStudyComposer extends
 	private void changeVisibilityPanelAction(boolean visibility) {
 		Component panel = getComponentById(component, "panelActions");
 		panel.setVisible(visibility);
+	}
+
+	@Override
+	protected String getUpdatePage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected String getDeactivationMessage() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
