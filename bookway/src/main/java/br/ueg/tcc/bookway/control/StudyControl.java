@@ -28,12 +28,15 @@ public class StudyControl extends GenericControl<Study> {
 		return stu;
 	}
 	
-	public Study getThisStudy() {
-		String sql = "FROM Study where text = '" + entity.getText().getId() + "' and userBookway = '"
-				+ entity.getUserBookway().getId() + "'";
+	public Study checksExistenceStudy(Study study) {
+		String sql = "FROM Study where text = '" + study.getText().getId()
+				+ "' and userBookway = '" + study.getUserBookway().getId()
+				+ "'";
 		data.put("sql", sql);
-		Study stu = (Study) searchByHQL().getList().get(0);
-		return stu;
+		List<?> list = searchByHQL().getList();
+		if (!list.isEmpty())
+			return (Study) list.get(0);
+		return null;
 	}
 	
 	@SuppressWarnings("unchecked")

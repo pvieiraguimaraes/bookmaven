@@ -19,6 +19,7 @@ public class UserValidator extends Validator {
 	public Return validateRegisterUser() {
 		Return retCheck = new Return(true);
 		retCheck.concat(validateModel());
+		//TODO Tratar a mensagem de validação sobre a quantidade dos elementos no campo senha ser 6
 		retCheck.concat(existsEmail());
 		retCheck.concat(equalsSenha());
 		retCheck.concat(permitedAge());
@@ -69,6 +70,13 @@ public class UserValidator extends Validator {
 		String newPassword = (String) mapData.get("newPassword");
 		String confirmNewPassword = (String) mapData.get("confirmNewPassword");
 		
+		if(newPassword.length() < 6)
+			ret.concat(creatReturn("newPassword",
+					getValidationMessage("password", "min", false) + " 6"));
+		if(confirmNewPassword.length() < 6)
+			ret.concat(creatReturn("confirmNewPassword",
+					getValidationMessage("password", "min", false) + " 6"));
+				
 		if (actualPassword.equalsIgnoreCase(""))
 			ret.concat(creatReturn("actualPassword",
 					getValidationMessage("", "notnull", false)));

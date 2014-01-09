@@ -40,7 +40,7 @@ public class UserComposer extends CRUDComposer<UserBookway, UserBookwayControl> 
 	}
 
 	public void setNewPassword(String newPassword) {
-		this.newPassword = EncryptUtils.encryptOnSHA512(newPassword);
+		this.newPassword = newPassword;
 	}
 
 	public String getConfirmNewPassword() {
@@ -48,7 +48,7 @@ public class UserComposer extends CRUDComposer<UserBookway, UserBookwayControl> 
 	}
 
 	public void setConfirmNewPassword(String confirmNewPassword) {
-		this.confirmNewPassword = EncryptUtils.encryptOnSHA512(confirmNewPassword);
+		this.confirmNewPassword = confirmNewPassword;
 	}
 
 	public List<AreaOfInterest> getListAreaOfInterest() {

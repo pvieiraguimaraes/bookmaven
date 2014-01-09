@@ -1,7 +1,6 @@
 package br.ueg.tcc.bookway.view.composer;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
@@ -15,7 +14,6 @@ import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.RelationshipTextUserControl;
-import br.ueg.tcc.bookway.control.StudyControl;
 import br.ueg.tcc.bookway.control.TextControl;
 import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.Text;
@@ -33,26 +31,6 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 
 	@Wire
 	public Checkbox myTexts;
-
-	private Boolean continueStudy = false;
-
-	private Study study;
-	
-	public Study getStudy() {
-		return study;
-	}
-
-	public void setStudy(Study study) {
-		this.study = study;
-	}
-
-	public Boolean getContinueStudy() {
-		return continueStudy;
-	}
-
-	public void setContinueStudy(Boolean continueStudy) {
-		this.continueStudy = continueStudy;
-	}
 
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
@@ -126,57 +104,54 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 		setStudy(checksExistenceStudy(text));
 		
 		if (study != null) {
-			if(study.getLastElementStop() != null)
-				showActionConfirmation("Deseja continuar o estudo de onde parou?",
-						"continueStudy");
-		} else
+			if(study.getLastElementStop() != null) {
+				showActionConfirmationYesOrNo("Deseja continuar o estudo de onde parou?",
+						"continueStudy", "noContinueStudy");
+			}
+		} else {
 			setStudy(createStudy(text));
-		
-		putStudyInSession(getStudy());
-		Executions.sendRedirect("/pages/user/study.zul");
+			putValuesInSession(getStudy(), getContinueStudy());
+			Executions.sendRedirect("/pages/user/study.zul");
+		}
 	}
 
 	private Study createStudy(Text text) {
-		Study study = new Study();
+		study = new Study();
 		study.setDateStudy(new Date());
 		study.setText(text);
 		study.setUserBookway((UserBookway) getUserLogged());
-
-		HashMap<String, Object> newMap = new HashMap<>();
-		newMap.put("entity", study);
-
-		StudyControl control = SpringFactory.getController("studyControl",
-				StudyControl.class, newMap);
 		
-		Return ret = control.doAction("save");
+		Return ret = saveOrUpdateStudy();
 
 		if (ret.isValid())
-			return control.getThisStudy(study);
+			return getStudyControl(null).getThisStudy(study);
 		return null;
 	}
 
 	private Study checksExistenceStudy(Text text) {
-		Study study = new Study();
 		study.setText(text);
 		study.setUserBookway((UserBookway) getUserLogged());
-
-		HashMap<String, Object> newMap = new HashMap<>();
-		newMap.put("entity", study);
-
-		StudyControl control = SpringFactory.getController("studyControl",
-				StudyControl.class, newMap);
 		
-		return control.getThisStudy();
+		return getStudyControl(null).checksExistenceStudy(getStudy());
 	}
 
 	public Return continueStudy() {
 		setContinueStudy(true);
-		session.setAttribute("continueStudy", getContinueStudy());
+		putValuesInSession(getStudy(), getContinueStudy());
+		Executions.sendRedirect("/pages/user/study.zul");
+		return new Return(true);
+	}
+	
+	public Return noContinueStudy() {
+		setContinueStudy(false);
+		putValuesInSession(getStudy(), getContinueStudy());
+		Executions.sendRedirect("/pages/user/study.zul");
 		return new Return(true);
 	}
 
-	private void putStudyInSession(Study study) {
+	private void putValuesInSession(Study study, Boolean boo) {
 		session.setAttribute("study", study);
+		session.setAttribute("continueStudy", boo);
 	}
 
 	/**

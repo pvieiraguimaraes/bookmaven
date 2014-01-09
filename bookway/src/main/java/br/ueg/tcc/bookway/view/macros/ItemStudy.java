@@ -16,7 +16,7 @@ public class ItemStudy extends HtmlMacroComponent {
 	private Label idText;
 	
 	@Wire
-	private Label idLevel;
+	private Label idElement;
 	
 	public ItemStudy() {
 		compose();
@@ -30,12 +30,12 @@ public class ItemStudy extends HtmlMacroComponent {
 		this.idText.setValue(idText);
 	}
 
-	public String getIdLevel() {
-		return this.idLevel.getValue();
+	public String getIdElement() {
+		return this.idElement.getValue();
 	}
 
-	public void setIdLevel(String idLevel) {
-		this.idLevel.setValue(idLevel);
+	public void setIdElement(String idElement) {
+		this.idElement.setValue(idElement);
 	}
 
 

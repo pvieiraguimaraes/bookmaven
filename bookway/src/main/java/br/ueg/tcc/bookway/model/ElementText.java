@@ -27,8 +27,20 @@ public class ElementText extends CommonEntity {
 	@JoinColumn(name = "id_level", insertable = true, updatable = true)
 	private LevelText idLevel;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "lastElementStop", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "lastElementStop", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Study> studys;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "elementText", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<ElementsItensStudy> elementsItensStudies;
+
+	public List<ElementsItensStudy> getElementsItensStudies() {
+		return elementsItensStudies;
+	}
+
+	public void setElementsItensStudies(
+			List<ElementsItensStudy> elementsItensStudies) {
+		this.elementsItensStudies = elementsItensStudies;
+	}
 
 	public String getName() {
 		return name;

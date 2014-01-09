@@ -192,7 +192,7 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 
 	public Return changePasswordUser() {
 		Return ret = new Return(true);
-		entity.setPassword((String) data.get("newPassword"));
+		entity.setPassword(EncryptUtils.encryptOnSHA512((String) data.get("newPassword")));
 		ret.concat(update());
 		return ret;
 	}
