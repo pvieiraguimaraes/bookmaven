@@ -1,27 +1,7 @@
 <zk>
-	<grid hflex="min" sclass="nostyle">
-		<columns>
-			<column/><column/><column/><column/>
-		</columns>
-		<rows>
-			<row>
-				<label value="Nome" />
-				<textbox id="fldName" maxlength="200" width="210px"
-					value="@{controller.entity.name}" />
-				<label value="Cor:" />
-				<colorbox id="fldColor" width="30px" value="@{controller.entity.color}" height="25px" />
-			</row>
-			<row spans="1,2,1">
-				<label value="Tag:" />
-				<textbox id="fldTag" value="@{controller.tagValue}" width="210px" />
-				<button image="/images/add.png" width="35px"
-					onClick='controller.doAction("addTagInList");' />
-			</row>
-		</rows>
-	</grid>
 	<div align="center" style="padding-bottom: 5px">
-		<listbox id="fldlstTags" model="@{controller.entity.tagsOfMarkings}" 
-			width="220px" selectedItem="@{controller.tagSelected}" hflex="min"
+		<listbox id="fldlstMarkings" model="@{controller.markingUser}" 
+			width="220px" selectedItem="@{controller.markingSelected}" hflex="min"
 			onAfterRender='self.clearSelection();' mold="paging" pageSize='5'
 			visible="false">
 			<listhead>

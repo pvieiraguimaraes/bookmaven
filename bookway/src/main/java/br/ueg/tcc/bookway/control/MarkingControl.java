@@ -61,5 +61,12 @@ public class MarkingControl extends GenericControl<MarkingOfUser> {
 
 		return new Return(true, markings);
 	}
+	
+	public Return getMarkingOfUser(UserBookway user){
+		String sql = "FROM MarkingOfUser WHERE id_user = '" + user.getId()
+				+ "'";
+		data.put("sql", sql);
+		return searchByHQL();
+	}
 
 }
