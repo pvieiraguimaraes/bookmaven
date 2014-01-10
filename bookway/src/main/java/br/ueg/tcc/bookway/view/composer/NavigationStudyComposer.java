@@ -16,6 +16,7 @@ import org.zkoss.zul.Tabs;
 import br.com.vexillum.util.HibernateUtils;
 import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.SpringFactory;
+import br.ueg.tcc.bookway.control.MarkingControl;
 import br.ueg.tcc.bookway.control.NavigationStudyControl;
 import br.ueg.tcc.bookway.model.ElementText;
 import br.ueg.tcc.bookway.model.ItemNavigationStudy;
@@ -36,16 +37,24 @@ public class NavigationStudyComposer extends
 
 	private final String UNDER_ON = "text-decoration: underline;";
 	private final String UNDER_OFF = "text-decoration: none;";
+	
 
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
+		
 		study = (Study) session.getAttribute("study");
 		continueStudy = (Boolean) session.getAttribute("continueStudy");
 		
 		if (study != null)
 			createAmbientStudy();
+
 		loadBinder();
+	}
+
+	public MarkingControl getMarkingControl() {
+		return SpringFactory.getController("markingControl",
+				MarkingControl.class, null);
 	}
 
 	private void createAmbientStudy() {
@@ -90,12 +99,12 @@ public class NavigationStudyComposer extends
 		tabpanel.setStyle("text-align: justify;");
 		
 		LevelText rootLevel;
-		
-		if (continueStudy)
-			rootLevel = HibernateUtils.materializeProxy(getControl()
-					.getLevelText(
-							study.getLastElementStop().getIdLevel().getId()));
-		else
+		//TODO Ver a maneira de continuar o estudo do ultmo elemento que parou, talvez seja relacionado com ScroolEvent
+//		if (continueStudy)
+//			rootLevel = HibernateUtils.materializeProxy(getControl()
+//					.getLevelText(
+//							study.getLastElementStop().getIdLevel().getId()));
+//		else
 			rootLevel = HibernateUtils.materializeProxy(getControl()
 					.getLevelText(study.getText().getRootLevelText().getId()));
 		
@@ -149,21 +158,30 @@ public class NavigationStudyComposer extends
 				itemStudy.setContent(elementText.getValue());
 				itemStudy.setIdText(idText.toString());
 				itemStudy.setIdElement(idLevel.toString());
+				
+				//TODO Colocar aqui a configuração de estudo de acordo com as opções do usuário
+				if (elementText.getName().equalsIgnoreCase("titulo")) {
+					itemStudy.setStyle("width: 100%; text-align: center;");
+					itemStudy.contentElement.setStyle("font-size: 18px; width: 100%; font-weight: bold;");
+				}
 
-				itemStudy.addEventListener(Events.ON_CLICK,
-						new EventListener() {
-							@Override
-							public void onEvent(Event event) throws Exception {
-								if (event.getTarget() != null) {
-									addItemInListItensSelected((ItemStudy) event
-											.getTarget());
-									changeItemStyle((ItemStudy) event
-											.getTarget());
-									checkPanelActionVisibility();
+				if (elementText.getName().equalsIgnoreCase("valor")) { //Mapeia somente os elementos do nível que representam valor
+					itemStudy.addEventListener(Events.ON_CLICK,
+							new EventListener() {
+								@Override
+								public void onEvent(Event event)
+										throws Exception {
+									if (event.getTarget() != null) {
+										addItemInListItensSelected((ItemStudy) event
+												.getTarget());
+										changeItemStyle((ItemStudy) event
+												.getTarget());
+										checkPanelActionVisibility();
+									}
 								}
-							}
 
-						});
+							});
+				}
 
 				compMaster.appendChild(itemStudy);
 			}
