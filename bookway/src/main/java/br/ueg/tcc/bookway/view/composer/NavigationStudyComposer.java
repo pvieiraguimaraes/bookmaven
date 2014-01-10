@@ -7,6 +7,7 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zul.Button;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Tabbox;
 import org.zkoss.zul.Tabpanel;
@@ -15,14 +16,17 @@ import org.zkoss.zul.Tabs;
 
 import br.com.vexillum.util.HibernateUtils;
 import br.com.vexillum.util.ReflectionUtils;
+import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.MarkingControl;
 import br.ueg.tcc.bookway.control.NavigationStudyControl;
 import br.ueg.tcc.bookway.model.ElementText;
 import br.ueg.tcc.bookway.model.ItemNavigationStudy;
 import br.ueg.tcc.bookway.model.LevelText;
+import br.ueg.tcc.bookway.model.MarkingOfUser;
 import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.Text;
+import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.view.macros.ItemStudy;
 
 /**
@@ -38,6 +42,15 @@ public class NavigationStudyComposer extends
 	private final String UNDER_ON = "text-decoration: underline;";
 	private final String UNDER_OFF = "text-decoration: none;";
 	
+	private List<MarkingOfUser> markingOfUsers;
+	
+	public List<MarkingOfUser> getMarkingOfUsers() {
+		return markingOfUsers;
+	}
+
+	public void setMarkingOfUsers(List<MarkingOfUser> markingOfUsers) {
+		this.markingOfUsers = markingOfUsers;
+	}
 
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
@@ -48,8 +61,29 @@ public class NavigationStudyComposer extends
 		
 		if (study != null)
 			createAmbientStudy();
-
+		loadMarkingsOfUser();
+		checkButtonMarking();
 		loadBinder();
+	}
+
+	@SuppressWarnings("unchecked")
+	private void loadMarkingsOfUser() {
+		Return ret = getMarkingControl().getMarkingOfUser(
+				(UserBookway) getUserLogged());
+		if (ret.isValid()) {
+			session.setAttribute("markingOfUsers",
+					(List<MarkingOfUser>) ret.getList());
+			setMarkingOfUsers((List<MarkingOfUser>) ret.getList());
+		}
+	}
+
+	private void checkButtonMarking() {
+		Button buttonMarking = (Button) getComponentById("fldMarking");
+		if (!getMarkingOfUsers().isEmpty()) {
+			if (buttonMarking != null)
+				buttonMarking.setDisabled(false);
+		} else if (buttonMarking != null)
+			buttonMarking.setDisabled(true);
 	}
 
 	public MarkingControl getMarkingControl() {

@@ -1,13 +1,11 @@
 package br.ueg.tcc.bookway.view.composer;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zkex.zul.Colorbox;
-import org.zkoss.zul.Button;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Window;
@@ -63,17 +61,9 @@ public class MarkingComposer extends
 	
 	@SuppressWarnings("unchecked")
 	private void loadMarkingsOfUser() {
-		List<MarkingOfUser> list = new ArrayList<MarkingOfUser>();
-		Return ret = getControl().getMarkingOfUser((UserBookway) getUserLogged());
-		if(ret.isValid())
-		 list = (List<MarkingOfUser>) ret.getList();
-		Button buttonMarking = (Button) getComponentById("fldMarking");
-		if (!list.isEmpty()) {
-			if(buttonMarking != null)
-				buttonMarking.setDisabled(false);
-			setListEntity(list);
-		} else if(buttonMarking != null)
-			buttonMarking.setDisabled(true);
+		List<MarkingOfUser> list = (List<MarkingOfUser>) session
+				.getAttribute("markingOfUsers");
+		setListEntity(list);
 	}
 
 	@Override
