@@ -235,4 +235,8 @@ public class MarkingComposer extends
 		loadBinder();
 		return ret;
 	}
+	
+	public void putMarkingInStudy(){
+		((Window)getComponentById("modalWindow")).detach();
+	}
 }

@@ -15,10 +15,14 @@ import br.com.vexillum.view.CRUDComposer;
 import br.ueg.tcc.bookway.control.StudyControl;
 import br.ueg.tcc.bookway.model.ElementText;
 import br.ueg.tcc.bookway.model.Study;
+import br.ueg.tcc.bookway.view.macros.ItemStudy;
 
 @SuppressWarnings("serial")
 public abstract class BaseComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		extends CRUDComposer<E, G> {
+	
+	private final String UNDER_ON = "text-decoration: underline;";
+	private final String UNDER_OFF = "text-decoration: none;";
 
 	protected BaseComposer<E, G> parentComposer;
 
@@ -29,6 +33,26 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 	protected Boolean continueStudy;
 	
 	protected HashMap<String, Object> newMap;
+	
+	protected List<ItemStudy> itemStudies;
+	
+	protected List<ItemStudy> itemStudiesSelected;
+
+	public List<ItemStudy> getItemStudiesSelected() {
+		return itemStudiesSelected;
+	}
+
+	public void setItemStudiesSelected(List<ItemStudy> itemStudiesSelected) {
+		this.itemStudiesSelected = itemStudiesSelected;
+	}
+
+	public List<ItemStudy> getItemStudies() {
+		return itemStudies;
+	}
+
+	public void setItemStudies(List<ItemStudy> itemStudies) {
+		this.itemStudies = itemStudies;
+	}
 
 	public Boolean getContinueStudy() {
 		return continueStudy;
@@ -99,6 +123,12 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 			newMap = new HashMap<>();
 		else
 			newMap = (HashMap<String, Object>) arg.get("newMap");
+		
+		if(itemStudies == null)
+			itemStudies = new ArrayList<>();
+			
+		if(itemStudiesSelected == null)
+			itemStudiesSelected = new ArrayList<>();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -193,6 +223,42 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 	public StudyControl getStudyControl(HashMap<String, Object> newMap) {
 		return SpringFactory.getController("studyControl", StudyControl.class,
 				newMap);
+	}
+	
+	public void changeItemStyle(ItemStudy itemStudy) {
+		String style = itemStudy.contentElement.getStyle();
+		if (style == null)
+			itemStudy.contentElement.setStyle(UNDER_ON);
+		else {
+			if (style.equalsIgnoreCase("") || style.equalsIgnoreCase(UNDER_OFF))
+				itemStudy.contentElement.setStyle(UNDER_ON);
+			else
+				itemStudy.contentElement.setStyle(UNDER_OFF);
+		}
+	}
+
+	public void resetStyleItens() {
+//		List<ElementText> listAux = new ArrayList<>(), listItensSelected = getItensSelected();
+//		List<ItemStudy> listAux2 = new ArrayList<>(), listItensStudies = getItemStudies();
+//		for (ItemStudy itemStudy : listItensStudies) {
+//			for (ElementText elementText : listItensSelected) {
+//				if (itemStudy.getIdElement().equalsIgnoreCase(
+//						elementText.getId().toString())) {
+//					changeItemStyle(itemStudy);
+//					listAux2.add(itemStudy);
+//					listAux.add(elementText);
+//					break;
+//				}
+//			}
+//			listItensSelected.removeAll(listAux);
+//		}
+//		listItensStudies.removeAll(listAux2);
+		
+		List<ItemStudy> list = getItemStudiesSelected();
+		for (ItemStudy itemStudy : list) {
+			changeItemStyle(itemStudy);
+		}
+		itemStudies = new ArrayList<>();
 	}
 
 }

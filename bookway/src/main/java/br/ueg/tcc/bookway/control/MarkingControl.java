@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import br.com.vexillum.control.GenericControl;
+import br.com.vexillum.control.IGenericControl;
 import br.com.vexillum.util.Return;
 import br.ueg.tcc.bookway.model.MarkingOfUser;
 import br.ueg.tcc.bookway.model.TagsOfMarking;
@@ -14,7 +15,7 @@ import br.ueg.tcc.bookway.model.UserBookway;
 
 @Service
 @Scope("prototype")
-public class MarkingControl extends GenericControl<MarkingOfUser> {
+public class MarkingControl extends GenericControl<MarkingOfUser> implements IGenericControl<MarkingOfUser> {
 
 	public MarkingControl() {
 		super(MarkingOfUser.class);

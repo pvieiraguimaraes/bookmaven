@@ -39,9 +39,6 @@ import br.ueg.tcc.bookway.view.macros.ItemStudy;
 public class NavigationStudyComposer extends
 		BaseComposer<ItemNavigationStudy, NavigationStudyControl> {
 
-	private final String UNDER_ON = "text-decoration: underline;";
-	private final String UNDER_OFF = "text-decoration: none;";
-	
 	private List<MarkingOfUser> markingOfUsers;
 	
 	public List<MarkingOfUser> getMarkingOfUsers() {
@@ -211,28 +208,18 @@ public class NavigationStudyComposer extends
 										changeItemStyle((ItemStudy) event
 												.getTarget());
 										checkPanelActionVisibility();
+										itemStudiesSelected.add((ItemStudy) event.getTarget());
 									}
 								}
 
 							});
+					itemStudies.add(itemStudy);
 				}
-
+				
 				compMaster.appendChild(itemStudy);
 			}
 		}
 		return compMaster;
-	}
-
-	private void changeItemStyle(ItemStudy itemStudy) {
-		String style = itemStudy.contentElement.getStyle();
-		if (style == null)
-			itemStudy.contentElement.setStyle(UNDER_ON);
-		else {
-			if (style.equalsIgnoreCase("") || style.equalsIgnoreCase(UNDER_OFF))
-				itemStudy.contentElement.setStyle(UNDER_ON);
-			else
-				itemStudy.contentElement.setStyle(UNDER_OFF);
-		}
 	}
 
 	private void addItemInListItensSelected(ItemStudy itemStudy) {
@@ -267,5 +254,9 @@ public class NavigationStudyComposer extends
 	protected String getDeactivationMessage() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public void registerMarkingInStudy(MarkingOfUser marking) {
+		
 	}
 }

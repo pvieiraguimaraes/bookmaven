@@ -65,8 +65,12 @@ public class AnnotationComposer extends
 		if(!update && entity.getStudy() == null)	
 			entity.setStudy((Study) session.getAttribute("study"));
 		Return ret = super.saveEntity();
-		if (ret.isValid() && !update)
+		if (ret.isValid() && !update){
 			getComponentById("winAnnotation").detach();
+			((BaseComposer<Annotation, AnnotationControl>) getParentComposer()).resetStyleItens();
+			getParentComposer().loadBinder();
+			loadBinder();
+		}
 		return ret;
 	}
 
