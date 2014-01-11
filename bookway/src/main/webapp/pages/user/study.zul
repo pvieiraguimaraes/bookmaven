@@ -7,7 +7,7 @@
 		<div id="panelActions" visible="false" style="width: 100%;margin-left: auto;margin-right: auto;position: fixed;">
 			<button id="fldAnnotation" label="Anotar" onClick='controller.callModalWindow("/pages/annotation/insert.zul")'/>
 			<button id="fldMarking" label="Marcar" onClick='controller.callModalWindow("/pages/marking/modalMarkingUser.zul")'/>
-			<button label="Referência"/>
+			<button label="Referência" />
 			<button label="Compartilhar"/>
 		</div>
 		<tabbox id="panelStudy" width="90%" height="auto" style="padding-top: 50px;"></tabbox>

@@ -13,13 +13,14 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import br.com.vexillum.model.CommonEntity;
+import br.com.vexillum.model.ICommonEntity;
 import br.com.vexillum.model.annotations.Validate;
 import br.com.vexillum.model.annotations.ValidatorClass;
 
 @ValidatorClass(validatorClass = "br.ueg.tcc.bookway.control.validator.MarkingValidator")
 @SuppressWarnings("serial")
 @Entity
-public class MarkingOfUser extends CommonEntity {
+public class MarkingOfUser extends CommonEntity implements ICommonEntity {
 
 	@Validate(max = 20, min = 2)
 	private String name;
