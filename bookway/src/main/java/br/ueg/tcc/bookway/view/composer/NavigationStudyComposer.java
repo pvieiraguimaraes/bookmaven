@@ -203,12 +203,10 @@ public class NavigationStudyComposer extends
 								public void onEvent(Event event)
 										throws Exception {
 									if (event.getTarget() != null) {
-										addItemInListItensSelected((ItemStudy) event
-												.getTarget());
-										changeItemStyle((ItemStudy) event
-												.getTarget());
+										addElementTextSelected((ItemStudy) event.getTarget());
+										changeItemStyle((ItemStudy) event.getTarget());
+										addItemStudySelected((ItemStudy) event.getTarget());
 										checkPanelActionVisibility();
-										itemStudiesSelected.add((ItemStudy) event.getTarget());
 									}
 								}
 
@@ -222,26 +220,20 @@ public class NavigationStudyComposer extends
 		return compMaster;
 	}
 
-	private void addItemInListItensSelected(ItemStudy itemStudy) {
+	private void addItemStudySelected(ItemStudy itemStudy) {
+		if (getItemStudiesSelected().contains(itemStudy))
+			getItemStudiesSelected().remove(itemStudy);
+		else
+			getItemStudiesSelected().add(itemStudy);
+	}
+	
+	private void addElementTextSelected(ItemStudy itemStudy) {
 		ElementText elementText = getControl().getElementText(
 				Long.parseLong(itemStudy.getIdElement()));
 		if (getItensSelected().contains(elementText))
 			getItensSelected().remove(elementText);
 		else
 			getItensSelected().add(elementText);
-
-	}
-
-	private void checkPanelActionVisibility() {
-		if (getItensSelected().isEmpty())
-			changeVisibilityPanelAction(false);
-		else
-			changeVisibilityPanelAction(true);
-	}
-
-	private void changeVisibilityPanelAction(boolean visibility) {
-		Component panel = getComponentById(component, "panelActions");
-		panel.setVisible(visibility);
 	}
 
 	@Override

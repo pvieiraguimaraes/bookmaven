@@ -109,6 +109,16 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		else
 			itensSelected = (List<ElementText>) arg.get("itensSelected");
 
+		if (arg.get("itemStudies") == null)
+			itemStudies = new ArrayList<>();
+		else
+			itemStudies = (List<ItemStudy>) arg.get("itemStudies");
+		
+		if (arg.get("itemStudiesSelected") == null)
+			itemStudiesSelected = new ArrayList<>();
+		else
+			itemStudiesSelected = (List<ItemStudy>) arg.get("itemStudiesSelected");
+		
 		if (arg.get("study") == null)
 			study = new Study();
 		else
@@ -124,11 +134,6 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		else
 			newMap = (HashMap<String, Object>) arg.get("newMap");
 		
-		if(itemStudies == null)
-			itemStudies = new ArrayList<>();
-			
-		if(itemStudiesSelected == null)
-			itemStudiesSelected = new ArrayList<>();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -238,27 +243,23 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 	}
 
 	public void resetStyleItens() {
-//		List<ElementText> listAux = new ArrayList<>(), listItensSelected = getItensSelected();
-//		List<ItemStudy> listAux2 = new ArrayList<>(), listItensStudies = getItemStudies();
-//		for (ItemStudy itemStudy : listItensStudies) {
-//			for (ElementText elementText : listItensSelected) {
-//				if (itemStudy.getIdElement().equalsIgnoreCase(
-//						elementText.getId().toString())) {
-//					changeItemStyle(itemStudy);
-//					listAux2.add(itemStudy);
-//					listAux.add(elementText);
-//					break;
-//				}
-//			}
-//			listItensSelected.removeAll(listAux);
-//		}
-//		listItensStudies.removeAll(listAux2);
-		
 		List<ItemStudy> list = getItemStudiesSelected();
 		for (ItemStudy itemStudy : list) {
 			changeItemStyle(itemStudy);
 		}
-		itemStudies = new ArrayList<>();
+		itemStudiesSelected = new ArrayList<>();
+		checkPanelActionVisibility();
 	}
 
+	public void checkPanelActionVisibility() {
+		if (getItemStudiesSelected().isEmpty())
+			changeVisibilityPanelAction(false);
+		else
+			changeVisibilityPanelAction(true);
+	}
+
+	public void changeVisibilityPanelAction(boolean visibility) {
+		Component panel = getComponentById(component, "panelActions");
+		panel.setVisible(visibility);
+	}
 }
