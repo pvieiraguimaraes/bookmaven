@@ -23,7 +23,7 @@ public class AnnotationControl extends GenericControl<Annotation> {
 	@SuppressWarnings("unchecked")
 	public Return searchAnnotation() {
 		Text text = (Text) data.get("selectedText");
-		List<Study> studies = (List<Study>) data.get("myStudies");
+		List<Study> studyAux = new ArrayList<>(), studies = (List<Study>) data.get("myStudies");
 		String title = (String) data.get("title");
 
 		List<Annotation> annotations = new ArrayList<Annotation>();
@@ -31,11 +31,10 @@ public class AnnotationControl extends GenericControl<Annotation> {
 
 		if (text != null) {
 			for (Study study : studies) {
-				if (study.getText() != text) {
-					studies.remove(study);
-				}
+				if (study.getText() == text)
+					studyAux.add(study);
 			}
-			for (Study study : studies) {
+			for (Study study : studyAux) {
 				sql = "FROM Annotation WHERE id_study = '" + study.getId()
 						+ "'";
 				if (title != null)

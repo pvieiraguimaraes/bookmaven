@@ -83,4 +83,8 @@ public class MarkingOfUser extends CommonEntity implements ICommonEntity {
 		this.markingUseds = markingUseds;
 	}
 
+	@Override
+	public String toString() {
+		return this.name;
+	}
 }

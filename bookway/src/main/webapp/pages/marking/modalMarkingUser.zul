@@ -1,5 +1,5 @@
 <window id="modalWindow" title="Escolha de Marcação" border="normal"
-	position="center, center" closable="true"
+	position="center, center" closable="true" contentStyle="overflow:auto"
 	apply="br.ueg.tcc.bookway.view.composer.MarkingComposer">
 	<include src="/pages/marking/frmMarkingUser.zul" />
 </window>

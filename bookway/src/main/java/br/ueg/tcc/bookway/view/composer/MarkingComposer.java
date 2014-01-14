@@ -15,10 +15,12 @@ import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.MarkingControl;
+import br.ueg.tcc.bookway.model.ElementText;
 import br.ueg.tcc.bookway.model.MarkingOfUser;
 import br.ueg.tcc.bookway.model.TagsOfMarking;
 import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.model.enums.TypePrivacy;
+import br.ueg.tcc.bookway.view.macros.ItemStudy;
 
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
@@ -30,6 +32,16 @@ public class MarkingComposer extends
 
 	private TagsOfMarking tagSelected;
 	
+	private TypePrivacy typePrivacy = TypePrivacy.PRIVADO;
+	
+	public TypePrivacy getTypePrivacy() {
+		return typePrivacy;
+	}
+
+	public void setTypePrivacy(TypePrivacy typePrivacy) {
+		this.typePrivacy = typePrivacy;
+	}
+
 	public TagsOfMarking getTagSelected() {
 		return tagSelected;
 	}
@@ -237,6 +249,27 @@ public class MarkingComposer extends
 	}
 	
 	public void putMarkingInStudy(){
+		createMarkingInItens(itensSelected);
+		changeStyleMarkingInItens(itemStudiesSelected);
 		((Window)getComponentById("modalWindow")).detach();
+	}
+	
+	private void changeStyleMarkingInItens(List<ItemStudy> itemStudiesSelected) {
+		String style = "background-color: " + selectedEntity.getColor();
+		for (ItemStudy itemStudy : itemStudiesSelected) {
+			itemStudy.contentElement.setStyle(style);
+		}		
+	}
+
+	private void createMarkingInItens(List<ElementText> itensSelected) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void changeColorbox(){
+		Colorbox  colorbox = (Colorbox) getComponentById("clrbx");
+		if(colorbox != null)
+			colorbox.setValue(getSelectedEntity().getColor());
+		loadBinder();
 	}
 }

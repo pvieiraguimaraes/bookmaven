@@ -1,21 +1,15 @@
 <zk>
-	<div align="center" style="padding-bottom: 5px">
-		<vlayout>
-			<label value='Duplo clique para selecionar'
-				style="color: blue; font-size: 10px;" />
-		</vlayout>
-		<listbox id="fldlstMarkings" model="@{controller.listEntity}" 
-			selectedItem="@{controller.selectedEntity}" hflex="min"
-			onAfterRender='self.clearSelection();' mold="paging" pageSize='5'>
-			<listitem self="@{each=itm}">
-				<listcell style="text-align: center;" label="@{itm.name}"/>
-				<listcell>
-					<colorbox disabled="true" value="@{itm.color}"/>
-				</listcell>
-				<attribute name="onDoubleClick">
-					controller.putMarkingInStudy();
-				</attribute>
-			</listitem>
-		</listbox>
-	</div>
+	<vlayout spacing="10px" style="padding-bottom: 5px; padding-top: 5px;">
+		<combobox id="fldTypePrivacy" width="200px"
+					model="@{controller.listTypesPrivacy}"
+					selectedItem="@{controller.typePrivacy}" />
+		<combobox id="fldListMarking" onChange="controller.changeColorbox()"
+					model="@{controller.listEntity}" width="200px"
+					selectedItem="@{controller.selectedEntity}" >			
+		</combobox>
+		<colorbox id="clrbx" disabled="true" width="190px"/>
+		<div align="right">
+			<button label="Inserir" onClick="controller.putMarkingInStudy()"/>
+		</div>
+	</vlayout>
 </zk>
