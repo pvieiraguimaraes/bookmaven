@@ -1,6 +1,7 @@
 package br.ueg.tcc.bookway.view.composer;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
@@ -14,6 +15,8 @@ import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.AnnotationControl;
 import br.ueg.tcc.bookway.control.StudyControl;
 import br.ueg.tcc.bookway.model.Annotation;
+import br.ueg.tcc.bookway.model.ElementText;
+import br.ueg.tcc.bookway.model.ElementsItensStudy;
 import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
@@ -62,16 +65,46 @@ public class AnnotationComposer extends
 
 	@Override
 	public Return saveEntity() {
-		if(!update && entity.getStudy() == null)	
+		Return ret = new Return(true), retAux = new Return(true);
+		Annotation annotation;
+		
+		if (!update && entity.getStudy() == null) {
+			ElementsItensStudy elementsItensStudy;
+			
 			entity.setStudy((Study) session.getAttribute("study"));
-		Return ret = super.saveEntity();
-		if (ret.isValid() && !update){
-			getComponentById("winAnnotation").detach();
-			((BaseComposer<Annotation, AnnotationControl>) getParentComposer()).resetStyleItens();
-			getParentComposer().loadBinder();
-			loadBinder();
-		}
+			entity.setDateItem(new Date());
+			annotation = entity;
+			
+			ret.concat(super.saveEntity());
+			
+			if (ret.isValid() && !update) {
+				entity = getAnnotation(annotation);
+				
+				for (ElementText elementText : itensSelected) {
+					elementsItensStudy = new ElementsItensStudy();
+					elementsItensStudy.setElementText(elementText);
+					elementsItensStudy.setItemOfStudy(entity);
+					elementsItensStudies.add(elementsItensStudy);
+				}
+				
+				retAux.concat(saveElementsItensStudy());
+				
+				getComponentById("winAnnotation").detach();
+				((BaseComposer<Annotation, AnnotationControl>) getParentComposer()).resetStyleItens();
+				getParentComposer().loadBinder();
+				loadBinder();
+			}
+		} else
+			ret.setValid(false);
 		return ret;
+	}
+
+	private Annotation getAnnotation(Annotation annot) {
+		Return ret = new Return(true);
+		ret.concat(getControl().searchThisAnnotation(annot));
+		if(ret.isValid())
+			return (Annotation) ret.getList().get(0);
+		return null;
 	}
 
 	public void loadListText() {
@@ -151,5 +184,4 @@ public class AnnotationComposer extends
 	protected String getDeactivationMessage() {
 		return "Deseja realmente excluir esta anotação?";
 	}
-
 }

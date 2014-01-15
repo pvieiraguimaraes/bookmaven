@@ -12,8 +12,10 @@ import br.com.vexillum.model.ICommonEntity;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.com.vexillum.view.CRUDComposer;
+import br.ueg.tcc.bookway.control.ElementsItensStudyControl;
 import br.ueg.tcc.bookway.control.StudyControl;
 import br.ueg.tcc.bookway.model.ElementText;
+import br.ueg.tcc.bookway.model.ElementsItensStudy;
 import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.view.macros.ItemStudy;
 
@@ -37,6 +39,20 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 	protected List<ItemStudy> itemStudies;
 	
 	protected List<ItemStudy> itemStudiesSelected;
+
+	/**
+	 * Lista que representa o relacionamento entre os elementos do texto e os itens de estudo
+	 */
+	protected List<ElementsItensStudy> elementsItensStudies;
+	
+	public List<ElementsItensStudy> getElementsItensStudies() {
+		return elementsItensStudies;
+	}
+
+	public void setElementsItensStudies(
+			List<ElementsItensStudy> elementsItensStudies) {
+		this.elementsItensStudies = elementsItensStudies;
+	}
 
 	public List<ItemStudy> getItemStudiesSelected() {
 		return itemStudiesSelected;
@@ -118,6 +134,11 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 			itemStudiesSelected = new ArrayList<>();
 		else
 			itemStudiesSelected = (List<ItemStudy>) arg.get("itemStudiesSelected");
+		
+		if (arg.get("elementsItensStudies") == null)
+			elementsItensStudies = new ArrayList<>();
+		else
+			elementsItensStudies = (List<ElementsItensStudy>) arg.get("elementsItensStudies");
 		
 		if (arg.get("study") == null)
 			study = new Study();
@@ -221,7 +242,24 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		newMap.put("entity", getStudy());
 
 		ret.concat(getStudyControl(newMap).doAction("save"));
-		
+		return ret;
+	}
+	
+	public Return saveElementsItensStudy(){
+		Return ret = new Return(true);
+		List<ElementsItensStudy> list = getElementsItensStudies();
+
+		if (list != null) {
+			for (ElementsItensStudy elementsItensStudy : list) {
+				newMap.put("entity", elementsItensStudy);
+				ret.concat(getElementsItensStudyControl(newMap)
+						.doAction("save"));
+				elementsItensStudies = new ArrayList<ElementsItensStudy>();
+				parentComposer.setElementsItensStudies(null);
+			}
+		} else
+			ret.setValid(false);
+			
 		return ret;
 	}
 	
@@ -230,15 +268,22 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 				newMap);
 	}
 	
+	public ElementsItensStudyControl getElementsItensStudyControl(HashMap<String, Object> newMap) {
+		return SpringFactory.getController("elementsItensStudyControl", ElementsItensStudyControl.class,
+				newMap);
+	}
+	
 	public void changeItemStyle(ItemStudy itemStudy) {
 		String style = itemStudy.contentElement.getStyle();
 		if (style == null)
 			itemStudy.contentElement.setStyle(UNDER_ON);
 		else {
-			if (style.equalsIgnoreCase("") || style.equalsIgnoreCase(UNDER_OFF))
-				itemStudy.contentElement.setStyle(UNDER_ON);
+			if (style.equalsIgnoreCase("") || style.contains(UNDER_OFF))
+				itemStudy.contentElement.setStyle(style.replace(UNDER_OFF, UNDER_ON));
+			else if (style.contains(UNDER_ON))
+				itemStudy.contentElement.setStyle(style.replace(UNDER_ON, UNDER_OFF));
 			else
-				itemStudy.contentElement.setStyle(UNDER_OFF);
+				itemStudy.contentElement.setStyle(style.concat(UNDER_ON));
 		}
 	}
 
@@ -260,6 +305,12 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 
 	public void changeVisibilityPanelAction(boolean visibility) {
 		Component panel = getComponentById(component, "panelActions");
-		panel.setVisible(visibility);
+		if (panel != null)
+			panel.setVisible(visibility);
+		else {
+			panel = parentComposer.getComponentById(component, "panelActions");
+			if (panel != null)
+				panel.setVisible(visibility);
+		}
 	}
 }

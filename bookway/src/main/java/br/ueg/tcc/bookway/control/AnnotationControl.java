@@ -1,5 +1,6 @@
 package br.ueg.tcc.bookway.control;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,5 +50,14 @@ public class AnnotationControl extends GenericControl<Annotation> {
 		}
 
 		return new Return(true, annotations);
+	}
+
+	public Return searchThisAnnotation(Annotation annotation) {
+		SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+		String sql = "FROM Annotation WHERE id_study = '"
+				+ annotation.getStudy().getId() + "' AND dateItem = '"
+				+ spf.format(annotation.getDateItem()) + "'";
+		data.put("sql", sql);
+		return searchByHQL();
 	}
 }
