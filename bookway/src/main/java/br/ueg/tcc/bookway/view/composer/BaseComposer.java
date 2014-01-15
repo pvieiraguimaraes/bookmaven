@@ -293,6 +293,7 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 			changeItemStyle(itemStudy);
 		}
 		itemStudiesSelected = new ArrayList<>();
+		setItensSelected(new ArrayList<ElementText>());
 		checkPanelActionVisibility();
 	}
 
