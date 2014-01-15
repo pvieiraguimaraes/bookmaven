@@ -9,7 +9,7 @@
 		</combobox>
 		<colorbox id="clrbx" disabled="true" width="190px"/>
 		<div align="right">
-			<button label="Inserir" onClick="controller.putMarkingInStudy()"/>
+			<button label="Inserir" onClick='controller.doAction("putMarkingInStudy")'/>
 		</div>
 	</vlayout>
 </zk>

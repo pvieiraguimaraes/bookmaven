@@ -1,5 +1,6 @@
 package br.ueg.tcc.bookway.model;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -43,6 +44,16 @@ public abstract class ItensOfStudy extends CommonEntity {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "itemOfStudy", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ElementsItensStudy> elementsItensStudies;
 	
+	private Date dateItem;
+	
+	public Date getDateItem() {
+		return dateItem;
+	}
+
+	public void setDateItem(Date dateItem) {
+		this.dateItem = dateItem;
+	}
+
 	public List<ElementsItensStudy> getElementsItensStudies() {
 		return elementsItensStudies;
 	}

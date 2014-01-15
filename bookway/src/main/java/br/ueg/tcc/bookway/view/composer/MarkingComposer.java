@@ -1,6 +1,9 @@
 package br.ueg.tcc.bookway.view.composer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
@@ -15,8 +18,11 @@ import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.MarkingControl;
+import br.ueg.tcc.bookway.control.MarkingUsedControl;
 import br.ueg.tcc.bookway.model.ElementText;
+import br.ueg.tcc.bookway.model.ElementsItensStudy;
 import br.ueg.tcc.bookway.model.MarkingOfUser;
+import br.ueg.tcc.bookway.model.MarkingUsed;
 import br.ueg.tcc.bookway.model.TagsOfMarking;
 import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.model.enums.TypePrivacy;
@@ -248,22 +254,80 @@ public class MarkingComposer extends
 		return ret;
 	}
 	
-	public void putMarkingInStudy(){
-		createMarkingInItens(itensSelected);
-		changeStyleMarkingInItens(itemStudiesSelected);
-		((Window)getComponentById("modalWindow")).detach();
+	public Return putMarkingInStudy(){
+		Return retAux, ret = new Return(true);
+		retAux = createMarkingInItens(itensSelected);
+		if (retAux.isValid()) {
+			changeStyleMarkingInItens(itemStudiesSelected);
+			((Window) getComponentById("modalWindow")).detach();
+		} else ret.setValid(false);
+		
+		return ret;
 	}
 	
 	private void changeStyleMarkingInItens(List<ItemStudy> itemStudiesSelected) {
-		String style = "background-color: " + selectedEntity.getColor();
+		String style = "background-color: " + selectedEntity.getColor() + ";";
 		for (ItemStudy itemStudy : itemStudiesSelected) {
 			itemStudy.contentElement.setStyle(style);
-		}		
+		}
+		parentComposer.setItemStudiesSelected(new ArrayList<ItemStudy>());
+		parentComposer.setItensSelected(new ArrayList<ElementText>());
+		parentComposer.checkPanelActionVisibility();
 	}
 
-	private void createMarkingInItens(List<ElementText> itensSelected) {
-		// TODO Auto-generated method stub
+	private Return createMarkingInItens(List<ElementText> itensSelected) {
+		Return ret = new Return(true);
+		ElementsItensStudy elementsItensStudy;
+		MarkingUsed markingUsed;
 		
+		if (selectedEntity != null) {
+			markingUsed = new MarkingUsed();
+			markingUsed.setTypePrivacy(getTypePrivacy());
+			markingUsed.setMarkingOfUser(selectedEntity);
+			markingUsed.setStudy(study);
+			markingUsed.setDateItem(new Date());
+			
+			ret.concat(saveMarkingUsed(markingUsed));
+			
+			if (ret.isValid()) {
+				markingUsed = getMarkingUsed(markingUsed);
+				
+				for (ElementText elementText : itensSelected) {
+					elementsItensStudy = new ElementsItensStudy();
+					elementsItensStudy.setElementText(elementText);
+					elementsItensStudy.setItemOfStudy(markingUsed);
+					elementsItensStudies.add(elementsItensStudy);
+				}
+				
+				ret.concat(saveElementsItensStudy());
+			}
+		} else
+			ret.setValid(false);
+		
+		return ret;
+	}
+	
+	private MarkingUsed getMarkingUsed(MarkingUsed markingUsed) {
+		Return ret = new Return(true);
+		newMap.put("markingUsed", markingUsed);
+		ret.concat(getMarkingUsedControl(newMap).searchThisMarkingUsed());
+		if(ret.isValid())
+			return (MarkingUsed) ret.getList().get(0);
+		return null;
+	}
+
+	public MarkingUsedControl getMarkingUsedControl(HashMap<String, Object> newMap) {
+		return SpringFactory.getController("markingUsedControl", MarkingUsedControl.class,
+				newMap);
+	}
+
+	private Return saveMarkingUsed(MarkingUsed marking) {
+		Return ret = new Return(true);
+		
+		newMap.put("entity", marking);
+		ret.concat(getMarkingUsedControl(newMap).doAction("save"));
+		
+		return ret;
 	}
 
 	public void changeColorbox(){
