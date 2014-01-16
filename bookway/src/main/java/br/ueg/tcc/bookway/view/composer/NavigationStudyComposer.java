@@ -222,9 +222,39 @@ public class NavigationStudyComposer extends
 					imageChild.setId(itemStudy.getIdIconStudy());
 					imageChild.setVisible(false);
 					
+					imageChild.addEventListener(Events.ON_CLICK,
+							new EventListener() {
+								@Override
+								public void onEvent(Event event)
+										throws Exception {
+									if (event.getTarget() != null) {
+//										session.setAttribute("itemStudySelected", (ItemStudy) event.getTarget());
+										callModalWindow("/template/frms/panelItensStudy.zul");
+									}
+								}
+
+							});
+					
 					itemStudy.appendChild(imageChild);
 					
 					itemStudy.addEventListener(Events.ON_MOUSE_OUT,
+							new EventListener() {
+								@Override
+								public void onEvent(Event event)
+										throws Exception {
+									if (event.getTarget() != null) {
+										ItemStudy item = (ItemStudy) event.getTarget();
+										
+										Image imageChild = ((Image) getComponentById(item.getIdIconStudy()));
+										imageChild.setVisible(false);
+									}
+								}
+								
+								
+
+							});
+					
+					itemStudy.addEventListener(Events.ON_MOUSE_OVER,
 							new EventListener() {
 								@Override
 								public void onEvent(Event event)
