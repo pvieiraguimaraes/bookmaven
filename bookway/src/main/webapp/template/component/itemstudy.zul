@@ -3,5 +3,6 @@
 		<label id="contentElement" value="${arg.contentElement}" />
 		<label id="idText" value="${arg.idText}" visible="false"/>
 		<label id="idElement" value="${arg.idElement}" visible="false"/>
+		<label id="idIconStudy" value="${arg.idIconStudy}" visible="false"/>
 	</hlayout>
 </div>

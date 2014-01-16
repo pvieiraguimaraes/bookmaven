@@ -8,6 +8,7 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Button;
+import org.zkoss.zul.Image;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Tabbox;
 import org.zkoss.zul.Tabpanel;
@@ -203,14 +204,41 @@ public class NavigationStudyComposer extends
 								public void onEvent(Event event)
 										throws Exception {
 									if (event.getTarget() != null) {
-										addElementTextSelected((ItemStudy) event.getTarget());
-										changeItemStyle((ItemStudy) event.getTarget());
-										addItemStudySelected((ItemStudy) event.getTarget());
+										ItemStudy item = (ItemStudy) event.getTarget();
+										
+										addElementTextSelected(item);
+										changeItemStyle(item);
+										addItemStudySelected(item);
 										checkPanelActionVisibility();
 									}
 								}
 
 							});
+					
+					itemStudy.setIdIconStudy("idIconStudy" + idLevel.toString());
+					
+					Image imageChild =  new Image("/images/icon-item-study.png");
+					imageChild.setStyle("float: right;");
+					imageChild.setId(itemStudy.getIdIconStudy());
+					imageChild.setVisible(false);
+					
+					itemStudy.appendChild(imageChild);
+					
+					itemStudy.addEventListener(Events.ON_MOUSE_OUT,
+							new EventListener() {
+								@Override
+								public void onEvent(Event event)
+										throws Exception {
+									if (event.getTarget() != null) {
+										ItemStudy item = (ItemStudy) event.getTarget();
+										
+										Image imageChild = ((Image) getComponentById(item.getIdIconStudy()));
+										imageChild.setVisible(true);
+									}
+								}
+
+							});
+					
 					itemStudies.add(itemStudy);
 				}
 				
@@ -246,9 +274,5 @@ public class NavigationStudyComposer extends
 	protected String getDeactivationMessage() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	public void registerMarkingInStudy(MarkingOfUser marking) {
-		
 	}
 }
