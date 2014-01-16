@@ -1,0 +1,5 @@
+<window id="modalWindow" title="Painel de Itens" border="normal"
+	position="center, center" closable="true" apply="br.ueg.tcc.bookway.view.composer.ElementsItensStudyComposer">
+
+
+</window>
