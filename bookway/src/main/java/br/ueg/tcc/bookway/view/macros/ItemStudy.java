@@ -6,22 +6,33 @@ import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Label;
 
 @SuppressWarnings("serial")
-@VariableResolver(value = {org.zkoss.zkplus.spring.DelegatingVariableResolver.class})
+@VariableResolver(value = { org.zkoss.zkplus.spring.DelegatingVariableResolver.class })
 public class ItemStudy extends HtmlMacroComponent {
 
 	@Wire
 	public Label contentElement;
-	
+
 	@Wire
 	private Label idText;
-	
+
 	@Wire
 	private Label idElement;
-	
+
+	@Wire
+	private Label idIconStudy;
+
+	public String getIdIconStudy() {
+		return this.idIconStudy.getValue();
+	}
+
+	public void setIdIconStudy(String idIconStudy) {
+		this.idIconStudy.setValue(idIconStudy);
+	}
+
 	public ItemStudy() {
 		compose();
 	}
-	
+
 	public String getIdText() {
 		return this.idText.getValue();
 	}
@@ -38,7 +49,6 @@ public class ItemStudy extends HtmlMacroComponent {
 		this.idElement.setValue(idElement);
 	}
 
-
 	public String getContent() {
 		return this.contentElement.getValue();
 	}
@@ -46,6 +56,4 @@ public class ItemStudy extends HtmlMacroComponent {
 	public void setContent(String contentElement) {
 		this.contentElement.setValue(contentElement);
 	}
-
 }
-
