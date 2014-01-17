@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zul.Image;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
 
@@ -21,6 +22,7 @@ import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.model.enums.TypePrivacy;
+import br.ueg.tcc.bookway.view.macros.ItemStudy;
 
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
@@ -84,10 +86,20 @@ public class AnnotationComposer extends
 					elementsItensStudy = new ElementsItensStudy();
 					elementsItensStudy.setElementText(elementText);
 					elementsItensStudy.setItemOfStudy(entity);
+					elementsItensStudy.setStudy(study);
 					elementsItensStudies.add(elementsItensStudy);
 				}
 				
 				retAux.concat(saveElementsItensStudy());
+				
+				if(retAux.isValid()){
+					List<ItemStudy> list = getItemStudiesSelected();
+					for (ItemStudy itemStudy : list) {
+						Image comp = createComponentIconStudy(itemStudy);
+						if (comp != null)
+							itemStudy.appendChild(comp);
+					}
+				}
 				
 				getComponentById("winAnnotation").detach();
 				((BaseComposer<Annotation, AnnotationControl>) getParentComposer()).resetStyleItens();

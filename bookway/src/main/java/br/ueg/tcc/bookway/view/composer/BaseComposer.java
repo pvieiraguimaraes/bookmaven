@@ -5,6 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zul.Image;
 import org.zkoss.zul.Window;
 
 import br.com.vexillum.control.GenericControl;
@@ -296,6 +301,16 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		setItensSelected(new ArrayList<ElementText>());
 		checkPanelActionVisibility();
 	}
+	
+	public void changeStyleMarkingInItens(List<ItemStudy> itemStudiesSelected, String color) {
+		String style = "background-color: " + color + ";";
+		for (ItemStudy itemStudy : itemStudiesSelected) {
+			itemStudy.contentElement.setStyle(style);
+		}
+		parentComposer.setItemStudiesSelected(new ArrayList<ItemStudy>());
+		parentComposer.setItensSelected(new ArrayList<ElementText>());
+		parentComposer.checkPanelActionVisibility();
+	}
 
 	public void checkPanelActionVisibility() {
 		if (getItemStudiesSelected().isEmpty())
@@ -313,5 +328,56 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 			if (panel != null)
 				panel.setVisible(visibility);
 		}
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public ItemStudy insertIconStudy(ItemStudy itemStudy, Long idLevel, boolean hasItensStudies) {
+		itemStudy.setIdIconStudy("idIconStudy" + idLevel.toString());
+
+		if(hasItensStudies)
+			itemStudy.appendChild(createComponentIconStudy(itemStudy));
+
+		itemStudy.addEventListener(Events.ON_MOUSE_OUT, new EventListener() {
+			@Override
+			public void onEvent(Event event) throws Exception {
+				if (event.getTarget() != null) {
+					ItemStudy item = (ItemStudy) event.getTarget();
+
+					Image imageChild = ((Image) getComponentById(item
+							.getIdIconStudy()));
+					if(imageChild != null)
+						imageChild.setVisible(false);
+				}
+			}
+
+		});
+
+		itemStudy.addEventListener(Events.ON_MOUSE_OVER, new EventListener() {
+			@Override
+			public void onEvent(Event event) throws Exception {
+				if (event.getTarget() != null) {
+					ItemStudy item = (ItemStudy) event.getTarget();
+
+					Image imageChild = ((Image) getComponentById(item
+							.getIdIconStudy()));
+					
+					if(imageChild != null)
+						imageChild.setVisible(true);
+				}
+			}
+
+		});
+		
+		return itemStudy;
+	}
+
+	public Image createComponentIconStudy(ItemStudy itemStudy) {
+		newMap.put("idIconStudy", itemStudy.getIdIconStudy());
+		List<Component> children = itemStudy.getChildren();
+		for (Component component : children) {
+			if(component instanceof Image)
+				return null;
+		}
+		return (Image) Executions.createComponents("/template/frms/frmIconStudy.zul", itemStudy, newMap);
 	}
 }

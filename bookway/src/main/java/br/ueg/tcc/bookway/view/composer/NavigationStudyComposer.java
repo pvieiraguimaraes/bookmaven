@@ -8,7 +8,6 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Button;
-import org.zkoss.zul.Image;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Tabbox;
 import org.zkoss.zul.Tabpanel;
@@ -92,8 +91,6 @@ public class NavigationStudyComposer extends
 	private void createAmbientStudy() {
 		Tabbox tabbox = (Tabbox) getComponentById(thisComposer.getComponent(),
 				"panelStudy");
-		// System.out.println(tabbox.getHeight()); Pensar em uma maneira de
-		// manipular o acesso aos dados de acordo com o tamanho da tela.
 		Tabs tabs = tabbox.getTabs();
 		if (tabs == null)
 			tabs = new Tabs();
@@ -180,6 +177,8 @@ public class NavigationStudyComposer extends
 	private Component createItemElementForStudy(List<ElementText> elements,
 			Component compMaster) {
 		ItemStudy itemStudy;
+		boolean hasItensStudies = false;
+		
 		if (elements != null) {
 			//TODO Aqui deve ser feito a verificação do tipo do ElementText e conforme diferença de tipo exibir diferente
 			for (ElementText elementText : elements) {
@@ -215,59 +214,9 @@ public class NavigationStudyComposer extends
 
 							});
 					
-					itemStudy.setIdIconStudy("idIconStudy" + idLevel.toString());
+					hasItensStudies = checkExistingItensStudies(elementText, getStudy());
 					
-					Image imageChild =  new Image("/images/icon-item-study.png");
-					imageChild.setStyle("float: right;");
-					imageChild.setId(itemStudy.getIdIconStudy());
-					imageChild.setVisible(false);
-					
-					imageChild.addEventListener(Events.ON_CLICK,
-							new EventListener() {
-								@Override
-								public void onEvent(Event event)
-										throws Exception {
-									if (event.getTarget() != null) {
-//										session.setAttribute("itemStudySelected", (ItemStudy) event.getTarget());
-										callModalWindow("/template/frms/panelItensStudy.zul");
-									}
-								}
-
-							});
-					
-					itemStudy.appendChild(imageChild);
-					
-					itemStudy.addEventListener(Events.ON_MOUSE_OUT,
-							new EventListener() {
-								@Override
-								public void onEvent(Event event)
-										throws Exception {
-									if (event.getTarget() != null) {
-										ItemStudy item = (ItemStudy) event.getTarget();
-										
-										Image imageChild = ((Image) getComponentById(item.getIdIconStudy()));
-										imageChild.setVisible(false);
-									}
-								}
-								
-								
-
-							});
-					
-					itemStudy.addEventListener(Events.ON_MOUSE_OVER,
-							new EventListener() {
-								@Override
-								public void onEvent(Event event)
-										throws Exception {
-									if (event.getTarget() != null) {
-										ItemStudy item = (ItemStudy) event.getTarget();
-										
-										Image imageChild = ((Image) getComponentById(item.getIdIconStudy()));
-										imageChild.setVisible(true);
-									}
-								}
-
-							});
+					itemStudy = insertIconStudy(itemStudy, idLevel, hasItensStudies);
 					
 					itemStudies.add(itemStudy);
 				}
@@ -276,6 +225,15 @@ public class NavigationStudyComposer extends
 			}
 		}
 		return compMaster;
+	}
+
+	private boolean checkExistingItensStudies(ElementText elementText, Study study) {
+		newMap.put("checkElementText", HibernateUtils.materializeProxy(elementText));
+		newMap.put("checkStudy", study);
+		Return ret = getElementsItensStudyControl(newMap).searchExistingItensStudies();
+		if(ret.isValid() && !ret.getList().isEmpty())
+			return true;
+		return false;
 	}
 
 	private void addItemStudySelected(ItemStudy itemStudy) {

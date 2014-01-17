@@ -20,7 +20,7 @@ public class ItemStudy extends HtmlMacroComponent {
 
 	@Wire
 	private Label idIconStudy;
-
+	
 	public String getIdIconStudy() {
 		return this.idIconStudy.getValue();
 	}
