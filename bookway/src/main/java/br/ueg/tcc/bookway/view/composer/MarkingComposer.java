@@ -1,6 +1,5 @@
 package br.ueg.tcc.bookway.view.composer;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,6 +8,7 @@ import java.util.List;
 import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zkex.zul.Colorbox;
+import org.zkoss.zul.Image;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.Window;
@@ -258,23 +258,13 @@ public class MarkingComposer extends
 		Return retAux, ret = new Return(true);
 		retAux = createMarkingInItens(itensSelected);
 		if (retAux.isValid()) {
-			changeStyleMarkingInItens(itemStudiesSelected);
+			changeStyleMarkingInItens(itemStudiesSelected, selectedEntity.getColor());
 			((Window) getComponentById("modalWindow")).detach();
 		} else ret.setValid(false);
 		
 		return ret;
 	}
 	
-	private void changeStyleMarkingInItens(List<ItemStudy> itemStudiesSelected) {
-		String style = "background-color: " + selectedEntity.getColor() + ";";
-		for (ItemStudy itemStudy : itemStudiesSelected) {
-			itemStudy.contentElement.setStyle(style);
-		}
-		parentComposer.setItemStudiesSelected(new ArrayList<ItemStudy>());
-		parentComposer.setItensSelected(new ArrayList<ElementText>());
-		parentComposer.checkPanelActionVisibility();
-	}
-
 	private Return createMarkingInItens(List<ElementText> itensSelected) {
 		Return ret = new Return(true);
 		ElementsItensStudy elementsItensStudy;
@@ -296,10 +286,21 @@ public class MarkingComposer extends
 					elementsItensStudy = new ElementsItensStudy();
 					elementsItensStudy.setElementText(elementText);
 					elementsItensStudy.setItemOfStudy(markingUsed);
+					elementsItensStudy.setStudy(study);
 					elementsItensStudies.add(elementsItensStudy);
 				}
 				
 				ret.concat(saveElementsItensStudy());
+				
+				if(ret.isValid()){
+					List<ItemStudy> list = getItemStudiesSelected();
+					for (ItemStudy itemStudy : list) {
+						Image comp = createComponentIconStudy(itemStudy);
+						if (comp != null)
+							itemStudy.appendChild(comp);
+					}
+				}
+					
 			}
 		} else
 			ret.setValid(false);

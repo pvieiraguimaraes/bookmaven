@@ -35,6 +35,18 @@ public class Study extends CommonEntity {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "study", cascade = CascadeType.ALL)
 	private List<ItensOfStudy> itensOfStudies;
 
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "study", cascade = CascadeType.ALL)
+	private List<ElementsItensStudy> elementsItensStudies;
+	
+	public List<ElementsItensStudy> getElementsItensStudies() {
+		return elementsItensStudies;
+	}
+
+	public void setElementsItensStudies(
+			List<ElementsItensStudy> elementsItensStudies) {
+		this.elementsItensStudies = elementsItensStudies;
+	}
+
 	public Text getText() {
 		return text;
 	}

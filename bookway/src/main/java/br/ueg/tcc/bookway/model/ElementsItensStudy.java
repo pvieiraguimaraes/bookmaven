@@ -20,6 +20,18 @@ public class ElementsItensStudy extends CommonEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_elementtext", insertable = true, updatable = true, nullable = false)
 	private ElementText elementText;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_study", insertable = true, updatable = true, nullable = false)
+	private Study study;
+
+	public Study getStudy() {
+		return study;
+	}
+
+	public void setStudy(Study study) {
+		this.study = study;
+	}
 
 	public ItensOfStudy getItemOfStudy() {
 		return itemOfStudy;

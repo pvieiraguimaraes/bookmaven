@@ -1,0 +1,7 @@
+<zk>
+	<image id="${arg.idIconStudy}" src="/images/icon-item-study.png" style="float: right;" visible="false">
+		<attribute name="onClick">
+			controller.callModalWindow("/template/frms/panelItensStudy.zul");
+		</attribute>
+	</image>
+</zk>
