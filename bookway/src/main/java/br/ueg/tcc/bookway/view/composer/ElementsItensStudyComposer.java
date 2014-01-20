@@ -1,8 +1,8 @@
 package br.ueg.tcc.bookway.view.composer;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Hibernate;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Tabbox;
@@ -18,6 +18,8 @@ import br.ueg.tcc.bookway.model.Annotation;
 import br.ueg.tcc.bookway.model.ElementText;
 import br.ueg.tcc.bookway.model.ElementsItensStudy;
 import br.ueg.tcc.bookway.model.ItensOfStudy;
+import br.ueg.tcc.bookway.model.MarkingOfUser;
+import br.ueg.tcc.bookway.model.MarkingUsed;
 import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.view.macros.ItemOfPanel;
 
@@ -28,6 +30,26 @@ public class ElementsItensStudyComposer extends
 	private ElementText checkElementText;
 
 	private Study checkStudy;
+	
+	private List<Annotation> annotations;
+	
+	private List<MarkingUsed> markingUseds;
+
+	public List<Annotation> getAnnotations() {
+		return annotations;
+	}
+
+	public void setAnnotations(List<Annotation> annotations) {
+		this.annotations = annotations;
+	}
+
+	public List<MarkingUsed> getMarkingUseds() {
+		return markingUseds;
+	}
+
+	public void setMarkingUseds(List<MarkingUsed> markingUseds) {
+		this.markingUseds = markingUseds;
+	}
 
 	public ElementText getCheckElementText() {
 		return checkElementText;
@@ -70,25 +92,59 @@ public class ElementsItensStudyComposer extends
 	}
 
 	private Component createComponentsInPanel(List<ElementsItensStudy> list) {
-//		<tabbox>
+	
+		separateItensStudyList(list);
+		
+	//		<tabbox>
 	//		<tabs>
 	//		 	<tab/>
 	//		</tabs>
 	//		<tabpanels>
 	//			<tabpanel/>
 	//		</tabpanels>
-//		</tabbox>
+	//		</tabbox>
 		
 		Tabbox tabbox = new Tabbox();
 		Tabs tabs = new Tabs();
-		Tab tab = new Tab();
+		Tab tab = null;
 		
-		for (ElementsItensStudy item : list) {
-			ItensOfStudy itemOfStudy = HibernateUtils.materializeProxy(item.getItemOfStudy());
-			
+		ItemOfPanel itemOfPanel;
+		
+		if (!getAnnotations().isEmpty()) {
+			tab = new Tab("Anotações");
+			for (Annotation annotation : getAnnotations()) {
+				itemOfPanel = new ItemOfPanel();
+				itemOfPanel.setTitleItem(annotation.getTitle());
+				itemOfPanel.setDescriptionItem(annotation.getContent());
+
+				tab.appendChild(itemOfPanel);
+			}
+			if (tab != null)
+				tabs.appendChild(tab);
+		}
+		
+		if (!getMarkingUseds().isEmpty()) {
+
 		}
 		
 		return null;
+	}
+
+	private void separateItensStudyList(List<ElementsItensStudy> list) {
+		resetListsItens();
+		for (ElementsItensStudy elementsItensStudy : list) {
+			ItensOfStudy itemOfStudy = HibernateUtils
+					.materializeProxy(elementsItensStudy.getItemOfStudy());
+			if (itemOfStudy instanceof Annotation)
+				annotations.add((Annotation) itemOfStudy);
+			if(itemOfStudy instanceof MarkingUsed)
+				markingUseds.add((MarkingUsed) itemOfStudy);
+		}
+	}
+	
+	private void resetListsItens(){
+		setAnnotations(new ArrayList<Annotation>());
+		setMarkingUseds(new ArrayList<MarkingUsed>());
 	}
 
 	private Component createItemPanel(ElementText elem) {
