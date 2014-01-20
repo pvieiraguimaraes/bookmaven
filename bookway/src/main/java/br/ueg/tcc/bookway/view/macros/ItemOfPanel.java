@@ -13,11 +13,11 @@ public class ItemOfPanel extends HtmlMacroComponent {
 
 	private Textbox descriptionItem;
 
-	private Boolean titleItemVisible;
+	private Boolean titleItemVisible = true;
 
-	private Boolean descriptionItemVisible;
+	private Boolean descriptionItemVisible = true;
 
-	private Boolean panelButtonsItemVisible;
+	private Boolean panelButtonsItemVisible = true;
 
 	public Label getTitleItem() {
 		return titleItem;

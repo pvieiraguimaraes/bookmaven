@@ -1,9 +1,11 @@
-<div>
-	<label id="idElementText" value="${arg.idElementText}" visible="true"/>
+<?component name="itemstudy" macroURI="/template/component/itemstudy.zul" class="br.ueg.tcc.bookway.view.macros.ItemStudy"?>
+
+<itemstudy id="div${arg.idIconStudy}">
+	<label id="idElementText" value="${arg.idElementText}" visible="false"/>
 	<image id="${arg.idIconStudy}" src="/images/icon-item-study.png" style="float: right;" visible="false">
 		<attribute name="onClick">
 			session.setAttribute("idElementText", idElementText.getValue());
 			controller.callModalWindow("/template/frms/panelItensStudy.zul");
 		</attribute>
 	</image>
-</div>
+</itemstudy>

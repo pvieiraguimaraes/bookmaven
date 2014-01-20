@@ -381,7 +381,7 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		newMap.put("idElementText", itemStudy.getIdElement());
 		List<Component> children = itemStudy.getChildren();
 		for (Component component : children) {
-			if(component instanceof Image)
+			if(component instanceof ItemStudy)
 				return null;
 		}
 		return Executions.createComponents("/template/component/iconItemStudy.zul", itemStudy, newMap);
