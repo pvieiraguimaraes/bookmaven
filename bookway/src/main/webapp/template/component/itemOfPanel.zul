@@ -1,0 +1,19 @@
+<div width="100px" height="150px">
+	<grid>
+		<rows>
+			<row>
+				<label id="titleItem" value="${arg.titleItem}"
+					visible="${arg.titleItemVisible}" />
+			</row>
+			<row>
+				<textbox id="descriptionItem" value="${arg.descriptionItem}" rows="4"
+					visible="${arg.descriptionItemVisible}" multiline="true" />
+			</row>
+		</rows>
+	</grid>
+	</image>
+	<div id="panelButtonsItem" align="right" visible="${arg.panelButtonsItemVisible}">
+		<button label="Editar" />
+		<button label="Excluir" />
+	</div>
+</div>
