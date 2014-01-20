@@ -1,9 +1,9 @@
-<zk>
+<div>
+	<label id="idElementText" value="${arg.idElementText}" visible="true"/>
 	<image id="${arg.idIconStudy}" src="/images/icon-item-study.png" style="float: right;" visible="false">
 		<attribute name="onClick">
-			session.setAttribute("itemStudySelected", arg.get("itemStudySelected"));
-			System.out.println("this itemStudySelected" + arg.get("itemStudySelected"));
+			session.setAttribute("idElementText", idElementText.getValue());
 			controller.callModalWindow("/template/frms/panelItensStudy.zul");
 		</attribute>
 	</image>
-</zk>
+</div>

@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zul.Image;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
 
@@ -95,7 +94,7 @@ public class AnnotationComposer extends
 				if(retAux.isValid()){
 					List<ItemStudy> list = getItemStudiesSelected();
 					for (ItemStudy itemStudy : list) {
-						Image comp = createComponentIconStudy(itemStudy);
+						Component comp = createComponentIconStudy(itemStudy);
 						if (comp != null)
 							itemStudy.appendChild(comp);
 					}

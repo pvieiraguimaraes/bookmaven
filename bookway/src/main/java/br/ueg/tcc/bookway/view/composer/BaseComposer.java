@@ -18,6 +18,7 @@ import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.com.vexillum.view.CRUDComposer;
 import br.ueg.tcc.bookway.control.ElementsItensStudyControl;
+import br.ueg.tcc.bookway.control.NavigationStudyControl;
 import br.ueg.tcc.bookway.control.StudyControl;
 import br.ueg.tcc.bookway.model.ElementText;
 import br.ueg.tcc.bookway.model.ElementsItensStudy;
@@ -159,7 +160,6 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 			newMap = new HashMap<>();
 		else
 			newMap = (HashMap<String, Object>) arg.get("newMap");
-		
 	}
 
 	@SuppressWarnings("unchecked")
@@ -278,6 +278,11 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 				newMap);
 	}
 	
+	public NavigationStudyControl getNavigationStudyControl(HashMap<String, Object> newMap) {
+		return SpringFactory.getController("navigationStudyControl", NavigationStudyControl.class,
+				newMap);
+	}
+	
 	public void changeItemStyle(ItemStudy itemStudy) {
 		String style = itemStudy.contentElement.getStyle();
 		if (style == null)
@@ -371,13 +376,14 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		return itemStudy;
 	}
 
-	public Image createComponentIconStudy(ItemStudy itemStudy) {
+	public Component createComponentIconStudy(ItemStudy itemStudy) {
 		newMap.put("idIconStudy", itemStudy.getIdIconStudy());
+		newMap.put("idElementText", itemStudy.getIdElement());
 		List<Component> children = itemStudy.getChildren();
 		for (Component component : children) {
 			if(component instanceof Image)
 				return null;
 		}
-		return (Image) Executions.createComponents("/template/frms/frmIconStudy.zul", itemStudy, newMap);
+		return Executions.createComponents("/template/component/iconItemStudy.zul", itemStudy, newMap);
 	}
 }
