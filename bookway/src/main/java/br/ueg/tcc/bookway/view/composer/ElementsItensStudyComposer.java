@@ -81,6 +81,7 @@ public class ElementsItensStudyComposer extends
 	@SuppressWarnings("unchecked")
 	private void createPanelItensStudy(String idElementText) {
 		Window win = (Window) getComponentById("panelItensStudy");
+
 		setCheckElementText(getNavigationStudyControl(null)
 				.getElementText(Long.parseLong(idElementText)));
 		setCheckStudy(study);
@@ -103,31 +104,37 @@ public class ElementsItensStudyComposer extends
 		tabbox.appendChild(tabs);
 		tabbox.appendChild(tabpanels);
 		
-		Tab tab = null;
-		Tabpanel tabpanel = null;
-		
-		Vlayout vlayout = null;
-		
 		if (!getAnnotations().isEmpty()) {
-			tab = new Tab("Anotações");
-			tab.setSelected(true);
-			tabs.appendChild(tab);
-			tabpanel = new Tabpanel();
-			vlayout = new Vlayout();
-			tabpanel.appendChild(vlayout);
-			tabpanels.appendChild(tabpanel);
-			for (Annotation annotation : getAnnotations()) {
-				vlayout.appendChild(new ItemOfPanel(annotation.getTitle(), annotation.getContent()));
-			}
-			if (tab != null)
-				tabs.appendChild(tab);
+			tabs.appendChild(createItemPanelAnnotation(tabs, tabpanels));
 		}
 		
 		if (!getMarkingUseds().isEmpty()) {
 
 		}
 		
+		((Tab)tabbox.getTabs().getFirstChild()).setSelected(true);
+		
 		return tabbox;
+	}
+
+	private Tab createItemPanelAnnotation(Tabs tabs, Tabpanels tabpanels) {
+		Tab tab = new Tab("Anotações");
+		Tabpanel tabpanel = new Tabpanel();
+		Vlayout vlayout = new Vlayout();
+		
+		tabs.appendChild(tab);
+		
+		vlayout.setHeight("400px");
+		vlayout.setStyle("overflow-y: scroll;");
+
+		tabpanel.appendChild(vlayout);
+		tabpanels.appendChild(tabpanel);
+		
+		for (Annotation annotation : getAnnotations()) {
+			vlayout.appendChild(new ItemOfPanel(annotation.getTitle(), annotation.getContent()));
+		}
+		
+		return tab;
 	}
 
 	private void separateItensStudyList(List<ElementsItensStudy> list) {
