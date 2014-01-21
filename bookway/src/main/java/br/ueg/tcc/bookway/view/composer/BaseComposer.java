@@ -308,13 +308,17 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 	}
 	
 	public void changeStyleMarkingInItens(List<ItemStudy> itemStudiesSelected, String color) {
-		String style = "background-color: " + color + ";";
 		for (ItemStudy itemStudy : itemStudiesSelected) {
-			itemStudy.contentElement.setStyle(style);
+			changeStyleMarkingThisItem(itemStudy, color);
 		}
 		parentComposer.setItemStudiesSelected(new ArrayList<ItemStudy>());
 		parentComposer.setItensSelected(new ArrayList<ElementText>());
 		parentComposer.checkPanelActionVisibility();
+	}
+	
+	public void changeStyleMarkingThisItem(ItemStudy itemStudy, String color){
+		String style = "background-color: " + color + ";";
+		itemStudy.contentElement.setStyle(style);
 	}
 
 	public void checkPanelActionVisibility() {

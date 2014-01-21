@@ -2,61 +2,43 @@ package br.ueg.tcc.bookway.view.macros;
 
 import org.zkoss.zk.ui.HtmlMacroComponent;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
+import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Label;
-import org.zkoss.zul.Textbox;
 
 @SuppressWarnings("serial")
 @VariableResolver(value = { org.zkoss.zkplus.spring.DelegatingVariableResolver.class })
 public class ItemOfPanel extends HtmlMacroComponent {
 
+	@Wire
 	private Label titleItem;
 
-	private Textbox descriptionItem;
+	@Wire
+	private Label descriptionItem;
 
-	private Boolean titleItemVisible = true;
-
-	private Boolean descriptionItemVisible = true;
-
-	private Boolean panelButtonsItemVisible = true;
-
-	public Label getTitleItem() {
-		return titleItem;
+	public ItemOfPanel() {
+		compose();
+	}
+	
+	public ItemOfPanel(String title, String description) {
+		compose();
+		setTitle(title);
+		setDescription(description);
 	}
 
-	public void setTitleItem(String titleItem) {
+	public String getTitle() {
+		return titleItem.getValue();
+	}
+
+	public void setTitle(String titleItem) {
 		this.titleItem.setValue(titleItem);
 	}
 
-	public String getDescriptionItem() {
+	public String getDescription() {
 		return descriptionItem.getValue();
 	}
 
-	public void setDescriptionItem(String descriptionItem) {
+	public void setDescription(String descriptionItem) {
 		this.descriptionItem.setValue(descriptionItem);
-	}
-
-	public Boolean getDescriptionItemVisible() {
-		return descriptionItemVisible;
-	}
-
-	public void setDescriptionItemVisible(Boolean descriptionItemVisible) {
-		this.descriptionItemVisible = descriptionItemVisible;
-	}
-
-	public Boolean getPanelButtonsItemVisible() {
-		return panelButtonsItemVisible;
-	}
-
-	public void setPanelButtonsItemVisible(Boolean panelButtonsItemVisible) {
-		this.panelButtonsItemVisible = panelButtonsItemVisible;
-	}
-
-	public Boolean getTitleItemVisible() {
-		return titleItemVisible;
-	}
-
-	public void setTitleItemVisible(Boolean titleItemVisible) {
-		this.titleItemVisible = titleItemVisible;
 	}
 
 }
