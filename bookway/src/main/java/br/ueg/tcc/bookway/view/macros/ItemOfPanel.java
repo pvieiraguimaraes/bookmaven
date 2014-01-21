@@ -3,6 +3,7 @@ package br.ueg.tcc.bookway.view.macros;
 import org.zkoss.zk.ui.HtmlMacroComponent;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zul.Div;
 import org.zkoss.zul.Label;
 
 @SuppressWarnings("serial")
@@ -14,6 +15,9 @@ public class ItemOfPanel extends HtmlMacroComponent {
 
 	@Wire
 	private Label descriptionItem;
+	
+	@Wire
+	private Div panelButtonsItem;
 
 	public ItemOfPanel() {
 		compose();
@@ -24,7 +28,7 @@ public class ItemOfPanel extends HtmlMacroComponent {
 		setTitle(title);
 		setDescription(description);
 	}
-
+	
 	public String getTitle() {
 		return titleItem.getValue();
 	}

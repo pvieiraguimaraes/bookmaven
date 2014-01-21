@@ -145,6 +145,8 @@ public class MarkingComposer extends
 	public void resetForm() {
 		tagValue = null;
 		selectedEntity = null;
+		getParentComposer().setEntity(getEntityObject());
+		getParentComposer().setSelectedEntity(null);
 		super.resetForm();
 	}
 	
@@ -246,10 +248,16 @@ public class MarkingComposer extends
 		Colorbox colorbox = (Colorbox) getComponentById("fldColor");
 		entity.setColor(colorbox.getColor());
 		entity.setUserBookway((UserBookway) getUserLogged());
+		for (TagsOfMarking tag : entity.getTagsOfMarkings()) {
+			if(tag.getUserBookway() == null)
+				tag.setUserBookway((UserBookway) getUserLogged());
+		}
 		Return ret = super.saveEntity();
 		if (ret.isValid())
 			((Window) getComponentById(component, "modalWindow")).detach();
 		loadBinder();
+		resetForm();
+		treatReturn(ret);
 		return ret;
 	}
 	

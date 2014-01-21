@@ -221,7 +221,10 @@ public class NavigationStudyComposer extends
 							});
 					
 					retAux = checkExistingItensStudies(elementText, getStudy());
-					hasItensStudies = retAux.isValid();
+					if(retAux.isValid() && !retAux.getList().isEmpty())
+						hasItensStudies = true;
+					else
+						hasItensStudies = false;
 					
 					if(hasItensStudies)
 						mark = checkExistingMarking((List<ElementsItensStudy>)retAux.getList());
