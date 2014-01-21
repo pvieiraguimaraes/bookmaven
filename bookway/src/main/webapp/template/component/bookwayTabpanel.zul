@@ -1,0 +1,5 @@
+<zk>
+	<tabpanel id="tabpanel">
+		<paging id="paging" pageSize="3" />
+	</tabpanel>
+</zk>

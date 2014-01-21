@@ -1,3 +1,5 @@
-<window id="panelItensStudy" title="Painel de Itens" border="normal"
+<?component name="itemofpanel" macroURI="/template/component/itemOfPanel.zul" class="br.ueg.tcc.bookway.view.macros.ItemOfPanel"?>
+
+<window id="panelItensStudy" title="Painel de Itens" border="normal" width="420px" height="590px"
 	position="center, center" closable="true" apply="br.ueg.tcc.bookway.view.composer.ElementsItensStudyComposer">
 </window>

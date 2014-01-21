@@ -6,7 +6,10 @@ import java.util.List;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Tabbox;
+import org.zkoss.zul.Tabpanel;
+import org.zkoss.zul.Tabpanels;
 import org.zkoss.zul.Tabs;
+import org.zkoss.zul.Vlayout;
 import org.zkoss.zul.Window;
 
 import br.com.vexillum.util.HibernateUtils;
@@ -18,7 +21,6 @@ import br.ueg.tcc.bookway.model.Annotation;
 import br.ueg.tcc.bookway.model.ElementText;
 import br.ueg.tcc.bookway.model.ElementsItensStudy;
 import br.ueg.tcc.bookway.model.ItensOfStudy;
-import br.ueg.tcc.bookway.model.MarkingOfUser;
 import br.ueg.tcc.bookway.model.MarkingUsed;
 import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.view.macros.ItemOfPanel;
@@ -92,32 +94,30 @@ public class ElementsItensStudyComposer extends
 	}
 
 	private Component createComponentsInPanel(List<ElementsItensStudy> list) {
-	
 		separateItensStudyList(list);
-		
-	//		<tabbox>
-	//		<tabs>
-	//		 	<tab/>
-	//		</tabs>
-	//		<tabpanels>
-	//			<tabpanel/>
-	//		</tabpanels>
-	//		</tabbox>
 		
 		Tabbox tabbox = new Tabbox();
 		Tabs tabs = new Tabs();
-		Tab tab = null;
+		Tabpanels tabpanels = new Tabpanels();
 		
-		ItemOfPanel itemOfPanel;
+		tabbox.appendChild(tabs);
+		tabbox.appendChild(tabpanels);
+		
+		Tab tab = null;
+		Tabpanel tabpanel = null;
+		
+		Vlayout vlayout = null;
 		
 		if (!getAnnotations().isEmpty()) {
 			tab = new Tab("Anotações");
+			tab.setSelected(true);
+			tabs.appendChild(tab);
+			tabpanel = new Tabpanel();
+			vlayout = new Vlayout();
+			tabpanel.appendChild(vlayout);
+			tabpanels.appendChild(tabpanel);
 			for (Annotation annotation : getAnnotations()) {
-				itemOfPanel = new ItemOfPanel();
-				itemOfPanel.setTitleItem(annotation.getTitle());
-				itemOfPanel.setDescriptionItem(annotation.getContent());
-
-				tab.appendChild(itemOfPanel);
+				vlayout.appendChild(new ItemOfPanel(annotation.getTitle(), annotation.getContent()));
 			}
 			if (tab != null)
 				tabs.appendChild(tab);
@@ -127,7 +127,7 @@ public class ElementsItensStudyComposer extends
 
 		}
 		
-		return null;
+		return tabbox;
 	}
 
 	private void separateItensStudyList(List<ElementsItensStudy> list) {
@@ -149,8 +149,7 @@ public class ElementsItensStudyComposer extends
 
 	private Component createItemPanel(ElementText elem) {
 		ItemOfPanel itemOfPanel = new ItemOfPanel();
-		
-		
+
 		return null;
 	}
 

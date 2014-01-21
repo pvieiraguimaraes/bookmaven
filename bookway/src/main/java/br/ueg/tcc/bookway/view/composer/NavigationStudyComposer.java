@@ -1,5 +1,6 @@
 package br.ueg.tcc.bookway.view.composer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
@@ -21,9 +22,12 @@ import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.MarkingControl;
 import br.ueg.tcc.bookway.control.NavigationStudyControl;
 import br.ueg.tcc.bookway.model.ElementText;
+import br.ueg.tcc.bookway.model.ElementsItensStudy;
 import br.ueg.tcc.bookway.model.ItemNavigationStudy;
+import br.ueg.tcc.bookway.model.ItensOfStudy;
 import br.ueg.tcc.bookway.model.LevelText;
 import br.ueg.tcc.bookway.model.MarkingOfUser;
+import br.ueg.tcc.bookway.model.MarkingUsed;
 import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
@@ -177,7 +181,9 @@ public class NavigationStudyComposer extends
 	private Component createItemElementForStudy(List<ElementText> elements,
 			Component compMaster) {
 		ItemStudy itemStudy;
+		Return retAux;
 		boolean hasItensStudies = false;
+		MarkingOfUser mark = null;
 		
 		if (elements != null) {
 			//TODO Aqui deve ser feito a verificação do tipo do ElementText e conforme diferença de tipo exibir diferente
@@ -214,10 +220,16 @@ public class NavigationStudyComposer extends
 
 							});
 					
-					hasItensStudies = checkExistingItensStudies(elementText, getStudy());
+					retAux = checkExistingItensStudies(elementText, getStudy());
+					hasItensStudies = retAux.isValid();
+					
+					if(hasItensStudies)
+						mark = checkExistingMarking((List<ElementsItensStudy>)retAux.getList());
+					
+					if(mark != null)
+						changeStyleMarkingThisItem(itemStudy, mark.getColor());
 					
 					itemStudy = insertIconStudy(itemStudy, idLevel, hasItensStudies);
-					
 					itemStudies.add(itemStudy);
 				}
 				
@@ -227,13 +239,30 @@ public class NavigationStudyComposer extends
 		return compMaster;
 	}
 
-	private boolean checkExistingItensStudies(ElementText elementText, Study study) {
+	private Return checkExistingItensStudies(ElementText elementText, Study study) {
 		newMap.put("checkElementText", HibernateUtils.materializeProxy(elementText));
 		newMap.put("checkStudy", study);
-		Return ret = getElementsItensStudyControl(newMap).searchExistingItensStudies();
-		if(ret.isValid() && !ret.getList().isEmpty())
-			return true;
-		return false;
+		return getElementsItensStudyControl(newMap).searchExistingItensStudies();
+	}
+
+	private MarkingOfUser checkExistingMarking(List<ElementsItensStudy> list) {
+		List<MarkingUsed> markingUseds = new ArrayList<MarkingUsed>();
+		MarkingUsed resultMark = null;
+		for (ElementsItensStudy elementsItensStudy : list) {
+			ItensOfStudy thisMark = elementsItensStudy.getItemOfStudy();
+			if(thisMark instanceof MarkingUsed)
+				markingUseds.add((MarkingUsed) thisMark);
+		}
+		if(!markingUseds.isEmpty()){
+			resultMark = markingUseds.get(0);
+			for (int i = 1; i < markingUseds.size(); i++) {
+				if(markingUseds.get(i).getDateItem().after(resultMark.getDateItem()))
+					resultMark = markingUseds.get(i);
+			}
+			if(resultMark != null)
+				return HibernateUtils.materializeProxy(resultMark.getMarkingOfUser());
+		}
+		return null;
 	}
 
 	private void addItemStudySelected(ItemStudy itemStudy) {
@@ -254,13 +283,11 @@ public class NavigationStudyComposer extends
 
 	@Override
 	protected String getUpdatePage() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected String getDeactivationMessage() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

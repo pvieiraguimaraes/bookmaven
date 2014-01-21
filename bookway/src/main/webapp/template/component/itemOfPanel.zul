@@ -1,19 +1,11 @@
-<div width="100px" height="150px">
-	<grid>
-		<rows>
-			<row>
-				<label id="titleItem" value="${arg.titleItem}"
-					visible="${arg.titleItemVisible}" />
-			</row>
-			<row>
-				<textbox id="descriptionItem" value="${arg.descriptionItem}" rows="4"
-					visible="${arg.descriptionItemVisible}" multiline="true" />
-			</row>
-		</rows>
-	</grid>
-	</image>
-	<div id="panelButtonsItem" align="right" visible="${arg.panelButtonsItemVisible}">
-		<button label="Editar" />
-		<button label="Excluir" />
+<div sclass="well itemofpanel" width="350px" height="150px">
+	<label id="titleItem" width="100px" value="${arg.titleItem}" />
+	<separator width="90%" bar="true"/>
+	<label id="descriptionItem" width="100px" height="300px" value="${arg.descriptionItem}"/>
+	<div id="panelButtonsItem" align="right">
+		<hlayout hflex="1">
+			<button label="Editar" />
+			<button label="Excluir" />
+		</hlayout>
 	</div>
 </div>
