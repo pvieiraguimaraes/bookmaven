@@ -23,6 +23,7 @@ import br.ueg.tcc.bookway.control.StudyControl;
 import br.ueg.tcc.bookway.model.ElementText;
 import br.ueg.tcc.bookway.model.ElementsItensStudy;
 import br.ueg.tcc.bookway.model.Study;
+import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 import br.ueg.tcc.bookway.view.macros.ItemStudy;
 
 @SuppressWarnings("serial")
@@ -50,6 +51,19 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 	 * Lista que representa o relacionamento entre os elementos do texto e os itens de estudo
 	 */
 	protected List<ElementsItensStudy> elementsItensStudies;
+	
+	/**
+	 * Utilizado nos casos de uso dos Itens De Estudo, onde é necessário informar o tipo de visualização PUBLICO / PRIVADO
+	 */
+	protected TypePrivacy typePrivacy = TypePrivacy.PRIVADO;
+	
+	public TypePrivacy getTypePrivacy() {
+		return typePrivacy;
+	}
+
+	public void setTypePrivacy(TypePrivacy typePrivacy) {
+		this.typePrivacy = typePrivacy;
+	}
 	
 	public List<ElementsItensStudy> getElementsItensStudies() {
 		return elementsItensStudies;

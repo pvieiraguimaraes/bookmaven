@@ -1,0 +1,7 @@
+<zk>
+	<window id="selectTextReference" title="Referenciar Conteúdo" border="normal" width="200px" height="485px" 
+		position="center, center" closable="true" apply="br.ueg.tcc.bookway.view.composer.RelationshipTextElementComposer">
+		<button	label="Próprio Texto"/>
+		<button	label="Outro Texto"/>
+	</window>
+</zk>
