@@ -21,6 +21,7 @@ import br.ueg.tcc.bookway.model.Annotation;
 import br.ueg.tcc.bookway.model.ElementText;
 import br.ueg.tcc.bookway.model.ElementsItensStudy;
 import br.ueg.tcc.bookway.model.ItensOfStudy;
+import br.ueg.tcc.bookway.model.MarkingOfUser;
 import br.ueg.tcc.bookway.model.MarkingUsed;
 import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.view.macros.ItemOfPanel;
@@ -97,6 +98,8 @@ public class ElementsItensStudyComposer extends
 	private Component createComponentsInPanel(List<ElementsItensStudy> list) {
 		separateItensStudyList(list);
 		
+		boolean flag = false;
+		
 		Tabbox tabbox = new Tabbox();
 		Tabs tabs = new Tabs();
 		Tabpanels tabpanels = new Tabpanels();
@@ -106,13 +109,17 @@ public class ElementsItensStudyComposer extends
 		
 		if (!getAnnotations().isEmpty()) {
 			tabs.appendChild(createItemPanelAnnotation(tabs, tabpanels));
+			flag = true;
 		}
 		
 		if (!getMarkingUseds().isEmpty()) {
-
+			tabs.appendChild(createItemPanelMarking(tabs, tabpanels));
+			flag = true;
 		}
 		
-		((Tab)tabbox.getTabs().getFirstChild()).setSelected(true);
+		
+		if(flag)
+			((Tab)tabbox.getTabs().getFirstChild()).setSelected(true);
 		
 		return tabbox;
 	}
@@ -131,7 +138,30 @@ public class ElementsItensStudyComposer extends
 		tabpanels.appendChild(tabpanel);
 		
 		for (Annotation annotation : getAnnotations()) {
-			vlayout.appendChild(new ItemOfPanel(annotation.getTitle(), annotation.getContent()));
+			//TODO Verificar aqui a mudança da visibilidade do botão de acordo com o dono do item
+			vlayout.appendChild(new ItemOfPanel("Annotation", annotation.getTitle(), annotation.getContent(), null, true, false, true, false, true, true));
+		}
+		
+		return tab;
+	}
+	
+	private Tab createItemPanelMarking(Tabs tabs, Tabpanels tabpanels) {
+		Tab tab = new Tab("Marcações");
+		Tabpanel tabpanel = new Tabpanel();
+		Vlayout vlayout = new Vlayout();
+		
+		tabs.appendChild(tab);
+		
+		vlayout.setHeight("400px");
+		vlayout.setStyle("overflow-y: scroll;");
+
+		tabpanel.appendChild(vlayout);
+		tabpanels.appendChild(tabpanel);
+		
+		for (MarkingUsed markingUsed : getMarkingUseds()) {
+			MarkingOfUser markingOfUser = markingUsed.getMarkingOfUser();
+			//TODO Colocar pra funcionar a visibilidade dos botões.
+			vlayout.appendChild(new ItemOfPanel("MarkingOfUser", markingOfUser.getName(), null, markingOfUser.getColor(), true, true, false, true, false, false));
 		}
 		
 		return tab;
@@ -152,12 +182,6 @@ public class ElementsItensStudyComposer extends
 	private void resetListsItens(){
 		setAnnotations(new ArrayList<Annotation>());
 		setMarkingUseds(new ArrayList<MarkingUsed>());
-	}
-
-	private Component createItemPanel(ElementText elem) {
-		ItemOfPanel itemOfPanel = new ItemOfPanel();
-
-		return null;
 	}
 
 	@Override

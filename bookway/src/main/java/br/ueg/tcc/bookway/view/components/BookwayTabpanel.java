@@ -1,6 +1,5 @@
 package br.ueg.tcc.bookway.view.components;
 
-import org.zkoss.zk.ui.IdSpace;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Paging;
