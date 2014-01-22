@@ -37,16 +37,6 @@ public class MarkingComposer extends
 
 	private TagsOfMarking tagSelected;
 	
-	private TypePrivacy typePrivacy = TypePrivacy.PRIVADO;
-	
-	public TypePrivacy getTypePrivacy() {
-		return typePrivacy;
-	}
-
-	public void setTypePrivacy(TypePrivacy typePrivacy) {
-		this.typePrivacy = typePrivacy;
-	}
-
 	public TagsOfMarking getTagSelected() {
 		return tagSelected;
 	}
