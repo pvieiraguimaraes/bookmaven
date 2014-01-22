@@ -1,11 +1,17 @@
-<div sclass="well itemofpanel" width="320px">
-	<label id="titleItem" width="100px" value="${arg.titleItem}" />
-	<separator width="90%" bar="true"/>
-	<label id="descriptionItem" width="100px" height="300px" value="${arg.descriptionItem}"/>
-	<div id="panelButtonsItem" align="right" style="padding-top: 20px;">
-		<hlayout hflex="1">
-			<button label="Editar" />
-			<button label="Excluir" />
-		</hlayout>
+<zk>
+	<div id="marking" width="360px" height="26px">
+		<label id="nameMarking" width="100%" value="${arg.titleItem}" />
+		<button id="btnExcludeMarking" label="Excluir" style="float: right;" />
 	</div>
-</div>
+	<div id="annotation" sclass="well itemofpanel" width="320px">
+		<label id="titleItem" width="100px" value="${arg.titleItem}" />
+		<separator id="separator" width="90%" bar="true"/>
+		<label id="descriptionItem" width="100px" height="300px" value="${arg.descriptionItem}"/>
+		<div align="right" style="padding-top: 20px;">
+			<hlayout hflex="1">
+				<button id="btnEditAnnot" label="Editar" />
+				<button id="btnExcludeAnnot" label="Excluir" />
+			</hlayout>
+		</div>
+	</div>
+</zk>

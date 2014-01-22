@@ -252,7 +252,7 @@ public class NavigationStudyComposer extends
 		List<MarkingUsed> markingUseds = new ArrayList<MarkingUsed>();
 		MarkingUsed resultMark = null;
 		for (ElementsItensStudy elementsItensStudy : list) {
-			ItensOfStudy thisMark = elementsItensStudy.getItemOfStudy();
+			ItensOfStudy thisMark = HibernateUtils.materializeProxy(elementsItensStudy.getItemOfStudy());
 			if(thisMark instanceof MarkingUsed)
 				markingUseds.add((MarkingUsed) thisMark);
 		}
