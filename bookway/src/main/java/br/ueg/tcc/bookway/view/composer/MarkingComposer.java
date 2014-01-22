@@ -1,6 +1,5 @@
 package br.ueg.tcc.bookway.view.composer;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +23,6 @@ import br.ueg.tcc.bookway.model.MarkingOfUser;
 import br.ueg.tcc.bookway.model.MarkingUsed;
 import br.ueg.tcc.bookway.model.TagsOfMarking;
 import br.ueg.tcc.bookway.model.UserBookway;
-import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 import br.ueg.tcc.bookway.view.macros.ItemStudy;
 
 @SuppressWarnings("serial")
@@ -51,10 +49,6 @@ public class MarkingComposer extends
 
 	public void setTagValue(String tagValue) {
 		this.tagValue = tagValue;
-	}
-
-	public List<TypePrivacy> getListTypesPrivacy() {
-		return Arrays.asList(TypePrivacy.values());
 	}
 
 	@Override

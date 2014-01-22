@@ -1,6 +1,7 @@
 package br.ueg.tcc.bookway.view.composer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -403,5 +404,9 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 				return null;
 		}
 		return Executions.createComponents("/template/component/iconItemStudy.zul", itemStudy, newMap);
+	}
+	
+	public List<TypePrivacy> getListTypesPrivacy() {
+		return Arrays.asList(TypePrivacy.values());
 	}
 }
