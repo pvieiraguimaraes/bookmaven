@@ -14,6 +14,7 @@ public class RelationshipTextElementComposer extends
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
+		loadBinder();
 	}
 
 	@Override
