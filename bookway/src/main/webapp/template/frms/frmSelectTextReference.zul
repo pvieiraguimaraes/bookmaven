@@ -1,7 +1,14 @@
 <zk>
-	<window id="selectTextReference" title="Referenciar Conteúdo" border="normal" width="200px" height="485px" 
+	<window id="selectTextReference" title="Referenciar Conteúdo" border="normal" width="200px" 
 		position="center, center" closable="true" apply="br.ueg.tcc.bookway.view.composer.RelationshipTextElementComposer">
-		<button	label="Próprio Texto"/>
-		<button	label="Outro Texto"/>
+		<vlayout>
+			<combobox id="fldTypePrivacy" width="180px"
+						model="@{controller.listTypesPrivacy}"
+						selectedItem="@{controller.typePrivacy}" />
+			<hlayout>
+				<button	label="Próprio Texto"/>
+				<button	label="Outro Texto"/>
+			</hlayout>
+		</vlayout>
 	</window>
 </zk>

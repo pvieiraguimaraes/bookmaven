@@ -13,7 +13,6 @@ public class RelationshipTextElementComposer extends
 	
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
-		// TODO Auto-generated method stub
 		super.doAfterCompose(comp);
 	}
 
