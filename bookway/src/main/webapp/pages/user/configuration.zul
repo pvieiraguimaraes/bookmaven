@@ -1,17 +1,20 @@
 <?page title="" contentType="text/html;charset=UTF-8"?>
 <?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
 <zk>
-	<div id="frmUser" self="@{define(content)}"
-		apply="br.ueg.tcc.bookway.view.composer.ConfigurationComposer"
-		style="margin-left: auto;margin-right: auto;" width="400px">
-		<groupbox>
-			<caption label="Configurações de Conta" />
-			<hbox>
-				<button label="Alterar Dados"
-					onClick="controller.editDataUser()" />
-				<button label="Excluir Conta"
-					onClick="controller.deleteAccount()" />
-			</hbox>
-		</groupbox>
+<!-- 	<div id="frmUser" self="@{define(content)}" -->
+<!-- 		apply="br.ueg.tcc.bookway.view.composer.ConfigurationComposer" -->
+<!-- 		style="margin-left: auto;margin-right: auto;" width="400px"> -->
+<!-- 		<groupbox> -->
+<!-- 			<caption label="Configurações de Conta" /> -->
+<!-- 			<hbox> -->
+<!-- 				<button label="Alterar Dados" -->
+<!-- 					onClick="controller.editDataUser()" /> -->
+<!-- 				<button label="Excluir Conta" -->
+<!-- 					onClick="controller.deleteAccount()" /> -->
+<!-- 			</hbox> -->
+<!-- 		</groupbox> -->
+<!-- 	</div> -->
+	<div self="@{define(content)}">
+		<include src="/template/frms/frmConfiguration.zul"/>
 	</div>
 </zk>

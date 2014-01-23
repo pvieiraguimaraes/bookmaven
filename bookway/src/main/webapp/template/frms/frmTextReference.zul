@@ -1,0 +1,6 @@
+<zk>
+	<window id="textReference" title="Relacionamento entre textos" border="normal" width="500px" 
+		position="center, center" closable="true" apply="br.ueg.tcc.bookway.view.composer.NavigationStudyComposer">
+		<include src="/template/frms/frmStudy.zul"/>
+	</window>
+</zk>

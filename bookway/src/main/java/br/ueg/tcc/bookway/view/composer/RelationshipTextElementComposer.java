@@ -38,5 +38,10 @@ public class RelationshipTextElementComposer extends
 	public RelationshipTextElement getEntityObject() {
 		return new RelationshipTextElement();
 	}
+	
+	public void callThisTextForReference(){
+		setStudy(study);
+		callModalWindow("/template/frms/frmTextReference.zul");
+	}
 
 }

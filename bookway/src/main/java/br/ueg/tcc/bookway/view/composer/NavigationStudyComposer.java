@@ -93,18 +93,19 @@ public class NavigationStudyComposer extends
 	}
 
 	private void createAmbientStudy() {
-		Tabbox tabbox = (Tabbox) getComponentById(thisComposer.getComponent(),
-				"panelStudy");
-		Tabs tabs = tabbox.getTabs();
-		if (tabs == null)
-			tabs = new Tabs();
-		tabs.appendChild(createTabStudy(getStudy().getText()));
-		Tabpanels tabpanels = tabbox.getTabpanels();
-		if (tabpanels == null)
-			tabpanels = new Tabpanels();
-		tabpanels.appendChild(createTabPanelStudy(getStudy()));
-		tabbox.appendChild(tabs);
-		tabbox.appendChild(tabpanels);
+		Tabbox tabbox = (Tabbox) getComponentById("panelStudy");
+		if (tabbox != null) {
+			Tabs tabs = tabbox.getTabs();
+			if (tabs == null)
+				tabs = new Tabs();
+			tabs.appendChild(createTabStudy(getStudy().getText()));
+			Tabpanels tabpanels = tabbox.getTabpanels();
+			if (tabpanels == null)
+				tabpanels = new Tabpanels();
+			tabpanels.appendChild(createTabPanelStudy(getStudy()));
+			tabbox.appendChild(tabs);
+			tabbox.appendChild(tabpanels);
+		}
 
 	}
 
@@ -192,7 +193,8 @@ public class NavigationStudyComposer extends
 						.getIdLevel().getIdText().getId());
 				Long idLevel = HibernateUtils.materializeProxy(elementText.getId());
 				itemStudy = new ItemStudy();
-				itemStudy.setContent(elementText.getValue());
+
+
 				itemStudy.setIdText(idText.toString());
 				itemStudy.setIdElement(idLevel.toString());
 				
