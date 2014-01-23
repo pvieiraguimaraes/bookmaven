@@ -1,0 +1,44 @@
+<zk>
+	<div>
+		<hbox width="100%" height="100%" align="center" pack="center">
+			<hbox apply="br.com.vexillum.view.PageConfigurationComposer">
+				<vbox>
+					<hbox width="100%" align="center" pack="center">
+						<label value="Categorias:" />
+						<combobox id="comboCatUser" width="150px"
+							model="@{controller.userPropertiesCategory}"
+							selectedItem="@{controller.selectedUserCategory}"
+							sclass="comboPageProperties"
+							onChange="controller.getPropertiesByUserCategory()">
+							<comboitem self="@{each=cat}"
+								label="@{cat.name}" />
+						</combobox>
+					</hbox>
+
+					<separator width="15px" />
+
+					<listbox
+						model="@{controller.listUserProperties load-when='comboCatUser.onChange'}"
+						hflex="min" itemRenderer="@{controller.configurationRenderer}"
+						onAfterRender='self.clearSelection();'
+						sclass="listPageProperties">
+						<auxhead>
+							<auxheader colspan="3"
+								label="Configurações de Usuário" align="center" />
+						</auxhead>
+						<listhead>
+							<listheader label="Propriedade"
+								width="100px" />
+							<listheader label="Descrição" width="255px" />
+							<listheader label="Valor" width="100px"
+								align="center" />
+							<listheader label="Default" width="60px"
+								align="center" />
+						</listhead>
+					</listbox>
+				</vbox>
+
+			</hbox>
+		</hbox>
+	</div>
+</zk>
