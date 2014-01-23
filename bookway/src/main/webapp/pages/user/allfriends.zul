@@ -1,0 +1,20 @@
+<?page title="Pesquisa de Amigos" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
+<?component name="itemfriend" macroURI="/template/component/itemfriend.zul" class="br.ueg.tcc.bookway.view.macros.ItemFriend"?>
+
+<zk>
+	<div self="@{define(content)}">
+		<hbox sclass="searchfriends" id="searchFriends" width="100%"
+			height="100%" pack="center"
+			apply="br.ueg.tcc.bookway.view.composer.FriendshipBookwayComposer">
+			<vbox>
+				<hbox width="100%" height="100%" pack="center">
+					<checkbox id="myFriends" label="Meus Amigos"/>
+					<textbox value="@{controller.searcKeyUser}" />
+					<button label="Pesquisar" onClick="controller.searchFriends()"/>
+				</hbox>
+				<vbox sclass="resultsearch" id="resultSearch" width="100%"></vbox>
+			</vbox>
+		</hbox>
+	</div>
+</zk>

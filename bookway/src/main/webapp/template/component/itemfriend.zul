@@ -1,0 +1,22 @@
+<div sclass="well itemfriend" width="350px" height="50%">
+	<hlayout id="panelgeneral">
+		<vlayout id="subpanelleft">
+			<image id="imagefriend" src="/images/bookavatar.png" />
+			<label id="userName" value="${arg.user}" />
+		</vlayout>
+		<label id="idUser" value="${arg.idUser}" visible="false" />
+	</hlayout>
+	<div align="right">
+		<hlayout>
+			<div id="panelRelationFriend"
+				apply="br.ueg.tcc.bookway.view.composer.FriendshipBookwayComposer">
+				<button id="btnRemove" sclass="btn btn-primary"
+					label="Remover" onClick="controller.removeFriend(idUser.getValue())"
+					visible="false" />
+				<button id="btnAdd" sclass="btn btn-primary"
+					label="Adicionar" onClick="controller.addFriend(idUser.getValue())"
+					visible="false" />
+			</div>
+		</hlayout>
+	</div>
+</div>

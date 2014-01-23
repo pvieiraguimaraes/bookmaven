@@ -4,7 +4,7 @@
 	<panel>
 		<caption label="Meus Amigos"></caption>
 		<panelchildren>
-			<vbox id="myFriends" height="100px"></vbox>
+			<vbox id="panelMyFriends" height="100px"></vbox>
 		</panelchildren>
 	</panel>
 	<panel apply="br.ueg.tcc.bookway.view.composer.InitComposer">
