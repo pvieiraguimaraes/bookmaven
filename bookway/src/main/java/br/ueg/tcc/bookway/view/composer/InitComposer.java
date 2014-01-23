@@ -8,15 +8,18 @@ import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Component;
 
 import br.com.vexillum.control.GenericControl;
+import br.com.vexillum.model.Friendship;
 import br.com.vexillum.model.ICommonEntity;
 import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
+import br.ueg.tcc.bookway.control.FriendshipBookwayControl;
 import br.ueg.tcc.bookway.control.RelationshipTextUserControl;
 import br.ueg.tcc.bookway.control.TextControl;
 import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
+import br.ueg.tcc.bookway.view.macros.ItemFriend;
 import br.ueg.tcc.bookway.view.macros.ItemText;
 import br.ueg.tcc.bookway.view.macros.MyText;
 
@@ -29,7 +32,16 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	private List<Text> allMyTexts;
 	private Text selectedText;
 	private List<Study> myStudies;
+	private List<Friendship> allMyFriends;
 	
+	public List<Friendship> getAllMyFriends() {
+		return allMyFriends;
+	}
+
+	public void setAllMyFriends(List<Friendship> allMyFriends) {
+		this.allMyFriends = allMyFriends;
+	}
+
 	public List<Study> getMyStudies() {
 		return myStudies;
 	}
@@ -62,6 +74,7 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 
 	private void initUserData() {
 		createListTextUser();
+		createListFriendshipUser();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -80,6 +93,17 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		setUpListTextInComponent(getAllMyTexts(), "panelMyTexts", getComponent(),
 				"MyText", true, 3);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public void createListFriendshipUser() {
+		Return ret = new Return(true);
+		ret.concat(getFriendshipControl().searchAllFriends());
+		if(ret.isValid() && ret.getList() != null && !ret.getList().isEmpty()){
+			setAllMyFriends((List<Friendship>) ret.getList());
+			setUpListFriendshipInComponent(getAllMyFriends(), "panelMyFriends", getComponent(),
+					"MyFriend", 8);
+		}
+	}
 
 	private TextControl getControlText() {
 		return SpringFactory.getController("textControl", TextControl.class,
@@ -89,6 +113,12 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	private RelationshipTextUserControl getRelationControl() {
 		return SpringFactory.getController("relationshipTextUserControl",
 				RelationshipTextUserControl.class,
+				ReflectionUtils.prepareDataForPersistence(this));
+	}
+	
+	private FriendshipBookwayControl getFriendshipControl() {
+		return SpringFactory.getController("friendshipBookwayControl",
+				FriendshipBookwayControl.class,
 				ReflectionUtils.prepareDataForPersistence(this));
 	}
 
@@ -128,6 +158,22 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 			}
 		}
 	}
+	
+	public void setUpListFriendshipInComponent(List<Friendship> list, String idParent,
+			Component comp, String nameComp, Integer numberOfElements) {
+		Component componentParent = getComponentById(comp, idParent);
+		if (numberOfElements != null && list.size() > numberOfElements)
+			list = list.subList(0, numberOfElements);
+		if (list != null && componentParent != null) {
+			for (Friendship friend : list) {
+				if (nameComp.equalsIgnoreCase("ItemFriend"))
+					componentParent.appendChild(createItemFriend(friend));
+				else
+					componentParent.appendChild(createMyFriend(friend));
+
+			}
+		}
+	}
 
 	private ItemText createItemText(Text text) {
 		setSelectedText(text);
@@ -141,6 +187,12 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		item.setIdText(String.valueOf(text.getId()));
 		return item;
 	}
+	
+	private ItemFriend createItemFriend(Friendship friendship) {
+		
+//		ItemFriend friend = new ItemFriend(getUserLogged(), has);
+		return null;
+	}
 
 	private MyText createMyText(Text text) {
 		MyText myText = new MyText();
@@ -149,6 +201,14 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		return myText;
 	}
 
+	private MyText createMyFriend(Friendship friendship) {
+//		MyText myText = new MyText();
+//		myText.setTitle(text.getTitle());
+//		myText.setDescription(text.getDescription());
+//		return myText;
+		return null;
+	}
+	
 	private RelationshipTextUserControl getRelationshipTextUserControl() {
 		return SpringFactory.getController("relationshipTextUserControl",
 				RelationshipTextUserControl.class,
@@ -157,25 +217,21 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 
 	@Override
 	protected String getUpdatePage() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected String getDeactivationMessage() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public G getControl() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public E getEntityObject() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
