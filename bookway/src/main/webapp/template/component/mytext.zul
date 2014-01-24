@@ -7,7 +7,7 @@
 			<vlayout id="subpanelrigth">
 				<label id="titleText" value="${arg.title}"
 					sclass="titlemytext" />
-				<label id="descriptionText" value="${arg.description}"
+				<label id="descriptionText" width="150px" value="${arg.description}"
 					sclass="descriptionmytext" maxlength="50"/>
 			</vlayout>
 		</hlayout>

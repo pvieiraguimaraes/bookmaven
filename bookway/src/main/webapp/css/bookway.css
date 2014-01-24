@@ -188,7 +188,6 @@
 }
 
 .descriptionitemtext {
-	width: 250px;
 	text-align: justify;
 }
 
@@ -213,6 +212,7 @@
 
 .descriptionmytext {
 	max-height: 50px;
+	width: 150px;
 }
 
 /*ITEM STUDY MACRO COMPONENT*/
