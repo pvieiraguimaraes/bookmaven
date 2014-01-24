@@ -21,6 +21,7 @@ import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.view.macros.ItemFriend;
 import br.ueg.tcc.bookway.view.macros.ItemText;
+import br.ueg.tcc.bookway.view.macros.MyFriend;
 import br.ueg.tcc.bookway.view.macros.MyText;
 
 @SuppressWarnings({ "serial" })
@@ -33,7 +34,16 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	private Text selectedText;
 	private List<Study> myStudies;
 	private List<Friendship> allMyFriends;
+	private UserBookway user;
 	
+	public UserBookway getUser() {
+		return user;
+	}
+
+	public void setUser(UserBookway user) {
+		this.user = user;
+	}
+
 	public List<Friendship> getAllMyFriends() {
 		return allMyFriends;
 	}
@@ -91,17 +101,18 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 			listTextUser.addAll((List<Text>) retListText.getList());
 		setAllMyTexts(listTextUser);
 		setUpListTextInComponent(getAllMyTexts(), "panelMyTexts", getComponent(),
-				"MyText", true, 3);
+				"MyText", true, 4);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public void createListFriendshipUser() {
 		Return ret = new Return(true);
+		setUser((UserBookway) getUserLogged());
 		ret.concat(getFriendshipControl().searchAllFriends());
 		if(ret.isValid() && ret.getList() != null && !ret.getList().isEmpty()){
 			setAllMyFriends((List<Friendship>) ret.getList());
 			setUpListFriendshipInComponent(getAllMyFriends(), "panelMyFriends", getComponent(),
-					"MyFriend", 8);
+					"MyFriend", 8, true);
 		}
 	}
 
@@ -159,15 +170,24 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		}
 	}
 	
+	/**Método responsável por criar os componentes que envolvem a amizade, seja os elementos
+	 * da pesquisa de ou os amigos na página inicial.
+	 * @param list, a lista das amizades a serem mapeados
+	 * @param idParent, id do component pai
+	 * @param comp, instancia do component para o mapeamento
+	 * @param nameComp, nome do componente a ser mapeado
+	 * @param numberOfElements, número dos elementos a serem mapeados
+	 * @param hasFriend, se a amizade já pertence ao usuário.
+	 */
 	public void setUpListFriendshipInComponent(List<Friendship> list, String idParent,
-			Component comp, String nameComp, Integer numberOfElements) {
-		Component componentParent = getComponentById(comp, idParent);
+			Component comp, String nameComp, Integer numberOfElements, boolean hasFriend) {
+		Component componentParent = getComponentById(idParent);
 		if (numberOfElements != null && list.size() > numberOfElements)
 			list = list.subList(0, numberOfElements);
 		if (list != null && componentParent != null) {
 			for (Friendship friend : list) {
 				if (nameComp.equalsIgnoreCase("ItemFriend"))
-					componentParent.appendChild(createItemFriend(friend));
+					componentParent.appendChild(createItemFriend(friend, hasFriend));
 				else
 					componentParent.appendChild(createMyFriend(friend));
 
@@ -188,10 +208,8 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		return item;
 	}
 	
-	private ItemFriend createItemFriend(Friendship friendship) {
-		
-//		ItemFriend friend = new ItemFriend(getUserLogged(), has);
-		return null;
+	private ItemFriend createItemFriend(Friendship friendship, boolean hasFriend) {
+		return new ItemFriend((UserBookway) getUserLogged(), hasFriend);
 	}
 
 	private MyText createMyText(Text text) {
@@ -201,12 +219,12 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		return myText;
 	}
 
-	private MyText createMyFriend(Friendship friendship) {
-//		MyText myText = new MyText();
-//		myText.setTitle(text.getTitle());
-//		myText.setDescription(text.getDescription());
-//		return myText;
-		return null;
+	private MyFriend createMyFriend(Friendship friendship) {
+		MyFriend myFriend = new MyFriend();
+		//TODO Colocar para carregar a foto do usuário, na pasta.
+		myFriend.setImageUser("/images/noimage.png");
+		myFriend.setTooltiptext(friendship.getFriend().getName());
+		return myFriend;
 	}
 	
 	private RelationshipTextUserControl getRelationshipTextUserControl() {

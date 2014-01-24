@@ -18,7 +18,8 @@
 							label="Marcações e Tags" 
 							onClick='Executions.sendRedirect("/pages/marking/search.zul")' />
 						<toolbarbutton image="/images/user-group.png"
-							label="Meus Amigos" />
+							label="Meus Amigos"
+							onClick='Executions.sendRedirect("/pages/user/allfriends.zul")' />
 						<toolbarbutton image="/images/configuration.png"
 							label="Configurações"
 							onClick='Executions.sendRedirect("/pages/user/configuration.zul")' />

@@ -1,30 +1,27 @@
 <?component name="mytext" macroURI="/template/component/mytext.zul" class="br.ueg.tcc.bookway.view.macros.MyText"?>
+<?component name="myfriend" macroURI="/template/component/myfriend.zul" class="br.ueg.tcc.bookway.view.macros.MyFriend"?>
 
 <zk>
-	<panel>
-		<caption label="Meus Amigos"></caption>
-		<panelchildren>
-			<vbox id="panelMyFriends" height="100px"></vbox>
-		</panelchildren>
-	</panel>
-	<panel apply="br.ueg.tcc.bookway.view.composer.InitComposer">
-		<caption label="Meus Textos"></caption>
-		<panelchildren>
-			<vbox id="panelMyTexts" height="300px"></vbox>
-			<hbox>
-				<toolbarbutton image="/images/book-search-icon.png"
-					label="Procurar Textos"
-					onClick='Executions.sendRedirect("/pages/user/alltexts.zul")' />
-				<toolbarbutton image="/images/book-add-icon.png"
-					label="Inserir Texto"
-					onClick='Executions.sendRedirect("/pages/user/text.zul")' />
-			</hbox>
-		</panelchildren>
-	</panel>
-	<panel>
-		<caption label="Anotações"></caption>
-		<panelchildren>
-			<vbox id="Anotations"></vbox>
-		</panelchildren>
-	</panel>
+	<div apply="br.ueg.tcc.bookway.view.composer.InitComposer">
+		<panel collapsible="true" width="200px">
+			<caption label="Meus Amigos"/>
+			<panelchildren>
+				<div id="panelMyFriends" height="100px" width="200px"></div>
+			</panelchildren>
+		</panel>
+		<panel collapsible="true">
+			<caption label="Meus Textos"></caption>
+			<panelchildren>
+				<vbox id="panelMyTexts" height="300px"></vbox>
+				<hbox>
+					<toolbarbutton image="/images/book-search-icon.png"
+						label="Procurar Textos"
+						onClick='Executions.sendRedirect("/pages/user/alltexts.zul")' />
+					<toolbarbutton image="/images/book-add-icon.png"
+						label="Inserir Texto"
+						onClick='Executions.sendRedirect("/pages/user/text.zul")' />
+				</hbox>
+			</panelchildren>
+		</panel>
+	</div>
 </zk>
