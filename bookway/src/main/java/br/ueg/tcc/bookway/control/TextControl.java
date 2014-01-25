@@ -146,8 +146,20 @@ public class TextControl extends GenericControl<Text> {
 	 */
 	public Return listTextsUser() {
 		Return ret = new Return(true);
+		String title = ""; Text thisText = null;
 		UserBookway user = (UserBookway) data.get("userLogged");
-		String sql = "FROM Text where userOwning = '" + user.getId() + "'";
+		Object text = (Object) data.get("entity");
+		
+		if(text instanceof Text)
+			thisText = (Text) text;
+		
+		if (thisText != null)
+			title = thisText.getTitle() == null ? "" : thisText.getTitle();
+
+		String sql = "FROM Text WHERE userOwning = '" + user.getId() + "'";
+		if (!title.equalsIgnoreCase(""))
+			sql += " AND title like '%" + title + "%'";
+
 		data.put("sql", sql);
 		ret.concat(searchByHQL());
 		return ret;
@@ -161,13 +173,22 @@ public class TextControl extends GenericControl<Text> {
 	 */
 	public Return searchTexts() {
 		Return ret = new Return(true);
-		Text text = (Text) data.get("entity");
+		
 		UserBookway user = (UserBookway) data.get("userLogged");
+		Text text = (Text) data.get("entity");
 		String title = text.getTitle() == null ? "" : text.getTitle();
-		String sql = "FROM Text where (userOwning != '" + user.getId() + "' or userOwning = null)"
-				+ " and title like '%" + title + "%' and typeText = '"
-				+ text.getTypeText() + "' and community = '"
-				+ text.isCommunity() + "'";
+		boolean myTexts = (boolean) data.get("checkMyTexts");
+		boolean community = (boolean) data.get("community");
+		
+		TypePrivacy typeText = text.getTypeText();
+		
+		String sql = "FROM Text WHERE title like '%" + title + "%' AND community = '" + community + "'";
+		if(typeText != null)
+			sql += " AND typeText = '" + typeText.ordinal() + "'";
+		
+		if(myTexts)
+			sql += " AND userOwning = '" + user.getId() + "'";
+		
 		data.put("sql", sql);
 		ret.concat(searchByHQL());
 		return ret;
@@ -221,27 +242,6 @@ public class TextControl extends GenericControl<Text> {
 	public Return searchFriendTexts() {
 		// TODO Servirá para buscar todos os textos do amigos.
 		return new Return(true);
-	}
-
-	/**
-	 * Metodo que subtrai listA da listB
-	 * 
-	 * @param listA
-	 * @param listB
-	 * @return lista resultante da subtração
-	 */
-	public List<Text> substractListText(List<Text> listA, List<Text> listB) {
-		List<Text> list = new ArrayList<Text>();
-		if (listA != null) {
-			List<Text> listAux = new ArrayList<Text>();
-			for (Text text : listA) {
-				if (listB.contains(text))
-					listAux.add(text);
-			}
-			list.addAll(listB);
-			list.addAll(listAux);
-		}
-		return list;
 	}
 	
 	public Return updateUserOwnerText(){

@@ -33,7 +33,7 @@ public class Text extends CommonEntity {
 	private Date insertDate;
 
 	@Validate(notNull = true)
-	@Enumerated(EnumType.STRING)
+	@Enumerated(EnumType.ORDINAL)
 	private TypePrivacy typeText;
 	private boolean community;
 	private String filePath;
@@ -92,7 +92,7 @@ public class Text extends CommonEntity {
 		this.typeText = typeText;
 	}
 
-	public boolean isCommunity() {
+	public boolean getCommunity() {
 		return community;
 	}
 

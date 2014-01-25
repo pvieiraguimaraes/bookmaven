@@ -11,8 +11,6 @@ import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.util.Clients;
-import org.zkoss.zul.Checkbox;
-import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Groupbox;
 import org.zkoss.zul.Intbox;
 import org.zkoss.zul.Label;
@@ -26,7 +24,6 @@ import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.TextControl;
 import br.ueg.tcc.bookway.model.Text;
-import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 
 /**
  * @author Pedro
@@ -48,12 +45,6 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 	protected Intbox fldCountlevels;
 
 	@Wire
-	protected Checkbox chckCommunity;
-
-	@Wire
-	protected Combobox fldTypeText;
-
-	@Wire
 	protected Label upLabelTxt;
 
 	@Wire
@@ -67,9 +58,6 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 	@Wire
 	protected Groupbox avancedImport;
 
-//	@Wire
-//	protected Checkbox myTexts;
-
 	private boolean avanced;
 
 	private Integer linesForPage;
@@ -79,8 +67,6 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 
 	private String stream;
 	private ArrayList<String> levels;
-
-	private List<TypePrivacy> listTypesText;
 
 	private String type;
 
@@ -136,14 +122,6 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 		this.pagesForChapter = pagesForChapter;
 	}
 
-	public List<TypePrivacy> getListTypesText() {
-		return listTypesText;
-	}
-
-	public void setListTypesText(List<TypePrivacy> listTypesText) {
-		this.listTypesText = listTypesText;
-	}
-
 	public ArrayList<String> getLevels() {
 		return levels;
 	}
@@ -166,10 +144,6 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 
 	public void setCountLevels(Integer countLevels) {
 		this.countLevels = countLevels;
-	}
-
-	public void initListTypeText() {
-		setListTypesText(getControl().initTypesText());
 	}
 
 	public String getType() {
@@ -341,14 +315,6 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 			return true;
 		}
 		return false;
-	}
-
-	public void checkComboType() {
-		if (fldTypeText.getSelectedItem().getValue().equals(TypePrivacy.PRIVADO)) {
-			chckCommunity.setChecked(false);
-			chckCommunity.setDisabled(true);
-		} else
-			chckCommunity.setDisabled(false);
 	}
 
 	public void checkFormImport() {

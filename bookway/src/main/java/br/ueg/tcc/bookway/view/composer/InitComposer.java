@@ -9,6 +9,9 @@ import org.springframework.context.annotation.Scope;
 import org.zkoss.image.AImage;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Components;
+import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zul.Checkbox;
+import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Image;
 
 import br.com.vexillum.control.GenericControl;
@@ -26,6 +29,7 @@ import br.ueg.tcc.bookway.control.TextControl;
 import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
+import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 import br.ueg.tcc.bookway.utils.AttachmentMedia;
 import br.ueg.tcc.bookway.view.macros.ItemFriend;
 import br.ueg.tcc.bookway.view.macros.ItemText;
@@ -38,6 +42,13 @@ import br.ueg.tcc.bookway.view.macros.MyText;
 public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		extends BaseComposer<E, G> {
 
+	@Wire
+	protected Checkbox chckCommunity;
+	@Wire
+	protected Checkbox chckTypeText;
+	@Wire
+	protected Combobox fldTypeText;
+	
 	private List<Text> allMyTexts;
 	
 	private Text selectedText;
@@ -46,6 +57,19 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	
 	private List<Friendship> allMyFriends;
 	
+	/**
+	 * Fornece a lista de tipo de texto, Público ou Privado
+	 */
+	private List<TypePrivacy> listTypesText;
+	
+	public List<TypePrivacy> getListTypesText() {
+		return listTypesText;
+	}
+
+	public void setListTypesText(List<TypePrivacy> listTypesText) {
+		this.listTypesText = listTypesText;
+	}
+
 	private UserBookway user;
 	
 	protected UserBookway owner;
@@ -66,6 +90,7 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 
 	public void setFriend(UserBookway friend) {
 		this.friend = friend;
+		
 	}
 	
 	public UserBookway getUser() {
@@ -115,8 +140,17 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	}
 
 	private void initUserData() {
+		Image image = (Image) getComponentById("photoUserbookway");
+		UserBookway userProfile = (UserBookway) getUserLogged();
+		if(image != null && userProfile != null)
+			showUserBookwayPhoto(image, userProfile);
 		createListTextUser();
 		createListFriendshipUser();
+		initListTypeText();
+	}
+	
+	public void initListTypeText() {
+		setListTypesText(getControlText().initTypesText());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -283,7 +317,7 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 
 	private MyFriend createMyFriend(UserBookway friendship) {
 		MyFriend myFriend = new MyFriend();
-		//TODO Colocar para carregar a foto do usuário, na pasta.
+		showUserBookwayPhoto(myFriend.imageUser, friendship);
 		myFriend.setImageUser("/images/noimage.png");
 		myFriend.setTooltiptext(friendship.getName());
 		return myFriend;

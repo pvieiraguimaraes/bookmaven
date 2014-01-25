@@ -30,6 +30,25 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 
 	@Wire
 	public Checkbox myTexts;
+	
+	private boolean checkMyTexts;
+	private boolean community;
+
+	public boolean getCommunity() {
+		return community;
+	}
+
+	public void setCommunity(boolean community) {
+		this.community = community;
+	}
+
+	public boolean getCheckMyTexts() {
+		return checkMyTexts;
+	}
+
+	public void setCheckMyTexts(boolean checkMyTexts) {
+		this.checkMyTexts = checkMyTexts;
+	}
 
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
@@ -57,18 +76,22 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 
 	@SuppressWarnings("unchecked")
 	public void searchText() {
+		Return ret = new Return(true);
 		resetResultListSearch();
 		if (myTexts.isChecked()) {
-			setUpListTextInComponent(getAllMyTexts(), "resultSearch",
+			setCheckMyTexts(true);
+			if(chckCommunity.isChecked())
+				setCommunity(true);
+			else
+				setCommunity(false);
+			ret.concat(getControl().doAction("searchTexts"));
+			setUpListTextInComponent((List<Text>) ret.getList(), "resultSearch",
 					getComponent(), "ItemText", false, null);
 		} else {
-			Return ret = new Return(true);
-			entity.setCommunity(false);
-			entity.setTypeText(TypePrivacy.PUBLICO);
+			if(entity.getTypeText() == null)
+				entity.setTypeText(TypePrivacy.PUBLICO);
 			ret.concat(getControl().doAction("searchTexts"));
-			List<Text> list = getControl().substractListText(getAllMyTexts(),
-					(List<Text>) ret.getList());
-			setUpListTextInComponent(list, "resultSearch", getComponent(),
+			setUpListTextInComponent((List<Text>) ret.getList(), "resultSearch", getComponent(),
 					"ItemText", false, null);
 		}
 	}
@@ -94,16 +117,17 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 	public void studyText(String id) {
 		Text text = getControl().getTextById(Long.parseLong(id));
 		setStudy(checksExistenceStudy(text));
-		
+
 		if (study != null) {
-			if(study.getLastElementStop() != null) {
-				showActionConfirmationYesOrNo("Deseja continuar o estudo de onde parou?",
+			if (study.getLastElementStop() != null) {
+				showActionConfirmationYesOrNo(
+						"Deseja continuar o estudo de onde parou?",
 						"continueStudy", "noContinueStudy");
+			} else {
+				setStudy(createStudy(text));
+				putValuesInSession(getStudy(), getContinueStudy());
+				Executions.sendRedirect("/pages/user/study.zul");
 			}
-		} else {
-			setStudy(createStudy(text));
-			putValuesInSession(getStudy(), getContinueStudy());
-			Executions.sendRedirect("/pages/user/study.zul");
 		}
 	}
 
@@ -165,6 +189,16 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 			showActionConfirmation(
 					messages.getKey("text_disconnection_confirmation"),
 					"disconnectionUserOfText");
+	}
+	
+	public void checkIfMyTexts(){
+		if(myTexts.isChecked()){
+			chckTypeText.setVisible(false);
+			chckCommunity.setVisible(false);
+		} else {
+			chckTypeText.setVisible(true);
+			chckCommunity.setVisible(true);
+		}
 	}
 
 	public Return deleteText() {
