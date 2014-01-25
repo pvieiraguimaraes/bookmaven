@@ -3,16 +3,30 @@
 <?component name="itemtext" macroURI="/template/component/itemtext.zul" class="br.ueg.tcc.bookway.view.macros.ItemText"?>
 
 <zk>
-	<div self="@{define(content)}">
-		<hbox sclass="searchtexts" id="searchTexts" width="100%"
-			height="100%" pack="center"
-			apply="br.ueg.tcc.bookway.view.composer.SearchTextComposer">
-			<vbox>
-				<hbox width="100%" height="100%" pack="center">
-					<checkbox id="myTexts" label="Meus Textos"/>
+	<div self="@{define(content)}" align="center" apply="br.ueg.tcc.bookway.view.composer.SearchTextComposer">
+		<grid hflex="min" sclass="nostyle">
+			<columns>
+				<column/>
+				<column width="130px"/>
+				<column width="150px"/>
+			</columns>
+			<rows>
+				<row spans="1,2">
+					<checkbox id="myTexts" label="Meus Textos" />
 					<textbox value="@{controller.entity.title}" />
-					<button label="Pesquisar" onClick="controller.searchText()"/>
-				</hbox>
+				</row>
+				<row>
+					<checkbox id="chckTypeText" value="@{controller.entity.typeText}" label="Público"/>
+					<checkbox id="chckCommunity" value="@{controller.entity.community}" label="Comunitário"/>
+					<cell align="right">
+						<button label="Pesquisar" onClick="controller.searchText()" />
+					</cell>
+				</row>
+			</rows>
+		</grid>
+		<hbox sclass="searchtexts" id="searchTexts" width="100%"
+			height="100%" pack="center">
+			<vbox align="center" pack="center">
 				<vbox sclass="resultsearch" id="resultSearch" width="100%"></vbox>
 			</vbox>
 		</hbox>

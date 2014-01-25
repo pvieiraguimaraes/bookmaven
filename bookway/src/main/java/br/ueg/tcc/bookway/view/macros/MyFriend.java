@@ -10,7 +10,7 @@ import org.zkoss.zul.Image;
 public class MyFriend extends HtmlMacroComponent {
 
 	@Wire
-	private Image imageUser;
+	public Image imageUser;
 	
 	public MyFriend() {
 		compose();

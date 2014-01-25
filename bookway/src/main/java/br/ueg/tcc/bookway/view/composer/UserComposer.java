@@ -103,13 +103,15 @@ public class UserComposer extends InitComposer<UserBookway, UserBookwayControl> 
 	}
 
 	private void setUserProfile() {
-		showUserBookwayPhoto((Image) getComponentById("photoUserbookway"), getEntity());
 		entity = (UserBookway) getUserLogged();
+//		showUserBookwayPhoto((Image) getComponentById("photoUserbookway"), getEntity());
 	}
 
 	public void updateAccount() {
-		if(photoUserBookway != null)
+		if(photoUserBookway != null){
 			uploadUserBookwayImage(photoUserBookway, entity);
+			session.setAttribute("userProfile", entity);
+		}
 		treatReturn(getControl().doAction("updateAccount"));
 	}
 
@@ -124,7 +126,7 @@ public class UserComposer extends InitComposer<UserBookway, UserBookwayControl> 
 		if(file != null){
 			AttachmentMedia att = new AttachmentMedia();
 			try {
-				att.uploadAttachment((Media) ZKUtils.mediaToStream(file), "photo", userBookway);
+				att.uploadAttachment(file, "photo", userBookway);
 			} catch (Exception e) {
 				ret.concat(new ExceptionManager(e).treatException());
 			}

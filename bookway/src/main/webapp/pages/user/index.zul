@@ -2,6 +2,6 @@
 <?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
 
 <zk>
-	<div self="@{define(content)}">	
+	<div self="@{define(content)}" apply="br.ueg.tcc.bookway.view.composer.InitComposer">	
 	</div>
 </zk>

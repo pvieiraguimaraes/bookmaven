@@ -155,7 +155,7 @@ public class NavigationStudyComposer extends
 		// }
 		// });
 		// TODO Ver como colocar os eventos ScroolEvent para funcionar aqui.
-
+		List<Component> children = tabpanel.getChildren();
 		return tabpanel;
 	}
 
@@ -167,7 +167,8 @@ public class NavigationStudyComposer extends
 		else {
 			List<ElementText> elements = HibernateUtils
 					.transaformBagInList(levelChild.getElements());
-			comp = createItemElementForStudy(elements, comp);
+				if(!elements.isEmpty())
+					comp = createItemElementForStudy(elements, comp);
 			List<LevelText> childs = HibernateUtils
 					.transaformBagInList(levelChild.getLevelsChildren());
 			for (LevelText levelText : childs) {
