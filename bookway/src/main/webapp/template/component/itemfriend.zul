@@ -1,22 +1,26 @@
-<div sclass="well itemfriend" width="350px" height="50%">
-	<hlayout id="panelgeneral">
-		<vlayout id="subpanelleft">
-			<image id="imagefriend" src="/images/bookavatar.png" />
-			<label id="userName" value="${arg.user}" />
-		</vlayout>
-		<label id="idUser" value="${arg.idUser}" visible="false" />
+<div id="itemFriend" sclass="well itemfriend" width="350px">
+	<hlayout>
+		<image id="imagefriend" src="/images/noimage.png" width="50px"
+			height="50px" />
+		<separator width="30px" />
+		<label id="userName" value="${arg.user}" />
+		<separator width="30px" />
 	</hlayout>
 	<div align="right">
 		<hlayout>
 			<div id="panelRelationFriend"
 				apply="br.ueg.tcc.bookway.view.composer.FriendshipBookwayComposer">
-				<button id="btnRemove" sclass="btn btn-primary"
-					label="Remover" onClick="controller.removeFriend(idUser.getValue())"
+				<button id="btnRemove" sclass="btn btn-primary"	label="Remover"
+					onClick="controller.removeFriendOrCancelInvite(idUser.getValue(), btnAdd.getParent().getParent().getParent().getParent())" visible="false" />
+				<button id="btnAdd" sclass="btn btn-primary" label="Adicionar"
+					onClick="controller.addFriend(idUser.getValue(), btnAdd.getParent().getParent().getParent().getParent())"
 					visible="false" />
-				<button id="btnAdd" sclass="btn btn-primary"
-					label="Adicionar" onClick="controller.addFriend(idUser.getValue())"
-					visible="false" />
+				<button id="btnCancelInvite" sclass="btn btn-primary"	label="Cancelar Convite"
+					onClick="controller.removeFriendOrCancelInvite(idUser.getValue(), btnAdd.getParent().getParent().getParent().getParent())" visible="false" />
+				<button id="btnAceptInvite" sclass="btn btn-primary"	label="Aceitar Convite"
+					onClick="controller.aceptInvite(idUser.getValue(), btnAdd.getParent().getParent().getParent().getParent())" visible="false" />
 			</div>
 		</hlayout>
 	</div>
+	<label id="idUser" value="${arg.idUser}" visible="false" />
 </div>

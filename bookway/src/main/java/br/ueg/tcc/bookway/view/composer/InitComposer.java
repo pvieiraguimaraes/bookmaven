@@ -1,15 +1,22 @@
 package br.ueg.tcc.bookway.view.composer;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
+import org.zkoss.image.AImage;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Components;
+import org.zkoss.zul.Image;
 
 import br.com.vexillum.control.GenericControl;
+import br.com.vexillum.control.manager.ExceptionManager;
+import br.com.vexillum.control.util.Attachment;
 import br.com.vexillum.model.Friendship;
 import br.com.vexillum.model.ICommonEntity;
+import br.com.vexillum.util.HibernateUtils;
 import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
@@ -19,6 +26,7 @@ import br.ueg.tcc.bookway.control.TextControl;
 import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
+import br.ueg.tcc.bookway.utils.AttachmentMedia;
 import br.ueg.tcc.bookway.view.macros.ItemFriend;
 import br.ueg.tcc.bookway.view.macros.ItemText;
 import br.ueg.tcc.bookway.view.macros.MyFriend;
@@ -31,10 +39,34 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		extends BaseComposer<E, G> {
 
 	private List<Text> allMyTexts;
+	
 	private Text selectedText;
+	
 	private List<Study> myStudies;
+	
 	private List<Friendship> allMyFriends;
+	
 	private UserBookway user;
+	
+	protected UserBookway owner;
+	
+	protected UserBookway friend;
+
+	public UserBookway getOwner() {
+		return owner;
+	}
+
+	public void setOwner(UserBookway owner) {
+		this.owner = owner;
+	}
+
+	public UserBookway getFriend() {
+		return friend;
+	}
+
+	public void setFriend(UserBookway friend) {
+		this.friend = friend;
+	}
 	
 	public UserBookway getUser() {
 		return user;
@@ -111,9 +143,24 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		ret.concat(getFriendshipControl().searchAllFriends());
 		if(ret.isValid() && ret.getList() != null && !ret.getList().isEmpty()){
 			setAllMyFriends((List<Friendship>) ret.getList());
-			setUpListFriendshipInComponent(getAllMyFriends(), "panelMyFriends", getComponent(),
-					"MyFriend", 8, true);
+			setUpListFriendshipInComponent(extractUsersFriends(), "panelMyFriends", getComponent(),	"MyFriend", 8, true);
 		}
+	}
+	
+	public List<UserBookway> extractUsersFriends() {
+		List<UserBookway> friends = new ArrayList<UserBookway>();
+		UserBookway uo = new UserBookway(), uf = new UserBookway();
+		if(getAllMyFriends() != null){
+			for (Friendship friendship : getAllMyFriends()) {
+				uf = (UserBookway) HibernateUtils.materializeProxy(friendship.getFriend());
+				uo = (UserBookway) HibernateUtils.materializeProxy(friendship.getOwner());
+				if (getUserLogged() != uf)
+					friends.add(uf);
+				if (getUserLogged() != uo)
+					friends.add(uo);
+			}
+		}
+		return friends;
 	}
 
 	private TextControl getControlText() {
@@ -179,20 +226,35 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	 * @param numberOfElements, número dos elementos a serem mapeados
 	 * @param hasFriend, se a amizade já pertence ao usuário.
 	 */
-	public void setUpListFriendshipInComponent(List<Friendship> list, String idParent,
+	public void setUpListFriendshipInComponent(List<UserBookway> list, String idParent,
 			Component comp, String nameComp, Integer numberOfElements, boolean hasFriend) {
 		Component componentParent = getComponentById(idParent);
+		String existInvite = "";
 		if (numberOfElements != null && list.size() > numberOfElements)
 			list = list.subList(0, numberOfElements);
 		if (list != null && componentParent != null) {
-			for (Friendship friend : list) {
-				if (nameComp.equalsIgnoreCase("ItemFriend"))
-					componentParent.appendChild(createItemFriend(friend, hasFriend));
+			for (UserBookway friend : list) {
+				if (nameComp.equalsIgnoreCase("ItemFriend")){
+					existInvite = checkInvitation(friend);
+					componentParent.appendChild(createItemFriend(friend, hasFriend, existInvite));
+				}
 				else
 					componentParent.appendChild(createMyFriend(friend));
 
 			}
 		}
+	}
+
+	private String checkInvitation(UserBookway friend) {
+		setOwner((UserBookway) getUserLogged());
+		setFriend(friend);
+		Return ret = getFriendshipControl().searchMyPendentInvites();
+		if(ret.isValid() && !ret.getList().isEmpty())
+			return "MY_INVITE";
+		ret.concat(getFriendshipControl().searchMyPendentRequests());
+		if(ret.isValid() && !ret.getList().isEmpty())
+			return "OTHER_INVITE";
+		return "";
 	}
 
 	private ItemText createItemText(Text text) {
@@ -208,8 +270,8 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		return item;
 	}
 	
-	private ItemFriend createItemFriend(Friendship friendship, boolean hasFriend) {
-		return new ItemFriend((UserBookway) getUserLogged(), hasFriend);
+	private ItemFriend createItemFriend(UserBookway friendship, boolean hasFriend, String existInvite) {
+		return new ItemFriend(friendship, hasFriend, existInvite);
 	}
 
 	private MyText createMyText(Text text) {
@@ -219,11 +281,11 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		return myText;
 	}
 
-	private MyFriend createMyFriend(Friendship friendship) {
+	private MyFriend createMyFriend(UserBookway friendship) {
 		MyFriend myFriend = new MyFriend();
 		//TODO Colocar para carregar a foto do usuário, na pasta.
 		myFriend.setImageUser("/images/noimage.png");
-		myFriend.setTooltiptext(friendship.getFriend().getName());
+		myFriend.setTooltiptext(friendship.getName());
 		return myFriend;
 	}
 	
@@ -231,6 +293,25 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		return SpringFactory.getController("relationshipTextUserControl",
 				RelationshipTextUserControl.class,
 				ReflectionUtils.prepareDataForPersistence(this));
+	}
+	
+	public void resetResultListSearch() {
+		Component resultSearch = getComponentById(getComponent(),
+				"resultSearch");
+		if (resultSearch != null)
+			Components.removeAllChildren(resultSearch);
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static void showUserBookwayPhoto(Image comp, UserBookway userBookway) {
+		Attachment att = new AttachmentMedia();
+		try {
+			File image = att.getAttachment("photo", userBookway);
+			if (image != null)
+				comp.setContent(new AImage(image));
+		} catch (Exception e) {
+			new ExceptionManager(e).treatException();
+		}
 	}
 
 	@Override
