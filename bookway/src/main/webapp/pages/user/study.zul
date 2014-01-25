@@ -4,22 +4,6 @@
 
 <zk>
 	<div self="@{define(content)}" hflex="1" vflex="1" align="center" >
-<!-- 		<include src="/template/frms/frmStudy.zul"/> -->
-<div
-		apply="br.ueg.tcc.bookway.view.composer.NavigationStudyComposer">
-		<div id="panelActions" visible="false"
-			style="width: 280px;position: fixed;right: 275px;top: 80px; z-index: 1;">
-			<button id="fldAnnotation" label="Anotar"
-				onClick='controller.callModalWindow("/pages/annotation/insert.zul")' />
-			<button id="fldMarking" label="Marcar"
-				onClick='controller.callModalWindow("/pages/marking/modalMarkingUser.zul")' />
-			<button label="Referência"
-				onClick='controller.callModalWindow("/template/frms/frmSelectTextReference.zul")' />
-			<button label="Compartilhar" />
-		</div>
-		<tabbox id="panelStudy" width="90%" height="auto"
-			style="padding-top: 50px;">
-		</tabbox>
-	</div>
+		<include src="/template/frms/frmStudy.zul"/>
 	</div>
 </zk>

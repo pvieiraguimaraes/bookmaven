@@ -124,10 +124,13 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 						"Deseja continuar o estudo de onde parou?",
 						"continueStudy", "noContinueStudy");
 			} else {
-				setStudy(createStudy(text));
 				putValuesInSession(getStudy(), getContinueStudy());
 				Executions.sendRedirect("/pages/user/study.zul");
 			}
+		} else {
+			setStudy(createStudy(text));
+			putValuesInSession(getStudy(), getContinueStudy());
+			Executions.sendRedirect("/pages/user/study.zul");
 		}
 	}
 
@@ -145,6 +148,8 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 	}
 
 	private Study checksExistenceStudy(Text text) {
+		if(study == null)
+			study = new Study();
 		study.setText(text);
 		study.setUserBookway((UserBookway) getUserLogged());
 		

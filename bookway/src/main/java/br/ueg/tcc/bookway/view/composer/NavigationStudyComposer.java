@@ -195,7 +195,7 @@ public class NavigationStudyComposer extends
 				Long idLevel = HibernateUtils.materializeProxy(elementText.getId());
 				itemStudy = new ItemStudy();
 
-
+				itemStudy.setContent(elementText.getValue());
 				itemStudy.setIdText(idText.toString());
 				itemStudy.setIdElement(idLevel.toString());
 				
