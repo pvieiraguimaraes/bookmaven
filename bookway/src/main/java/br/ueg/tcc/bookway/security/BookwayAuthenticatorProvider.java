@@ -13,11 +13,22 @@ import br.com.vexillum.control.security.ManagerAuthenticator;
 import br.com.vexillum.model.Category;
 import br.com.vexillum.util.EncryptUtils;
 import br.com.vexillum.util.HibernateUtils;
+import br.com.vexillum.util.ReflectionUtils;
+import br.com.vexillum.util.SpringFactory;
+import br.ueg.tcc.bookway.control.UserBookwayControl;
 import br.ueg.tcc.bookway.model.UserBookway;
 
 @SuppressWarnings("rawtypes")
 public class BookwayAuthenticatorProvider extends AuthenticatorProvider
 		implements AuthenticationProvider {
+	
+	protected UserBookwayControl bookwayControl;
+	
+	public BookwayAuthenticatorProvider() {
+		bookwayControl = SpringFactory.getController(
+				"userBookwayControl", UserBookwayControl.class,
+				ReflectionUtils.prepareDataForPersistence(this));
+	}
 
 	@Override
 	public Authentication authenticate(Authentication auth)
@@ -26,13 +37,13 @@ public class BookwayAuthenticatorProvider extends AuthenticatorProvider
 		String userName = token.getName();
 		String password = token.getCredentials() != null ? token
 				.getCredentials().toString() : null;
-		UserBookway user = (UserBookway) control.getUser(userName, EncryptUtils.encryptOnSHA512(password));
+		UserBookway user = bookwayControl.getUser(userName, EncryptUtils.encryptOnSHA512(password));
 		if (user == null)
 			return null;
 		// TODO Tratar permissoes depois sem ser como categoria
 		// List<String> permissions = control.getPermissionsUser(user);
 		List<Category> userCategories = new ArrayList<Category>();
-		userCategories.add(control.getCategoryUser(user));
+		userCategories.add(bookwayControl.getCategoryUser(user));
 		ManagerAuthenticator<UserBookway, Category> manager = new ManagerAuthenticator<UserBookway, Category>(
 				HibernateUtils.materializeProxy(user), userCategories);
 		manager.setAuthenticated(user != null);

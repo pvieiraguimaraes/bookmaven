@@ -23,17 +23,32 @@ public class ItemFriend extends HtmlMacroComponent {
 	
 	@Wire
 	private Button btnRemove;
+	
+	@Wire
+	private Button btnCancelInvite;
+	
+	@Wire
+	private Button btnAceptInvite;
 
-	public ItemFriend(UserBookway user, boolean has) {
+	public ItemFriend(UserBookway user, boolean has, String existInvite) {
 		compose();
-		configureButtonsInComponent(user, has);
+		setUser(user.getName());
+		setIdUser(user.getId().toString());
+		configureButtonsInComponent(user, has, existInvite);
 	}
 
-	private void configureButtonsInComponent(UserBookway user, boolean has) {
+	private void configureButtonsInComponent(UserBookway user, boolean has, String existInvite) {
 		if (has) {
 			btnRemove.setVisible(true);
-		} else
-			btnAdd.setVisible(true);
+		} else {
+			if (existInvite.equalsIgnoreCase("OTHER_INVITE")) {
+				btnAceptInvite.setVisible(true);
+			} else if (existInvite.equalsIgnoreCase("MY_INVITE")){
+				btnCancelInvite.setVisible(true);
+			} else
+				btnAdd.setVisible(true);
+		}
+		
 	}
 
 	public String getUser() {

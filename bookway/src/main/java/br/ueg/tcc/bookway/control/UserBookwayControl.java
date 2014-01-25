@@ -12,6 +12,7 @@ import org.zkoss.zk.ui.Executions;
 import br.com.vexillum.control.UserBasicControl;
 import br.com.vexillum.control.manager.EmailManager;
 import br.com.vexillum.model.Category;
+import br.com.vexillum.model.UserBasic;
 import br.com.vexillum.util.EncryptUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
@@ -26,9 +27,54 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 	public UserBookwayControl() {
 		super(UserBookway.class);
 	}
+	
+	@Override
+	public UserBookway getUser(String name, String password) {
+		UserBookway user = new UserBookway();
+		user = getUserByMail(name);
+		if (user != null && user.getPassword().equals(password) && user.getActive())
+			return user;
+		return null;
+	}
+	
+	@Override
+	public Category getCategoryUser(UserBasic user) {
+		String hql = "FROM Category WHERE id in (select u.category.id from UserBookway as u where id ='"
+				+ user.getId() + "')";
+		data.put("sql", hql);
+		Return ret = searchByHQL();
+		return (Category) ret.getList().get(0);
+	}
+	
+	@Override
+	public UserBookway getUserByMail(String email) {
+		String hql = "FROM UserBookway as u where email ='"
+				+ email + "'";
+		data.put("sql", hql);
+		Return ret = searchByHQL();
+		return (UserBookway) ret.getList().get(0);
+	}
 
+	/**Método utilizado para encontrar um usuário através de um código único
+	 * gerado para validar sua conta de usuário.
+	 * @param code
+	 * @return
+	 */
 	public UserBookway getUserByCode(String code) {
 		String hql = "from UserBookway where verificationCode ='" + code + "'";
+		data.put("sql", hql);
+		Return retCode = searchByHQL();
+		if (retCode.getList() != null && !retCode.getList().isEmpty())
+			return (UserBookway) retCode.getList().get(0);
+		return null;
+	}
+	
+	/**Método utilizado para localizar um usuário através de seu ID
+	 * @param id
+	 * @return
+	 */
+	public UserBookway getUserById(String id) {
+		String hql = "from UserBookway where id ='" + id + "'";
 		data.put("sql", hql);
 		Return retCode = searchByHQL();
 		if (retCode.getList() != null && !retCode.getList().isEmpty())

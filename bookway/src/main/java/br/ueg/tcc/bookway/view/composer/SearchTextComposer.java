@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.context.annotation.Scope;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Checkbox;
@@ -58,7 +57,7 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 
 	@SuppressWarnings("unchecked")
 	public void searchText() {
-		resetResultListText();
+		resetResultListSearch();
 		if (myTexts.isChecked()) {
 			setUpListTextInComponent(getAllMyTexts(), "resultSearch",
 					getComponent(), "ItemText", false, null);
@@ -72,13 +71,6 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 			setUpListTextInComponent(list, "resultSearch", getComponent(),
 					"ItemText", false, null);
 		}
-	}
-
-	private void resetResultListText() {
-		Component resultSearch = getComponentById(getComponent(),
-				"resultSearch");
-		if (resultSearch != null)
-			Components.removeAllChildren(resultSearch);
 	}
 
 	/**

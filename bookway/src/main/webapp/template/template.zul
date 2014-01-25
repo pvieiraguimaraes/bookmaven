@@ -12,9 +12,8 @@
 			<borderlayout hflex="1" vflex="1">
 				<north>
 					<div width="200px" height="200px" align="center"
-						style="margin-top: 25px;">
-						<image src="/images/noimage.png"
-							width="150px" height="150px" />
+						style="margin-top: 25px;" apply="br.ueg.tcc.bookway.view.composer.InitComposer">
+						<image id="photoUserbookway" src="/images/noimage.png"	width="150px" height="150px"/>
 					</div>
 				</north>
 				<center>
