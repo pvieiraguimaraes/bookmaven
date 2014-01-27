@@ -6,7 +6,7 @@
 	<div self="@{define(content)}" align="center" apply="br.ueg.tcc.bookway.view.composer.SearchTextComposer">
 		<grid hflex="min" sclass="nostyle">
 			<columns>
-				<column/>
+				<column width="150px"/>
 				<column width="130px"/>
 				<column width="150px"/>
 			</columns>

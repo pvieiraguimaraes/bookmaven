@@ -10,11 +10,11 @@
 				<grid hflex="min" sclass="nostyle">
 					<columns>
 						<column />
-						<column />
+						<column width="250px" />
 					</columns>
 					<rows>
 						<row>
-							<image id="photoPerfilUser" src="/images/noimage.png"	width="50px" height="50px"/>
+							<image id="photoPerfilUser" src="/images/noimage.png" onCreate="controller.checkUserPhoto()" width="50px" height="50px"/>
 							<fileupload label="Alterar Foto" onUpload="controller.changeUserBookwayImage(event)"/>
 						</row>
 						<row>

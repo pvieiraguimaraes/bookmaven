@@ -78,6 +78,7 @@ public class TextReader extends TextBookwayIO {
 		ArrayList<String> levels = new ArrayList<>();
 		levels.add(configuration.getKey("LEVEL_ROOT"));
 		levels.addAll(arrayList);
+		levels.add(configuration.getKey("LEVEL_PAGE"));
 		levels.add(configuration.getKey("LEVEL_CONTENT"));
 		levels.add(configuration.getKey("LEVEL_REFERENCE"));
 		return levels;
@@ -93,11 +94,12 @@ public class TextReader extends TextBookwayIO {
 				break;
 			}
 		}
-		if (child.equalsIgnoreCase(configuration.getKey("LEVEL_CONTENT")))
-			return configuration.getKey("LEVEL_CONTENT") + ","
+		if (child.equalsIgnoreCase(configuration.getKey("LEVEL_PAGE")))
+			return configuration.getKey("LEVEL_PAGE") + "," + configuration.getKey("LEVEL_CONTENT") + ","
 					+ configuration.getKey("LEVEL_REFERENCE") + "*";
-		if (child.equalsIgnoreCase(configuration.getKey("LEVEL_REFERENCE"))
-				|| child.equalsIgnoreCase(""))
+		if (child.equalsIgnoreCase(configuration.getKey("LEVEL_REFERENCE"))	|| child.equalsIgnoreCase(""))
+			return "#PCDATA";
+		if (child.equalsIgnoreCase(configuration.getKey("LEVEL_CONTENT")))
 			return "#PCDATA";
 		return child + "*";
 	}
@@ -342,12 +344,13 @@ public class TextReader extends TextBookwayIO {
 			elementText.setIdLevel(level);
 			listElementsText.add(elementText);
 		}
-		if (element.getName().equalsIgnoreCase(
-				configuration.getKey("LEVEL_CONTENT"))
-				|| element.getName().equalsIgnoreCase(
-						configuration.getKey("LEVEL_REFERENCE"))) {
+		if (element.getName().equalsIgnoreCase(configuration.getKey("LEVEL_CONTENT")) || element.getName().equalsIgnoreCase(configuration.getKey("LEVEL_PAGE"))
+				|| element.getName().equalsIgnoreCase(configuration.getKey("LEVEL_REFERENCE"))) {
 			elementText.setIdLevel(level);
-			elementText.setName(configuration.getKey("LEVEL_VALUE"));
+			if(element.getName().equalsIgnoreCase(configuration.getKey("LEVEL_PAGE")))
+				elementText.setName(configuration.getKey("LEVEL_PAGE"));
+			else
+				elementText.setName(configuration.getKey("LEVEL_VALUE"));
 			elementText.setValue(element.getText());
 			listElementsText.add(elementText);
 		}
