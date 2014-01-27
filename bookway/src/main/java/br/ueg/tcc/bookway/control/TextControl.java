@@ -85,12 +85,11 @@ public class TextControl extends GenericControl<Text> {
 	private String createDTDValidator() {
 		ArrayList<String> levels = (ArrayList<String>) data.get("levels");
 		Integer countLevels = (Integer) data.get("countLevels");
-		if (levels != null && levels.isEmpty())
+		if (levels != null && !levels.isEmpty())
 			return txtReader.createDTDValidator(levels);
-		if (countLevels != null)
+		else
 			return txtReader.createDTDValidator(txtReader
 					.getDefaultLevels(countLevels));
-		return null;
 	}
 
 	/**

@@ -167,6 +167,11 @@ public class UserComposer extends InitComposer<UserBookway, UserBookwayControl> 
 		return SpringFactory.getController("userBookwayControl", UserBookwayControl.class, ReflectionUtils.prepareDataForPersistence(this));
 	}
 	
+	public void checkUserPhoto(){
+		Image image = (Image) getComponentById("photoPerfilUser");
+		showUserBookwayPhoto(image, (UserBookway) getUserInSession());
+	}
+	
 	public void changePasswordUser(){
 		Return ret = new Return(true);
 		ret.concat(getControl().doAction("changePasswordUser"));

@@ -4,6 +4,7 @@ import org.zkoss.zk.ui.HtmlMacroComponent;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Button;
+import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
 
 import br.ueg.tcc.bookway.model.UserBookway;
@@ -29,6 +30,9 @@ public class ItemFriend extends HtmlMacroComponent {
 	
 	@Wire
 	private Button btnAceptInvite;
+	
+	@Wire
+	public Image imageFriend; 
 
 	public ItemFriend(UserBookway user, boolean has, String existInvite) {
 		compose();

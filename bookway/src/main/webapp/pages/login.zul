@@ -5,7 +5,7 @@
 			<grid>
 				<rows>
 					<row>
-						<label value="Usuário:" onClick="j_username.focus();" />
+						<label value="E-mail:" onClick="j_username.focus();" />
 						<textbox id="j_username" name="j_username" />
 					</row>
 					<row>

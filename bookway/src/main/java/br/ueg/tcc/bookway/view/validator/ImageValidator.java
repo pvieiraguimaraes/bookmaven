@@ -30,7 +30,7 @@ public class ImageValidator{
 	private Return isImage(){
 		Return ret = new Return(true);
 		if(media.getContentType().indexOf("image") == -1){
-			ret.concat(new Return(false, new Message(null, "Você apenas pode fazer o upload de imagens!")));
+			ret.concat(new Return(false, new Message(null, "Insira um arquivo válido!")));
 		}
 		return ret;
 	}

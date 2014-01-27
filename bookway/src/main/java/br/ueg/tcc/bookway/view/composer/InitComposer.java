@@ -305,7 +305,9 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	}
 	
 	private ItemFriend createItemFriend(UserBookway friendship, boolean hasFriend, String existInvite) {
-		return new ItemFriend(friendship, hasFriend, existInvite);
+		ItemFriend item = new ItemFriend(friendship, hasFriend, existInvite);
+		showUserBookwayPhoto(item.imageFriend, friendship);
+		return item;
 	}
 
 	private MyText createMyText(Text text) {
@@ -318,7 +320,6 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	private MyFriend createMyFriend(UserBookway friendship) {
 		MyFriend myFriend = new MyFriend();
 		showUserBookwayPhoto(myFriend.imageUser, friendship);
-		myFriend.setImageUser("/images/noimage.png");
 		myFriend.setTooltiptext(friendship.getName());
 		return myFriend;
 	}
