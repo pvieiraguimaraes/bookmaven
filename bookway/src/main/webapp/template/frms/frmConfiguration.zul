@@ -23,16 +23,16 @@
 						onAfterRender='self.clearSelection();'
 						sclass="listPageProperties">
 						<auxhead>
-							<auxheader colspan="3"
+							<auxheader colspan="4"
 								label="Configurações de Usuário" align="center" />
 						</auxhead>
 						<listhead>
 							<listheader label="Propriedade"
 								width="100px" />
 							<listheader label="Descrição" width="255px" />
-							<listheader label="Valor" width="100px"
+							<listheader label="Valor" width="150px"
 								align="center" />
-							<listheader label="Default" width="60px"
+							<listheader label="Padrão" width="60px"
 								align="center" />
 						</listhead>
 					</listbox>
