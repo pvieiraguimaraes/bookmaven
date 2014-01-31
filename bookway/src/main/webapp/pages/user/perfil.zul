@@ -19,7 +19,7 @@
 						</row>
 						<row>
 							<label value="Nome Completo: " />
-							<textbox id="fldNome"
+							<textbox id="fldName"
 								value="@{controller.entity.name}" />
 						</row>
 						<row>
@@ -33,7 +33,7 @@
 						</row>
 						<row>
 							<label value="Data Nascimento: " />
-							<datebox id="fldDataNascimento"
+							<datebox id="fldbirthDate"
 								value="@{controller.entity.birthDate}" />
 						</row>
 						<row>

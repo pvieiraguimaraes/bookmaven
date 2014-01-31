@@ -112,6 +112,9 @@ public class UserComposer extends InitComposer<UserBookway, UserBookwayControl> 
 			uploadUserBookwayImage(photoUserBookway, entity);
 			session.setAttribute("userProfile", entity);
 		}
+		UserBookway user = getControl().getUserById(entity.getId().toString());
+		entity.setPassword(user.getPassword());
+		entity.setConfirmPassword(user.getPassword());
 		treatReturn(getControl().doAction("updateAccount"));
 	}
 
