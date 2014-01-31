@@ -31,8 +31,6 @@
 							</radiogroup>
 						</vlayout>
 					</hlayout>
-					Ao clicar em Cadastre-se, você está afirmando que leu e
-					concorda com os	<a>Termos de uso</a> e com a <a>Política de Privacidade.</a>
 					<div align="right" style="margin-top: 30px;">
 						<button label="Cadastre-se"
 							onClick="controller.register()"

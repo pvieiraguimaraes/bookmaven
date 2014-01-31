@@ -19,11 +19,24 @@ public class UserValidator extends Validator {
 	public Return validateRegisterUser() {
 		Return retCheck = new Return(true);
 		retCheck.concat(validateModel());
-		//TODO Tratar a mensagem de validação sobre a quantidade dos elementos no campo senha ser 6
+
 		retCheck.concat(existsEmail());
 		retCheck.concat(equalsSenha());
 		retCheck.concat(permitedAge());
 		return retCheck;
+	}
+	
+	public Return validateUpdateAccount(){
+		Return ret = new Return(true);
+		ret.concat(validateModel());
+		
+		UserBookway user = getUserController(null).getUserById(
+				entity.getId().toString());
+		if(user.getEmail() != ((UserBookway)entity).getEmail())
+			ret.concat(existsEmail());
+		ret.concat(permitedAge());
+
+		return ret;
 	}
 
 	private Return existsEmail() {
@@ -33,13 +46,18 @@ public class UserValidator extends Validator {
 		data.put("sql", "FROM UserBookway u WHERE u.email = '"
 				+ ((UserBookway) entity).getEmail() + "'");
 
-		UserBookwayControl controller = SpringFactory.getController(
-				"userBookwayControl", UserBookwayControl.class, data);
+		UserBookwayControl controller = getUserController(data);
 		if (!controller.searchByHQL().getList().isEmpty()) {
 			ret.concat(creatReturn("email",
 					getValidationMessage("email", "exists", true)));
 		}
 		return ret;
+	}
+
+	private UserBookwayControl getUserController(HashMap<String, Object> data) {
+		UserBookwayControl controller = SpringFactory.getController(
+				"userBookwayControl", UserBookwayControl.class, data);
+		return controller;
 	}
 	
 	private Return permitedAge(){
