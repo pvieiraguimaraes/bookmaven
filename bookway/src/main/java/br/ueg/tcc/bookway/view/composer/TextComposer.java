@@ -163,7 +163,6 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 			initListTypeText();
 			super.doAfterCompose(comp);
 		}
-		createListTextUser();
 		loadBinder();
 	}
 	

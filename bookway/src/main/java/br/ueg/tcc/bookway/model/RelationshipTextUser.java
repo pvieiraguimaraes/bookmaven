@@ -36,5 +36,5 @@ public class RelationshipTextUser extends CommonEntity {
 	public void setUserBookway(UserBookway userBookway) {
 		this.userBookway = userBookway;
 	}
-
+	
 }

@@ -7,7 +7,6 @@ import java.util.Random;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-import org.zkoss.zk.ui.Executions;
 
 import br.com.vexillum.control.UserBasicControl;
 import br.com.vexillum.control.manager.EmailManager;
@@ -197,8 +196,6 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 	public Return updateAccount() {
 		Return retUpdate = new Return(true);
 		retUpdate.concat(update());
-		if (retUpdate.isValid())
-			Executions.sendRedirect("/pages/user/index.zul");
 		return retUpdate;
 	}
 

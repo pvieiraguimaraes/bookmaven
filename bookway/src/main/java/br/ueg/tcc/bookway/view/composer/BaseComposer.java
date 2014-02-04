@@ -11,6 +11,7 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Image;
+import org.zkoss.zul.Tab;
 import org.zkoss.zul.Window;
 
 import br.com.vexillum.control.GenericControl;
@@ -42,12 +43,15 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 
 	protected Boolean continueStudy;
 	
+	protected Boolean isTextReferenceMode;
+	
 	protected HashMap<String, Object> newMap;
 	
 	protected List<ItemStudy> itemStudies;
 	
 	protected List<ItemStudy> itemStudiesSelected;
 
+	protected List<ItemStudy> itemStudiesSelectedForReference;
 	/**
 	 * Lista que representa o relacionamento entre os elementos do texto e os itens de estudo
 	 */
@@ -60,6 +64,23 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 	
 	public TypePrivacy getTypePrivacy() {
 		return typePrivacy;
+	}
+
+	public List<ItemStudy> getItemStudiesSelectedForReference() {
+		return itemStudiesSelectedForReference;
+	}
+
+	public void setItemStudiesSelectedForReference(
+			List<ItemStudy> itemStudiesSelectedForReference) {
+		this.itemStudiesSelectedForReference = itemStudiesSelectedForReference;
+	}
+
+	public Boolean getIsTextReferenceMode() {
+		return isTextReferenceMode;
+	}
+
+	public void setIsTextReferenceMode(Boolean isTextReferenceMode) {
+		this.isTextReferenceMode = isTextReferenceMode;
 	}
 
 	public void setTypePrivacy(TypePrivacy typePrivacy) {
@@ -155,6 +176,11 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 			itemStudiesSelected = new ArrayList<>();
 		else
 			itemStudiesSelected = (List<ItemStudy>) arg.get("itemStudiesSelected");
+		
+		if (itemStudiesSelectedForReference == null)
+			itemStudiesSelectedForReference = new ArrayList<>();
+//		else
+//			itemStudiesSelectedForReference = (List<ItemStudy>) arg.get("itemStudiesSelectedForReference");
 		
 		if (arg.get("elementsItensStudies") == null)
 			elementsItensStudies = new ArrayList<>();
@@ -393,6 +419,12 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		});
 		
 		return itemStudy;
+	}
+	
+	public Component createTabWithName(String nameTab) {
+		Tab tab = new Tab();
+		tab.setLabel(nameTab);
+		return tab;
 	}
 
 	public Component createComponentIconStudy(ItemStudy itemStudy) {
