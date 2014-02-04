@@ -116,6 +116,7 @@ public class UserComposer extends InitComposer<UserBookway, UserBookwayControl> 
 		entity.setPassword(user.getPassword());
 		entity.setConfirmPassword(user.getPassword());
 		treatReturn(getControl().doAction("updateAccount"));
+		loadBinder();
 	}
 
 	public void deleteAccount() {

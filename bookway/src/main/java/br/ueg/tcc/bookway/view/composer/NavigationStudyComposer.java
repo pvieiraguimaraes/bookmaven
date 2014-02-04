@@ -9,7 +9,6 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Button;
-import org.zkoss.zul.Tab;
 import org.zkoss.zul.Tabbox;
 import org.zkoss.zul.Tabpanel;
 import org.zkoss.zul.Tabpanels;
@@ -29,7 +28,6 @@ import br.ueg.tcc.bookway.model.LevelText;
 import br.ueg.tcc.bookway.model.MarkingOfUser;
 import br.ueg.tcc.bookway.model.MarkingUsed;
 import br.ueg.tcc.bookway.model.Study;
-import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.view.macros.ItemStudy;
 
@@ -59,11 +57,18 @@ public class NavigationStudyComposer extends
 		
 		study = (Study) session.getAttribute("study");
 		continueStudy = (Boolean) session.getAttribute("continueStudy");
+		isTextReferenceMode = (Boolean) session.getAttribute("isTextReferenceMode");
+		
+		if(isTextReferenceMode == null)
+			isTextReferenceMode = false;
 		
 		if (study != null)
 			createAmbientStudy();
-		loadMarkingsOfUser();
-		checkButtonMarking();
+		
+		if (!isTextReferenceMode) {
+			loadMarkingsOfUser();
+			checkButtonMarking();
+		}
 		loadBinder();
 	}
 
@@ -98,7 +103,7 @@ public class NavigationStudyComposer extends
 			Tabs tabs = tabbox.getTabs();
 			if (tabs == null)
 				tabs = new Tabs();
-			tabs.appendChild(createTabStudy(getStudy().getText()));
+			tabs.appendChild(createTabWithName(getStudy().getText().getTitle()));
 			Tabpanels tabpanels = tabbox.getTabpanels();
 			if (tabpanels == null)
 				tabpanels = new Tabpanels();
@@ -121,41 +126,32 @@ public class NavigationStudyComposer extends
 		return new ItemNavigationStudy();
 	}
 
-	private Component createTabStudy(Text text) {
-		Tab tab = new Tab();
-		tab.setLabel(text.getTitle());
-		return tab;
-	}
-
 	private Component createTabPanelStudy(Study study) {
 		Tabpanel tabpanel = new Tabpanel();
 		tabpanel.setSclass("tabpanelstudy");
 		tabpanel.setStyle("text-align: justify;");
 		
 		LevelText rootLevel;
-		//TODO Ver a maneira de continuar o estudo do ultmo elemento que parou, talvez seja relacionado com ScroolEvent
-//		if (continueStudy)
+
+//		if (continueStudy) {
+//			LevelText page = getPageElement(study.getLastElementStop().getIdLevel());
+//
 //			rootLevel = HibernateUtils.materializeProxy(getControl()
-//					.getLevelText(
-//							study.getLastElementStop().getIdLevel().getId()));
-//		else
+//					.getLevelText(page.getId()));
+//		} else
 			rootLevel = HibernateUtils.materializeProxy(getControl()
 					.getLevelText(study.getText().getRootLevelText().getId()));
-		
+
 		tabpanel = (Tabpanel) mappingElementsAndChildren(rootLevel, tabpanel);
 
-		// Slider slideStudy = new Slider();
-		// slideStudy.appendChild(tabpanel);
-		//
-		// slideStudy.addEventListener(Events.ON_SCROLL, new EventListener() {
-		// @Override
-		// public void onEvent(Event event) throws Exception {
-		//
-		// System.out.println("Rolando");
-		// }
-		// });
-		// TODO Ver como colocar os eventos ScroolEvent para funcionar aqui.
 		return tabpanel;
+	}
+
+	private LevelText getPageElement(LevelText level) {
+		 HibernateUtils.materializeProxy(level.getElements());
+		ElementText page;
+		
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -177,7 +173,7 @@ public class NavigationStudyComposer extends
 		return comp;
 
 	}
-
+	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Component createItemElementForStudy(List<ElementText> elements,
 			Component compMaster) {
@@ -189,56 +185,81 @@ public class NavigationStudyComposer extends
 		if (elements != null) {
 			//TODO Aqui deve ser feito a verificação do tipo do ElementText e conforme diferença de tipo exibir diferente
 			for (ElementText elementText : elements) {
-				Long idText = HibernateUtils.materializeProxy(elementText
-						.getIdLevel().getIdText().getId());
-				Long idLevel = HibernateUtils.materializeProxy(elementText.getId());
-				itemStudy = new ItemStudy();
-
-				itemStudy.setContent(elementText.getValue());
-				itemStudy.setIdText(idText.toString());
-				itemStudy.setIdElement(idLevel.toString());
 				
-				//TODO Colocar aqui a configuração de estudo de acordo com as opções do usuário
-				if (elementText.getName().equalsIgnoreCase("titulo")) {
-					itemStudy.setStyle("width: 100%; text-align: center;");
-					itemStudy.contentElement.setStyle("font-size: 18px; width: 100%; font-weight: bold;");
-				}
-
-				if (elementText.getName().equalsIgnoreCase("valor")) { //Mapeia somente os elementos do nível que representam valor
-					itemStudy.addEventListener(Events.ON_CLICK,
-							new EventListener() {
-								@Override
-								public void onEvent(Event event)
-										throws Exception {
-									if (event.getTarget() != null) {
-										ItemStudy item = (ItemStudy) event.getTarget();
-										
-										addElementTextSelected(item);
-										changeItemStyle(item);
-										addItemStudySelected(item);
-										checkPanelActionVisibility();
-									}
-								}
-
-							});
-					
-					retAux = checkExistingItensStudies(elementText, getStudy());
-					if(retAux.isValid() && !retAux.getList().isEmpty())
-						hasItensStudies = true;
-					else
-						hasItensStudies = false;
-					
-					if(hasItensStudies)
-						mark = checkExistingMarking((List<ElementsItensStudy>)retAux.getList());
-					
-					if(mark != null)
-						changeStyleMarkingThisItem(itemStudy, mark.getColor());
-					
-					itemStudy = insertIconStudy(itemStudy, idLevel, hasItensStudies);
-					itemStudies.add(itemStudy);
-				}
+				if(!elementText.getIdLevel().getName().equalsIgnoreCase("pagina")){
 				
-				compMaster.appendChild(itemStudy);
+					Long idText = HibernateUtils.materializeProxy(elementText
+							.getIdLevel().getIdText().getId());
+					Long idLevel = HibernateUtils.materializeProxy(elementText.getId());
+					itemStudy = new ItemStudy();
+	
+					itemStudy.setContent(elementText.getValue());
+					itemStudy.setIdText(idText.toString());
+					itemStudy.setIdElement(idLevel.toString());
+					
+					//TODO Colocar aqui a configuração de estudo de acordo com as opções do usuário
+					if (elementText.getName().equalsIgnoreCase("titulo")) {
+						itemStudy.setStyle("width: 100%; text-align: center;");
+						itemStudy.contentElement.setStyle("font-size: 18px; width: 100%; font-weight: bold;");
+					}
+	
+					if (elementText.getName().equalsIgnoreCase("valor")) {
+						if (isTextReferenceMode) {
+							itemStudy.addEventListener(Events.ON_CLICK,
+									new EventListener() {
+										@Override
+										public void onEvent(Event event)
+												throws Exception {
+											if (event.getTarget() != null) {
+												ItemStudy item = (ItemStudy) event
+														.getTarget();
+
+												changeItemStyle(item);
+												addItemStudySelectedForReference(item);
+											}
+										}
+
+									});
+
+						} else {
+							itemStudy.addEventListener(Events.ON_CLICK,
+									new EventListener() {
+										@Override
+										public void onEvent(Event event)
+												throws Exception {
+											if (event.getTarget() != null) {
+												ItemStudy item = (ItemStudy) event
+														.getTarget();
+												addElementTextSelected(item);
+												changeItemStyle(item);
+												addItemStudySelected(item);
+												checkPanelActionVisibility();
+											}
+										}
+
+									});
+						}
+						
+						retAux = checkExistingItensStudies(elementText, getStudy());
+						if(retAux.isValid() && !retAux.getList().isEmpty())
+							hasItensStudies = true;
+						else
+							hasItensStudies = false;
+						
+						if(hasItensStudies)
+							mark = checkExistingMarking((List<ElementsItensStudy>)retAux.getList());
+						
+						if(mark != null)
+							changeStyleMarkingThisItem(itemStudy, mark.getColor());
+						
+						if(!isTextReferenceMode)
+							itemStudy = insertIconStudy(itemStudy, idLevel, hasItensStudies);
+						
+						itemStudies.add(itemStudy);
+					}
+					
+					compMaster.appendChild(itemStudy);
+				}
 			}
 		}
 		return compMaster;
@@ -275,6 +296,13 @@ public class NavigationStudyComposer extends
 			getItemStudiesSelected().remove(itemStudy);
 		else
 			getItemStudiesSelected().add(itemStudy);
+	}
+	
+	private void addItemStudySelectedForReference(ItemStudy itemStudy) {
+		if (getItemStudiesSelectedForReference().contains(itemStudy))
+			getItemStudiesSelectedForReference().remove(itemStudy);
+		else
+			getItemStudiesSelectedForReference().add(itemStudy);
 	}
 	
 	private void addElementTextSelected(ItemStudy itemStudy) {

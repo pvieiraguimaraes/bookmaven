@@ -19,7 +19,7 @@ import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 
-/**
+/**Classe responsável pela pesquisa de textos no sistema.
  * @author Pedro
  * 
  */
@@ -124,16 +124,21 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 						"Deseja continuar o estudo de onde parou?",
 						"continueStudy", "noContinueStudy");
 			} else {
-				putValuesInSession(getStudy(), getContinueStudy());
+				putValuesInSession(getStudy(), getContinueStudy(), false);
 				Executions.sendRedirect("/pages/user/study.zul");
 			}
 		} else {
 			setStudy(createStudy(text));
-			putValuesInSession(getStudy(), getContinueStudy());
+			putValuesInSession(getStudy(), getContinueStudy(), false);
 			Executions.sendRedirect("/pages/user/study.zul");
 		}
 	}
 
+	/**Método que cria o objeto de estudo caso não existe salva no banco e
+	 * retorna ele para o usuário, para se relacionar com os outros objetos
+	 * @param text
+	 * @return
+	 */
 	private Study createStudy(Text text) {
 		study = new Study();
 		study.setDateStudy(new Date());
@@ -147,6 +152,10 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 		return null;
 	}
 
+	/**Verifica se existe um estudo do usuário para aquele texto
+	 * @param text
+	 * @return
+	 */
 	private Study checksExistenceStudy(Text text) {
 		if(study == null)
 			study = new Study();
@@ -156,23 +165,38 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 		return getStudyControl(null).checksExistenceStudy(getStudy());
 	}
 
+	/**Ação que será executada caso o usuário opte por continuar o estudo 
+	 * de onde parou
+	 * @return
+	 */
 	public Return continueStudy() {
 		setContinueStudy(true);
-		putValuesInSession(getStudy(), getContinueStudy());
+		putValuesInSession(getStudy(), getContinueStudy(), false);
 		Executions.sendRedirect("/pages/user/study.zul");
 		return new Return(true);
 	}
 	
+	/**Ação que será executada caso o usuário opte por não continuar o estudo 
+	 * de onde parou
+	 * @return
+	 */
 	public Return noContinueStudy() {
 		setContinueStudy(false);
-		putValuesInSession(getStudy(), getContinueStudy());
+		putValuesInSession(getStudy(), getContinueStudy(), false);
 		Executions.sendRedirect("/pages/user/study.zul");
 		return new Return(true);
 	}
 
-	private void putValuesInSession(Study study, Boolean boo) {
+	/**Coloca os atributos necessário na sessão para que possam ser passados para execução
+	 * do próximo composer.
+	 * @param study
+	 * @param continueStudy
+	 * @param isTextReferenceMode
+	 */
+	private void putValuesInSession(Study study, Boolean continueStudy, Boolean isTextReferenceMode) {
 		session.setAttribute("study", study);
-		session.setAttribute("continueStudy", boo);
+		session.setAttribute("continueStudy", continueStudy);
+		session.setAttribute("isTextReferenceMode", isTextReferenceMode);
 	}
 
 	/**

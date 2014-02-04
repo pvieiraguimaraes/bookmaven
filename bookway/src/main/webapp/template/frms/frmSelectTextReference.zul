@@ -6,7 +6,7 @@
 						model="@{controller.listTypesPrivacy}"
 						selectedItem="@{controller.typePrivacy}" />
 			<hlayout>
-				<button	label="Próprio Texto"/>
+				<button	label="Próprio Texto" onClick="controller.callThisTextForReference()"/>
 				<button	label="Outro Texto"/>
 			</hlayout>
 		</vlayout>

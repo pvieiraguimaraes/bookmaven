@@ -24,7 +24,7 @@
 						</row>
 						<row>
 							<label value="E-mail: " />
-							<textbox id="fldEmail"
+							<textbox id="fldEmail" readonly="true"
 								value="@{controller.entity.email}" />
 						</row>
 						<row>
@@ -83,7 +83,7 @@
 							<div align="right">
 								<button label="Editar Dados"
 									sclass="btn btn-primary" onClick="controller.updateAccount()" />
-								<button label="Cancelar"
+								<button label="Cancelar" onClick='Executions.sendRedirect("/pages/user/index.zul")'
 									sclass="btn btn-primary" />
 							</div>
 						</row>

@@ -39,8 +39,13 @@ public class RelationshipTextElementComposer extends
 		return new RelationshipTextElement();
 	}
 	
+	public void saveRelationship(){
+		
+	}
+	
 	public void callThisTextForReference(){
-		setStudy(study);
+		session.setAttribute("study", study);
+		session.setAttribute("isTextReferenceMode", true);
 		callModalWindow("/template/frms/frmTextReference.zul");
 	}
 

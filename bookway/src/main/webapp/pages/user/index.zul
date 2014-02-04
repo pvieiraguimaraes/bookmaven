@@ -1,7 +1,8 @@
 <?page title="Bookway" contentType="text/html;charset=UTF-8"?>
 <?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
+<?component name="itemfriend" macroURI="/template/component/itemfriend.zul" class="br.ueg.tcc.bookway.view.macros.ItemFriend"?>
 
 <zk>
-	<div self="@{define(content)}" apply="br.ueg.tcc.bookway.view.composer.InitComposer">	
+	<div id="panelRequestsInvites" self="@{define(content)}" apply="br.ueg.tcc.bookway.view.composer.InitComposer">
 	</div>
 </zk>

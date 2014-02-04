@@ -81,7 +81,7 @@ public class FriendshipBookwayComposer extends InitComposer<Friendship, Friendsh
 				setUpListFriendshipInComponent(convertListUsersInPossibleFriendships((List<UserBookway>) ret.getList()), "resultSearch", component, "ItemFriend", null, false);				
 			}
 		} else
-			setUpListFriendshipInComponent(extractUsersFriends(), "resultSearch", component, "ItemFriend", null, true);
+			setUpListFriendshipInComponent(extractUsersFriends(getAllMyFriends()), "resultSearch", component, "ItemFriend", null, true);
 		
 		loadBinder();
 	}
@@ -89,7 +89,7 @@ public class FriendshipBookwayComposer extends InitComposer<Friendship, Friendsh
 	@SuppressWarnings("unchecked")
 	private List<UserBookway> convertListUsersInPossibleFriendships(
 			List<UserBookway> users) {
-		List<UserBookway> actualUsersFriends = extractUsersFriends();
+		List<UserBookway> actualUsersFriends = extractUsersFriends(getAllMyFriends());
 		return ListUtils.removeAll(users, actualUsersFriends);
 	}
 

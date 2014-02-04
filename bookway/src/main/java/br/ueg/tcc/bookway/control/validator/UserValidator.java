@@ -18,33 +18,32 @@ public class UserValidator extends Validator {
 
 	public Return validateRegisterUser() {
 		Return retCheck = new Return(true);
+		UserBookway user = (UserBookway) entity;
 		retCheck.concat(validateModel());
-
-		retCheck.concat(existsEmail());
 		retCheck.concat(equalsSenha());
-		retCheck.concat(permitedAge());
+		retCheck.concat(existsEmail(user.getEmail()));
 		return retCheck;
 	}
 	
-	public Return validateUpdateAccount(){
-		Return ret = new Return(true);
-		ret.concat(validateModel());
-		
-		UserBookway user = getUserController(null).getUserById(
-				entity.getId().toString());
-		if(user.getEmail() != ((UserBookway)entity).getEmail())
-			ret.concat(existsEmail());
-		ret.concat(permitedAge());
-
+	@Override
+	protected Return validateModel() {
+		Return ret = super.validateModel();
+		UserBookway user = (UserBookway) entity;
+		if (user.getBirthDate() != null)
+			ret.concat(permitedAge());
 		return ret;
 	}
+	
+	public Return validateUpdateAccount(){
+		return validateModel();
+	}
 
-	private Return existsEmail() {
+	private Return existsEmail(String email) {
 		Return ret = new Return(true);
 		HashMap<String, Object> data = new HashMap<String, Object>();
 
 		data.put("sql", "FROM UserBookway u WHERE u.email = '"
-				+ ((UserBookway) entity).getEmail() + "'");
+				+ email + "'");
 
 		UserBookwayControl controller = getUserController(data);
 		if (!controller.searchByHQL().getList().isEmpty()) {

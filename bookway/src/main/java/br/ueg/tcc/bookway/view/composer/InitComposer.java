@@ -9,10 +9,17 @@ import org.springframework.context.annotation.Scope;
 import org.zkoss.image.AImage;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Components;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Div;
 import org.zkoss.zul.Image;
+import org.zkoss.zul.Separator;
+import org.zkoss.zul.Tabbox;
+import org.zkoss.zul.Tabpanel;
+import org.zkoss.zul.Tabpanels;
+import org.zkoss.zul.Tabs;
 
 import br.com.vexillum.control.GenericControl;
 import br.com.vexillum.control.manager.ExceptionManager;
@@ -57,6 +64,26 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	
 	private List<Friendship> allMyFriends;
 	
+	private List<Friendship> invitesList;
+	
+	private List<Friendship> requestsList;
+	
+	public List<Friendship> getInvitesList() {
+		return invitesList;
+	}
+
+	public void setInvitesList(List<Friendship> invitesList) {
+		this.invitesList = invitesList;
+	}
+
+	public List<Friendship> getRequestsList() {
+		return requestsList;
+	}
+
+	public void setRequestsList(List<Friendship> requestsList) {
+		this.requestsList = requestsList;
+	}
+
 	/**
 	 * Fornece a lista de tipo de texto, Público ou Privado
 	 */
@@ -135,8 +162,65 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
+		String page = Executions.getCurrent().getDesktop().getRequestPath();
 		super.doAfterCompose(comp);
+		if(page.equalsIgnoreCase("/pages/user/index.zul")){
+			loadRequestAndInvites();
+		}
 		initUserData();
+	}
+
+	private void loadRequestAndInvites() {
+		loadListRequestsInvites();
+		createElementsInvitesRequests();
+	}
+
+	@SuppressWarnings("unchecked")
+	private void loadListRequestsInvites() {
+		setUser((UserBookway) getUserLogged());
+		Return ret = getFriendshipControl().searchPendentInvites();
+		if(ret.isValid())
+			setInvitesList((List<Friendship>) ret.getList());
+		ret = new Return(true);
+		ret.concat(getFriendshipControl().searchFriendRequests());
+		if(ret.isValid())
+			setRequestsList((List<Friendship>) ret.getList());
+		
+	}
+
+	private void createElementsInvitesRequests() {
+		Div div = (Div) getComponentById(component, "panelRequestsInvites");
+		Tabbox tabbox =  new Tabbox();
+		if(div != null){
+			div.appendChild(tabbox);
+			Tabs tabs = tabbox.getTabs();
+			Tabpanels tabpanels = tabbox.getTabpanels();
+			Separator separator = new Separator();
+			separator.setOrient("horizontal");
+			separator.setWidth("30px");
+			if (tabs == null)
+				tabs = new Tabs();
+			if (tabpanels == null)
+				tabpanels = new Tabpanels();
+			if (!invitesList.isEmpty()) {
+				tabs.appendChild(createTabWithName("Convites Enviados"));
+				Tabpanel tabpanelInvitess = new Tabpanel();
+				tabpanelInvitess.appendChild(separator);
+				setUpListFriendshipInComponent(extractUsersFriends(invitesList), null, tabpanelInvitess, "ItemFriend", null, false);
+				tabpanelInvitess.appendChild(separator);
+				tabpanels.appendChild(tabpanelInvitess);
+			}
+			if (!requestsList.isEmpty()) {
+				tabs.appendChild(createTabWithName("Solicitações Pendentes"));
+				Tabpanel tabpanelRequests = new Tabpanel();
+				tabpanelRequests.appendChild(separator);
+				setUpListFriendshipInComponent(extractUsersFriends(requestsList), null, tabpanelRequests, "ItemFriend", null, false);
+				tabpanelRequests.appendChild(separator);
+				tabpanels.appendChild(tabpanelRequests);
+			}
+			tabbox.appendChild(tabs);
+			tabbox.appendChild(tabpanels);
+		}
 	}
 
 	private void initUserData() {
@@ -177,15 +261,15 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		ret.concat(getFriendshipControl().searchAllFriends());
 		if(ret.isValid() && ret.getList() != null && !ret.getList().isEmpty()){
 			setAllMyFriends((List<Friendship>) ret.getList());
-			setUpListFriendshipInComponent(extractUsersFriends(), "panelMyFriends", getComponent(),	"MyFriend", 8, true);
+			setUpListFriendshipInComponent(extractUsersFriends(getAllMyFriends()), "panelMyFriends", getComponent(),	"MyFriend", 8, true);
 		}
 	}
 	
-	public List<UserBookway> extractUsersFriends() {
+	public List<UserBookway> extractUsersFriends(List<Friendship> friendships) {
 		List<UserBookway> friends = new ArrayList<UserBookway>();
 		UserBookway uo = new UserBookway(), uf = new UserBookway();
-		if(getAllMyFriends() != null){
-			for (Friendship friendship : getAllMyFriends()) {
+		if(friendships != null){
+			for (Friendship friendship : friendships) {
 				uf = (UserBookway) HibernateUtils.materializeProxy(friendship.getFriend());
 				uo = (UserBookway) HibernateUtils.materializeProxy(friendship.getOwner());
 				if (getUserLogged() != uf)
@@ -252,7 +336,8 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	}
 	
 	/**Método responsável por criar os componentes que envolvem a amizade, seja os elementos
-	 * da pesquisa de ou os amigos na página inicial.
+	 * da pesquisa de ou os amigos na página inicial. Os components criados serão filhos do component
+	 * informado em idParent que caso seja null poderá ser substituido por comp.
 	 * @param list, a lista das amizades a serem mapeados
 	 * @param idParent, id do component pai
 	 * @param comp, instancia do component para o mapeamento
@@ -260,21 +345,29 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	 * @param numberOfElements, número dos elementos a serem mapeados
 	 * @param hasFriend, se a amizade já pertence ao usuário.
 	 */
-	public void setUpListFriendshipInComponent(List<UserBookway> list, String idParent,
-			Component comp, String nameComp, Integer numberOfElements, boolean hasFriend) {
-		Component componentParent = getComponentById(idParent);
-		String existInvite = "";
-		if (numberOfElements != null && list.size() > numberOfElements)
-			list = list.subList(0, numberOfElements);
-		if (list != null && componentParent != null) {
-			for (UserBookway friend : list) {
-				if (nameComp.equalsIgnoreCase("ItemFriend")){
-					existInvite = checkInvitation(friend);
-					componentParent.appendChild(createItemFriend(friend, hasFriend, existInvite));
-				}
-				else
-					componentParent.appendChild(createMyFriend(friend));
+	public void setUpListFriendshipInComponent(List<UserBookway> list,
+			String idParent, Component comp, String nameComp,
+			Integer numberOfElements, boolean hasFriend) {
+		Component componentParent;
+		if (idParent != null)
+			componentParent = getComponentById(idParent);
+		else
+			componentParent = comp;
 
+		String existInvite = "";
+		if (componentParent != null) {
+			if (numberOfElements != null && list.size() > numberOfElements)
+				list = list.subList(0, numberOfElements);
+			if (list != null && componentParent != null) {
+				for (UserBookway friend : list) {
+					if (nameComp.equalsIgnoreCase("ItemFriend")) {
+						existInvite = checkInvitation(friend);
+						componentParent.appendChild(createItemFriend(friend,
+								hasFriend, existInvite));
+					} else
+						componentParent.appendChild(createMyFriend(friend));
+
+				}
 			}
 		}
 	}
