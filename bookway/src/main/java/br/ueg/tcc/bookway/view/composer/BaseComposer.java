@@ -179,8 +179,8 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		
 		if (itemStudiesSelectedForReference == null)
 			itemStudiesSelectedForReference = new ArrayList<>();
-//		else
-//			itemStudiesSelectedForReference = (List<ItemStudy>) arg.get("itemStudiesSelectedForReference");
+		else
+			itemStudiesSelectedForReference = (List<ItemStudy>) arg.get("itemStudiesSelectedForReference");
 		
 		if (arg.get("elementsItensStudies") == null)
 			elementsItensStudies = new ArrayList<>();

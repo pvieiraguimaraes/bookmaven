@@ -55,7 +55,7 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 		super.doAfterCompose(comp);
 		String page = Executions.getCurrent().getDesktop().getRequestPath();
 		if (myTexts != null
-				&& page.equalsIgnoreCase("/pages/user/alltexts.zul")) {
+				&& (page.equalsIgnoreCase("/pages/user/alltexts.zul") || page.equalsIgnoreCase("/pages/user/study.zul"))) {
 			myTexts.setChecked(true);
 			searchText();
 		}

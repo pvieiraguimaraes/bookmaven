@@ -7,7 +7,7 @@
 						selectedItem="@{controller.typePrivacy}" />
 			<hlayout>
 				<button	label="Próprio Texto" onClick="controller.callThisTextForReference()"/>
-				<button	label="Outro Texto"/>
+				<button	label="Outro Texto" onClick="controller.callSearchTextForReference()"/>
 			</hlayout>
 		</vlayout>
 	</window>

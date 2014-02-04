@@ -1,0 +1,6 @@
+<?component name="itemtext" macroURI="/template/component/itemtext.zul" class="br.ueg.tcc.bookway.view.macros.ItemText"?>
+
+<window id="panelSearchText" title="Painel de Itens" border="normal" width="460px" height="485px" 
+	position="center, center" closable="true">
+	<include src="/template/frms/frmAllTexts.zul"/>
+</window>
