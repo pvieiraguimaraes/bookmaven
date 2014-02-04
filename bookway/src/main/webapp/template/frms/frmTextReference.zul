@@ -2,8 +2,10 @@
 
 <zk>
 	<window id="textReference" title="Relacionamento entre textos" border="normal" width="500px" 
-		position="center, center" closable="true">
-		<include src="/template/frms/frmStudy.zul"/>
-		<button label="Salvar" apply="br.ueg.tcc.bookway.view.composer.RelationshipTextElementComposer" onClick="controller.saveRelationship()"/>
+		position="center, center" closable="true" apply="br.ueg.tcc.bookway.view.composer.RelationshipTextElementComposer">
+		<tabbox id="panelStudy" width="90%" height="auto"
+			style="padding-top: 50px;">
+		</tabbox>
+		<button label="Salvar" onClick="controller.saveRelationship()"/>
 	</window>
 </zk>
