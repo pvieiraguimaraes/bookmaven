@@ -23,6 +23,7 @@ import br.ueg.tcc.bookway.model.ElementsItensStudy;
 import br.ueg.tcc.bookway.model.ItensOfStudy;
 import br.ueg.tcc.bookway.model.MarkingOfUser;
 import br.ueg.tcc.bookway.model.MarkingUsed;
+import br.ueg.tcc.bookway.model.RelationshipTextElement;
 import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.view.macros.ItemOfPanel;
 
@@ -37,6 +38,17 @@ public class ElementsItensStudyComposer extends
 	private List<Annotation> annotations;
 	
 	private List<MarkingUsed> markingUseds;
+	
+	private List<RelationshipTextElement> relationshipTextElements;
+
+	public List<RelationshipTextElement> getRelationshipTextElements() {
+		return relationshipTextElements;
+	}
+
+	public void setRelationshipTextElements(
+			List<RelationshipTextElement> relationshipTextElements) {
+		this.relationshipTextElements = relationshipTextElements;
+	}
 
 	public List<Annotation> getAnnotations() {
 		return annotations;
@@ -117,11 +129,38 @@ public class ElementsItensStudyComposer extends
 			flag = true;
 		}
 		
+		if (!getRelationshipTextElements().isEmpty()) {
+			tabs.appendChild(createItemPanelRelationshipTextElement(tabs, tabpanels));
+			flag = true;
+		}
 		
 		if(flag)
 			((Tab)tabbox.getTabs().getFirstChild()).setSelected(true);
 		
 		return tabbox;
+	}
+
+	private Component createItemPanelRelationshipTextElement(Tabs tabs,
+			Tabpanels tabpanels) {
+		Tab tab = new Tab("Referências");
+		Tabpanel tabpanel = new Tabpanel();
+		Vlayout vlayout = new Vlayout();
+		
+		tabs.appendChild(tab);
+		
+		vlayout.setHeight("400px");
+		vlayout.setStyle("overflow-y: scroll;");
+
+		tabpanel.appendChild(vlayout);
+		tabpanels.appendChild(tabpanel);
+		
+//		for (RelationshipTextElement relation : getRelationshipTextElements()()) {
+//			MarkingOfUser markingOfUser = markingUsed.getMarkingOfUser();
+			//TODO Colocar pra funcionar a visibilidade dos botões.
+//			vlayout.appendChild(new ItemOfPanel("MarkingOfUser", markingOfUser.getName(), null, markingOfUser.getColor(), true, true, false, true, false, false));
+//		}
+		
+		return tab;
 	}
 
 	private Tab createItemPanelAnnotation(Tabs tabs, Tabpanels tabpanels) {
@@ -176,12 +215,15 @@ public class ElementsItensStudyComposer extends
 				annotations.add((Annotation) itemOfStudy);
 			if(itemOfStudy instanceof MarkingUsed)
 				markingUseds.add((MarkingUsed) itemOfStudy);
+			if(itemOfStudy instanceof RelationshipTextElement)
+				relationshipTextElements.add((RelationshipTextElement) itemOfStudy);
 		}
 	}
 	
 	private void resetListsItens(){
 		setAnnotations(new ArrayList<Annotation>());
 		setMarkingUseds(new ArrayList<MarkingUsed>());
+		setRelationshipTextElements(new ArrayList<RelationshipTextElement>());
 	}
 
 	@Override

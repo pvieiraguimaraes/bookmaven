@@ -8,8 +8,8 @@
 						model="@{controller.listTypesPrivacy}"
 						selectedItem="@{controller.typePrivacy}" />
 			<hlayout>
-				<button	label="Próprio Texto" onClick="controller.callThisTextForReference()"/>
-				<button	label="Outro Texto" onClick="controller.callSearchTextForReference()"/>
+				<button	label="Próprio Texto" onClick="controller.callThisTextForReference();selectTextReference.detach()"/>
+				<button	label="Outro Texto" onClick="controller.callSearchTextForReference();selectTextReference.detach()"/>
 			</hlayout>
 		</vlayout>
 	</window>

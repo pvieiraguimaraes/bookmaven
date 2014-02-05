@@ -284,12 +284,7 @@ public class MarkingComposer extends
 				ret.concat(saveElementsItensStudy());
 				
 				if(ret.isValid()){
-					List<ItemStudy> list = getItemStudiesSelected();
-					for (ItemStudy itemStudy : list) {
-						Component comp = createComponentIconStudy(itemStudy);
-						if (comp != null)
-							itemStudy.appendChild(comp);
-					}
+					createIconsStudy(getItemStudiesSelected());
 				}
 					
 			}

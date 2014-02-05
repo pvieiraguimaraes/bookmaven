@@ -21,7 +21,6 @@ import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.model.enums.TypePrivacy;
-import br.ueg.tcc.bookway.view.macros.ItemStudy;
 
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
@@ -92,12 +91,7 @@ public class AnnotationComposer extends
 				retAux.concat(saveElementsItensStudy());
 				
 				if(retAux.isValid()){
-					List<ItemStudy> list = getItemStudiesSelected();
-					for (ItemStudy itemStudy : list) {
-						Component comp = createComponentIconStudy(itemStudy);
-						if (comp != null)
-							itemStudy.appendChild(comp);
-					}
+					createIconsStudy(getItemStudiesSelected());
 				}
 				
 				getComponentById("winAnnotation").detach();
