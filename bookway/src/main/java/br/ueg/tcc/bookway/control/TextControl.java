@@ -184,7 +184,11 @@ public class TextControl extends GenericControl<Text> {
 		
 		TypePrivacy typeText = text.getTypeText();
 		
-		String sql = "FROM Text WHERE title like '%" + title + "%' AND community = '" + community + "'";
+		String sql = "FROM Text WHERE title like '%" + title + "%'";
+		
+		if(community)
+			sql += " AND community = '" + community + "'";
+		
 		if(typeText != null)
 			sql += " AND typeText = '" + typeText.ordinal() + "'";
 		

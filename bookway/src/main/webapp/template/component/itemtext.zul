@@ -30,6 +30,10 @@
 					label="Adquirir"
 					onClick="controller.acquireText(idText.getValue())"
 					visible="false" />
+				<button id="btnOpen" sclass="btn btn-primary"
+					label="Abrir" apply="br.ueg.tcc.bookway.view.composer.RelationshipTextElementComposer"
+					onClick="controller.openText(idText.getValue())"
+					visible="false" />
 			</div>
 			<div id="panelRelationText"
 				apply="br.ueg.tcc.bookway.view.composer.RelationshipTextComposer">

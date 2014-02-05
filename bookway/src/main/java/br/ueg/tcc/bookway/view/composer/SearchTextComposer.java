@@ -33,7 +33,7 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 	
 	private boolean checkMyTexts;
 	private boolean community;
-
+	
 	public boolean getCommunity() {
 		return community;
 	}
@@ -55,8 +55,11 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 		super.doAfterCompose(comp);
 		String page = Executions.getCurrent().getDesktop().getRequestPath();
 		if (myTexts != null
-				&& (page.equalsIgnoreCase("/pages/user/alltexts.zul") || page.equalsIgnoreCase("/pages/user/study.zul"))) {
+				&& (page.equalsIgnoreCase("/pages/user/alltexts.zul") || page
+						.equalsIgnoreCase("/pages/user/study.zul"))) {
 			myTexts.setChecked(true);
+//			session.setAttribute("isTextReferenceMode", true);
+//			setIsTextReferenceMode((Boolean) session.getAttribute("isTextReferenceMode"));
 			searchText();
 		}
 		createListTextUser();
@@ -134,23 +137,6 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 		}
 	}
 
-	/**Método que cria o objeto de estudo caso não existe salva no banco e
-	 * retorna ele para o usuário, para se relacionar com os outros objetos
-	 * @param text
-	 * @return
-	 */
-	private Study createStudy(Text text) {
-		study = new Study();
-		study.setDateStudy(new Date());
-		study.setText(text);
-		study.setUserBookway((UserBookway) getUserLogged());
-		
-		Return ret = saveOrUpdateStudy();
-
-		if (ret.isValid())
-			return getStudyControl(null).getThisStudy(study);
-		return null;
-	}
 
 	/**Verifica se existe um estudo do usuário para aquele texto
 	 * @param text

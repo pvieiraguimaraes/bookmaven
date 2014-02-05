@@ -1,4 +1,5 @@
 <?component name="itemstudy" macroURI="/template/component/itemstudy.zul" class="br.ueg.tcc.bookway.view.macros.ItemStudy"?>
+<?component name="itemtext" macroURI="/template/component/itemtext.zul" class="br.ueg.tcc.bookway.view.macros.ItemText"?>
 
 <zk>
 	<window id="textReference" title="Relacionamento entre textos" border="normal" width="500px" 

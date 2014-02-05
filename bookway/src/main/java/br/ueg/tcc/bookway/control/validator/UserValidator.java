@@ -87,20 +87,14 @@ public class UserValidator extends Validator {
 		String newPassword = (String) mapData.get("newPassword");
 		String confirmNewPassword = (String) mapData.get("confirmNewPassword");
 		
-		if(newPassword.length() < 6)
-			ret.concat(creatReturn("newPassword",
-					getValidationMessage("password", "min", false) + " 6"));
-		if(confirmNewPassword.length() < 6)
-			ret.concat(creatReturn("confirmNewPassword",
-					getValidationMessage("password", "min", false) + " 6"));
 				
-		if (actualPassword.equalsIgnoreCase(""))
+		if (actualPassword == null || actualPassword.equalsIgnoreCase(""))
 			ret.concat(creatReturn("actualPassword",
 					getValidationMessage("", "notnull", false)));
-		if (newPassword.equalsIgnoreCase(""))
+		if (newPassword == null || newPassword.equalsIgnoreCase(""))
 			ret.concat(creatReturn("newPassword",
 					getValidationMessage("", "notnull", false)));
-		if (confirmNewPassword.equalsIgnoreCase(""))
+		if (confirmNewPassword == null || confirmNewPassword.equalsIgnoreCase(""))
 			ret.concat(creatReturn("confirmNewPassword",
 					getValidationMessage("", "notnull", false)));
 		if (!equalsFields(password, actualPassword).isValid()) 
@@ -109,7 +103,13 @@ public class UserValidator extends Validator {
 		if (!equalsFields(newPassword, confirmNewPassword).isValid())
 				ret.concat(creatReturn("confirmNewPassword",
 						getValidationMessage("password", "equals", false)));
-
+	
+		if(newPassword != null && newPassword.length() < 6)
+			ret.concat(creatReturn("newPassword",
+					getValidationMessage("password", "min", false) + " 6"));
+		if(confirmNewPassword != null && confirmNewPassword.length() < 6)
+			ret.concat(creatReturn("confirmNewPassword",
+					getValidationMessage("password", "min", false) + " 6"));
 		return ret;
 	}
 }

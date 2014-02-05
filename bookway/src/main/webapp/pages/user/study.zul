@@ -1,6 +1,8 @@
 <?page title="Bookway" contentType="text/html;charset=UTF-8"?>
 <?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
 <?component name="itemstudy" macroURI="/template/component/itemstudy.zul" class="br.ueg.tcc.bookway.view.macros.ItemStudy"?>
+<?component name="itemtext" macroURI="/template/component/itemtext.zul" class="br.ueg.tcc.bookway.view.macros.ItemText"?>
+
 
 <zk>
 	<div self="@{define(content)}" hflex="1" vflex="1" align="center" >

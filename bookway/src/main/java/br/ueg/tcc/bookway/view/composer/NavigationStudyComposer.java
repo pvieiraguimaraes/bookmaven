@@ -86,8 +86,6 @@ public class NavigationStudyComposer extends
 				MarkingControl.class, null);
 	}
 
-	
-
 	@Override
 	public NavigationStudyControl getControl() {
 		return SpringFactory.getController("navigationStudyControl",
@@ -99,8 +97,6 @@ public class NavigationStudyComposer extends
 	public ItemNavigationStudy getEntityObject() {
 		return new ItemNavigationStudy();
 	}
-
-	
 
 	private LevelText getPageElement(LevelText level) {
 		 HibernateUtils.materializeProxy(level.getElements());

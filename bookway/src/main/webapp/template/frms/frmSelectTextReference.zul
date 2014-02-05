@@ -1,3 +1,5 @@
+<?component name="itemtext" macroURI="/template/component/itemtext.zul" class="br.ueg.tcc.bookway.view.macros.ItemText"?>
+
 <zk>
 	<window id="selectTextReference" title="Referenciar Conteúdo" border="normal" width="200px" 
 		position="center, center" closable="true" apply="br.ueg.tcc.bookway.view.composer.RelationshipTextElementComposer">

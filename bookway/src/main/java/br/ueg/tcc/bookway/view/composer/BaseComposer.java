@@ -2,31 +2,43 @@ package br.ueg.tcc.bookway.view.composer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Image;
 import org.zkoss.zul.Tab;
 import org.zkoss.zul.Window;
 
 import br.com.vexillum.control.GenericControl;
 import br.com.vexillum.model.ICommonEntity;
+import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.com.vexillum.view.CRUDComposer;
 import br.ueg.tcc.bookway.control.ElementsItensStudyControl;
 import br.ueg.tcc.bookway.control.NavigationStudyControl;
+import br.ueg.tcc.bookway.control.RelationshipTextUserControl;
 import br.ueg.tcc.bookway.control.StudyControl;
+import br.ueg.tcc.bookway.control.TextControl;
 import br.ueg.tcc.bookway.model.ElementText;
 import br.ueg.tcc.bookway.model.ElementsItensStudy;
 import br.ueg.tcc.bookway.model.Study;
+import br.ueg.tcc.bookway.model.Text;
+import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 import br.ueg.tcc.bookway.view.macros.ItemStudy;
+import br.ueg.tcc.bookway.view.macros.ItemText;
+import br.ueg.tcc.bookway.view.macros.MyText;
 
 @SuppressWarnings("serial")
 public abstract class BaseComposer<E extends ICommonEntity, G extends GenericControl<E>>
@@ -34,13 +46,25 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 	
 	private final String UNDER_ON = "text-decoration: underline;";
 	private final String UNDER_OFF = "text-decoration: none;";
+	
+	@Wire
+	public Checkbox myTexts;
 
 	protected BaseComposer<E, G> parentComposer;
 
 	protected List<ElementText> itensSelected;
 
+	/**
+	 * Lista que representa os Elementos de Texto que participará da referência
+	 */
+	protected List<ElementText> itensSelectedForReference;
+	
 	protected Study study;
-
+	
+	protected Text textOrign;
+	
+	protected Text textDestiny;
+	
 	protected Boolean continueStudy;
 	
 	protected Boolean isTextReferenceMode;
@@ -62,6 +86,41 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 	 */
 	protected TypePrivacy typePrivacy = TypePrivacy.PRIVADO;
 	
+	private Text selectedText;
+	
+	public Text getTextOrign() {
+		return textOrign;
+	}
+
+	public void setTextOrign(Text textOrign) {
+		this.textOrign = textOrign;
+	}
+
+	public Text getTextDestiny() {
+		return textDestiny;
+	}
+
+	public void setTextDestiny(Text textDestiny) {
+		this.textDestiny = textDestiny;
+	}
+
+	public List<ElementText> getItensSelectedForReference() {
+		return itensSelectedForReference;
+	}
+
+	public void setItensSelectedForReference(
+			List<ElementText> itensSelectedForReference) {
+		this.itensSelectedForReference = itensSelectedForReference;
+	}
+
+	public Text getSelectedText() {
+		return selectedText;
+	}
+
+	public void setSelectedText(Text selectedText) {
+		this.selectedText = selectedText;
+	}
+
 	public TypePrivacy getTypePrivacy() {
 		return typePrivacy;
 	}
@@ -166,6 +225,11 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 			itensSelected = new ArrayList<>();
 		else
 			itensSelected = (List<ElementText>) arg.get("itensSelected");
+		
+		if (arg.get("itensSelectedForReference") == null)
+			itensSelectedForReference = new ArrayList<>();
+		else
+			itensSelectedForReference = (List<ElementText>) arg.get("itensSelectedForReference");
 
 		if (arg.get("itemStudies") == null)
 			itemStudies = new ArrayList<>();
@@ -192,10 +256,25 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		else
 			study = (Study) arg.get("study");
 
+		if (arg.get("textDestiny") == null)
+			textDestiny = new Text();
+		else
+			textDestiny = (Text) arg.get("textDestiny");
+		
+		if (arg.get("textOrign") == null)
+			textOrign = new Text();
+		else
+			textOrign = (Text) arg.get("textOrign");
+		
 		if (arg.get("continueStudy") == null)
 			continueStudy = false;
 		else
 			continueStudy = (Boolean) arg.get("continueStudy");
+		
+		if (arg.get("isTextReferenceMode") == null)
+			isTextReferenceMode = false;
+		else
+			isTextReferenceMode = (Boolean) arg.get("isTextReferenceMode");
 
 		if (arg.get("newMap") == null)
 			newMap = new HashMap<>();
@@ -324,6 +403,11 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 				newMap);
 	}
 	
+	public TextControl getTextControl(HashMap<String, Object> newMap) {
+		return SpringFactory.getController("textControl", TextControl.class,
+				newMap);
+	}
+	
 	public void changeItemStyle(ItemStudy itemStudy) {
 		String style = itemStudy.contentElement.getStyle();
 		if (style == null)
@@ -440,5 +524,93 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 	
 	public List<TypePrivacy> getListTypesPrivacy() {
 		return Arrays.asList(TypePrivacy.values());
+	}
+	
+	public void resetResultListSearch() {
+		Component resultSearch = getComponentById(getComponent(),
+				"resultSearch");
+		if (resultSearch != null)
+			Components.removeAllChildren(resultSearch);
+	}
+	
+	/**
+	 * Método para setar a lista de elementos visual que represetarão o texto
+	 * que serao criados pela pesquisa ou na inicialização, listandos todos os
+	 * textos do usuário
+	 * 
+	 * @param textsUser
+	 *            , lista de textos que serão representados
+	 * @param idParent
+	 *            , component que deverá ser o pai
+	 * @param comp
+	 *            , component da execução do composer
+	 * @param nameComp
+	 *            , nome do component que será criado
+	 * @param sorted
+	 *            , se os elementos que irão compor a lista serão sorteados
+	 * @param numberOfElements
+	 *            , numero de elementos que comporão a lista
+	 */
+	public void setUpListTextInComponent(List<Text> textsUser, String idParent,
+			Component comp, String nameComp, boolean sorted,
+			Integer numberOfElements) {
+		Component componentParent = getComponentById(comp, idParent);
+		if (sorted)
+			Collections.shuffle(textsUser);
+		if (numberOfElements != null && textsUser.size() > numberOfElements)
+			textsUser = textsUser.subList(0, numberOfElements);
+		if (textsUser != null && componentParent != null) {
+			for (Text text : textsUser) {
+				if (nameComp.equalsIgnoreCase("ItemText"))
+					componentParent.appendChild(createItemText(text));
+				else
+					componentParent.appendChild(createMyText(text));
+
+			}
+		}
+	}
+	
+	/**Método que cria o objeto de estudo caso não existe salva no banco e
+	 * retorna ele para o usuário, para se relacionar com os outros objetos
+	 * @param text
+	 * @return
+	 */
+	public Study createStudy(Text text) {
+		study = new Study();
+		study.setDateStudy(new Date());
+		study.setText(text);
+		study.setUserBookway((UserBookway) getUserLogged());
+		
+		Return ret = saveOrUpdateStudy();
+
+		if (ret.isValid())
+			return getStudyControl(null).getThisStudy(study);
+		return null;
+	}
+	
+	private ItemText createItemText(Text text) {
+		setSelectedText(text);
+		boolean has = getRelationshipTextUserControl().verifyUserHasText();
+		ItemText item = new ItemText((UserBookway) userLogged, text, has, isTextReferenceMode);
+		String userOwning = text.getUserOwning() != null ? text.getUserOwning()
+				.getName() : "";
+		item.setUser(userOwning);
+		item.setTitle(text.getTitle());
+		item.setDescription(text.getDescription());
+		item.setIdText(String.valueOf(text.getId()));
+		return item;
+	}
+
+	private MyText createMyText(Text text) {
+		MyText myText = new MyText();
+		myText.setTitle(text.getTitle());
+		myText.setDescription(text.getDescription());
+		return myText;
+	}
+	
+	public RelationshipTextUserControl getRelationshipTextUserControl() {
+		return SpringFactory.getController("relationshipTextUserControl",
+				RelationshipTextUserControl.class,
+				ReflectionUtils.prepareDataForPersistence(this));
 	}
 }
