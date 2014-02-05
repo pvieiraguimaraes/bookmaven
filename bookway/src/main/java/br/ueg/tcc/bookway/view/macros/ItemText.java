@@ -33,26 +33,32 @@ public class ItemText extends HtmlMacroComponent {
 	private Button btnAcquire;
 	@Wire
 	private Button btnRemove;
+	@Wire
+	private Button btnOpen;
 
-	public ItemText(UserBookway user, Text text, boolean has) {
+	public ItemText(UserBookway user, Text text, boolean has, Boolean isTextReferenceMode) {
 		compose();
-		configureButtonsInComponent(user, text, has);
+		configureButtonsInComponent(user, text, has, isTextReferenceMode);
 	}
 
 	private void configureButtonsInComponent(UserBookway user, Text text,
-			boolean has) {
-		if (text.getUserOwning() == null)
-			btnAcquire.setVisible(true);
-		if (user == text.getUserOwning()) {
-			btnExclude.setVisible(true);
-			btnEdit.setVisible(true);
-			btnStudy.setVisible(true);
-		} else {
-			if (has) {
+			boolean has, Boolean isTextReferenceMode) {
+		if(isTextReferenceMode != null && isTextReferenceMode)
+			btnOpen.setVisible(true);
+		else {
+			if (text.getUserOwning() == null)
+				btnAcquire.setVisible(true);
+			if (user == text.getUserOwning()) {
+				btnExclude.setVisible(true);
+				btnEdit.setVisible(true);
 				btnStudy.setVisible(true);
-				btnRemove.setVisible(true);
-			} else
-				btnAdd.setVisible(true);
+			} else {
+				if (has) {
+					btnStudy.setVisible(true);
+					btnRemove.setVisible(true);
+				} else
+					btnAdd.setVisible(true);
+			}
 		}
 	}
 

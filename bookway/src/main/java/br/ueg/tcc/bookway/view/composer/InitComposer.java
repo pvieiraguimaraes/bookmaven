@@ -2,13 +2,11 @@ package br.ueg.tcc.bookway.view.composer;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
 import org.zkoss.image.AImage;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Checkbox;
@@ -39,9 +37,7 @@ import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 import br.ueg.tcc.bookway.utils.AttachmentMedia;
 import br.ueg.tcc.bookway.view.macros.ItemFriend;
-import br.ueg.tcc.bookway.view.macros.ItemText;
 import br.ueg.tcc.bookway.view.macros.MyFriend;
-import br.ueg.tcc.bookway.view.macros.MyText;
 
 @SuppressWarnings({ "serial" })
 @org.springframework.stereotype.Component
@@ -57,8 +53,6 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	protected Combobox fldTypeText;
 	
 	private List<Text> allMyTexts;
-	
-	private Text selectedText;
 	
 	private List<Study> myStudies;
 	
@@ -142,14 +136,6 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 
 	public void setMyStudies(List<Study> myStudies) {
 		this.myStudies = myStudies;
-	}
-
-	public Text getSelectedText() {
-		return selectedText;
-	}
-
-	public void setSelectedText(Text selectedText) {
-		this.selectedText = selectedText;
 	}
 
 	public List<Text> getAllMyTexts() {
@@ -298,42 +284,6 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 				ReflectionUtils.prepareDataForPersistence(this));
 	}
 
-	/**
-	 * Método para setar a lista de elementos visual que represetarão o texto
-	 * que serao criados pela pesquisa ou na inicialização, listandos todos os
-	 * textos do usuário
-	 * 
-	 * @param textsUser
-	 *            , lista de textos que serão representados
-	 * @param idParent
-	 *            , component que deverá ser o pai
-	 * @param comp
-	 *            , component da execução do composer
-	 * @param nameComp
-	 *            , nome do component que será criado
-	 * @param sorted
-	 *            , se os elementos que irão compor a lista serão sorteados
-	 * @param numberOfElements
-	 *            , numero de elementos que comporão a lista
-	 */
-	public void setUpListTextInComponent(List<Text> textsUser, String idParent,
-			Component comp, String nameComp, boolean sorted,
-			Integer numberOfElements) {
-		Component componentParent = getComponentById(comp, idParent);
-		if (sorted)
-			Collections.shuffle(textsUser);
-		if (numberOfElements != null && textsUser.size() > numberOfElements)
-			textsUser = textsUser.subList(0, numberOfElements);
-		if (textsUser != null && componentParent != null) {
-			for (Text text : textsUser) {
-				if (nameComp.equalsIgnoreCase("ItemText"))
-					componentParent.appendChild(createItemText(text));
-				else
-					componentParent.appendChild(createMyText(text));
-
-			}
-		}
-	}
 	
 	/**Método responsável por criar os componentes que envolvem a amizade, seja os elementos
 	 * da pesquisa de ou os amigos na página inicial. Os components criados serão filhos do component
@@ -383,19 +333,6 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 			return "OTHER_INVITE";
 		return "";
 	}
-
-	private ItemText createItemText(Text text) {
-		setSelectedText(text);
-		boolean has = getRelationshipTextUserControl().verifyUserHasText();
-		ItemText item = new ItemText((UserBookway) userLogged, text, has);
-		String userOwning = text.getUserOwning() != null ? text.getUserOwning()
-				.getName() : "";
-		item.setUser(userOwning);
-		item.setTitle(text.getTitle());
-		item.setDescription(text.getDescription());
-		item.setIdText(String.valueOf(text.getId()));
-		return item;
-	}
 	
 	private ItemFriend createItemFriend(UserBookway friendship, boolean hasFriend, String existInvite) {
 		ItemFriend item = new ItemFriend(friendship, hasFriend, existInvite);
@@ -403,31 +340,11 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		return item;
 	}
 
-	private MyText createMyText(Text text) {
-		MyText myText = new MyText();
-		myText.setTitle(text.getTitle());
-		myText.setDescription(text.getDescription());
-		return myText;
-	}
-
 	private MyFriend createMyFriend(UserBookway friendship) {
 		MyFriend myFriend = new MyFriend();
 		showUserBookwayPhoto(myFriend.imageUser, friendship);
 		myFriend.setTooltiptext(friendship.getName());
 		return myFriend;
-	}
-	
-	private RelationshipTextUserControl getRelationshipTextUserControl() {
-		return SpringFactory.getController("relationshipTextUserControl",
-				RelationshipTextUserControl.class,
-				ReflectionUtils.prepareDataForPersistence(this));
-	}
-	
-	public void resetResultListSearch() {
-		Component resultSearch = getComponentById(getComponent(),
-				"resultSearch");
-		if (resultSearch != null)
-			Components.removeAllChildren(resultSearch);
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })

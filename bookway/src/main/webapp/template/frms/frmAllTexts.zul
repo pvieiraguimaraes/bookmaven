@@ -19,8 +19,7 @@
 					<checkbox id="chckCommunity"
 						value="@{controller.entity.community}" label="Comunitário" />
 					<cell align="right">
-						<button label="Pesquisar"
-							onClick="controller.searchText()" />
+						<button label="Pesquisar" onClick="controller.searchText()" />
 					</cell>
 				</row>
 			</rows>

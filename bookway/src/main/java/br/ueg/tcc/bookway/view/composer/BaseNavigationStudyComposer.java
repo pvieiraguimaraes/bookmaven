@@ -50,12 +50,17 @@ public abstract class BaseNavigationStudyComposer<E extends ICommonEntity, G ext
 	}
 	
 	public void addElementTextSelected(ItemStudy itemStudy, ElementText elementText) {
-//		ElementText elementText = getControl().getElementText(
-//				Long.parseLong(itemStudy.getIdElement()));
 		if (getItensSelected().contains(elementText))
 			getItensSelected().remove(elementText);
 		else
 			getItensSelected().add(elementText);
+	}
+	
+	public void addElementTextSelectedForReference(ItemStudy itemStudy, ElementText elementText) {
+		if (getItensSelectedForReference().contains(elementText))
+			getItensSelectedForReference().remove(elementText);
+		else
+			getItensSelectedForReference().add(elementText);
 	}
 
 	public void createAmbientStudy(LevelText levelRoot) {
@@ -114,7 +119,7 @@ public abstract class BaseNavigationStudyComposer<E extends ICommonEntity, G ext
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Component addEnventForNavigationReference(ItemStudy itemStudy){
+	public Component addEnventForNavigationReference(ItemStudy itemStudy, final ElementText elementText){
 		itemStudy.addEventListener(Events.ON_CLICK,
 				new EventListener() {
 					@Override
@@ -123,7 +128,7 @@ public abstract class BaseNavigationStudyComposer<E extends ICommonEntity, G ext
 						if (event.getTarget() != null) {
 							ItemStudy item = (ItemStudy) event
 									.getTarget();
-
+							addElementTextSelectedForReference(item, elementText);
 							changeItemStyle(item);
 							addItemStudySelectedForReference(item);
 						}
@@ -211,7 +216,7 @@ public abstract class BaseNavigationStudyComposer<E extends ICommonEntity, G ext
 	
 					if (elementText.getName().equalsIgnoreCase("valor")) {
 						if (isTextReferenceMode) {
-							itemStudy = (ItemStudy) addEnventForNavigationReference(itemStudy);
+							itemStudy = (ItemStudy) addEnventForNavigationReference(itemStudy, elementText);
 						} else {
 							itemStudy = (ItemStudy) addEnventForNavigationStudy(itemStudy, elementText);
 						}
