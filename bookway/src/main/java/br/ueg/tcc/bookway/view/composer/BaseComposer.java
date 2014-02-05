@@ -61,10 +61,6 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 	
 	protected Study study;
 	
-	protected Text textOrign;
-	
-	protected Text textDestiny;
-	
 	protected Boolean continueStudy;
 	
 	protected Boolean isTextReferenceMode;
@@ -88,22 +84,6 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 	
 	private Text selectedText;
 	
-	public Text getTextOrign() {
-		return textOrign;
-	}
-
-	public void setTextOrign(Text textOrign) {
-		this.textOrign = textOrign;
-	}
-
-	public Text getTextDestiny() {
-		return textDestiny;
-	}
-
-	public void setTextDestiny(Text textDestiny) {
-		this.textDestiny = textDestiny;
-	}
-
 	public List<ElementText> getItensSelectedForReference() {
 		return itensSelectedForReference;
 	}
@@ -256,16 +236,6 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		else
 			study = (Study) arg.get("study");
 
-		if (arg.get("textDestiny") == null)
-			textDestiny = new Text();
-		else
-			textDestiny = (Text) arg.get("textDestiny");
-		
-		if (arg.get("textOrign") == null)
-			textOrign = new Text();
-		else
-			textOrign = (Text) arg.get("textOrign");
-		
 		if (arg.get("continueStudy") == null)
 			continueStudy = false;
 		else
@@ -388,6 +358,14 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		return ret;
 	}
 	
+	public void createIconsStudy(List<ItemStudy> list) {
+		for (ItemStudy itemStudy : list) {
+			Component comp = createComponentIconStudy(itemStudy);
+			if (comp != null)
+				itemStudy.appendChild(comp);
+		}
+	}
+	
 	public StudyControl getStudyControl(HashMap<String, Object> newMap) {
 		return SpringFactory.getController("studyControl", StudyControl.class,
 				newMap);
@@ -458,7 +436,8 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		if (panel != null)
 			panel.setVisible(visibility);
 		else {
-			panel = parentComposer.getComponentById(component, "panelActions");
+			if(parentComposer != null)
+				panel = parentComposer.getComponentById(component, "panelActions");
 			if (panel != null)
 				panel.setVisible(visibility);
 		}

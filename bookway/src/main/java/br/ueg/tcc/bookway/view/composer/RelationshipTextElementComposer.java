@@ -1,5 +1,6 @@
 package br.ueg.tcc.bookway.view.composer;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,10 +12,14 @@ import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.RelationshipTextElementControl;
+import br.ueg.tcc.bookway.model.ElementText;
+import br.ueg.tcc.bookway.model.ElementsItensStudy;
+import br.ueg.tcc.bookway.model.ItemRelationshipTextElement;
 import br.ueg.tcc.bookway.model.RelationshipTextElement;
 import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
+import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 import br.ueg.tcc.bookway.view.macros.ItemStudy;
 
 @SuppressWarnings("serial")
@@ -24,16 +29,6 @@ public class RelationshipTextElementComposer
 
 	private String titleText;
 	
-	private Study studyOrign;
-	
-	public Study getStudyOrign() {
-		return studyOrign;
-	}
-
-	public void setStudyOrign(Study studyOrign) {
-		this.studyOrign = studyOrign;
-	}
-
 	public String getTitleText() {
 		return titleText;
 	}
@@ -95,38 +90,143 @@ public class RelationshipTextElementComposer
 	}
 
 	public void saveRelationship() {
-		extractDataForEntity();
+		Return ret = new Return(true), retAux = new Return(true);
+		RelationshipTextElement relationshipTextElement;
+		
 		entity.setDateItem(new Date());
-//		ElementText
-//		List<ItemStudy> itensOrign = itemStudiesSelected;
-//		for (ItemStudy itemStudy : itensOrign) {
-//			itemStudy.getIdElement()
-//		}
-//		List<ItemStudy> itensDestiny = itemStudiesSelectedForReference;
+		extractDataForEntity();
+		List<ElementText> elementsOrign = extractElementsText(itemStudiesSelected);
+		List<ElementText> elementsDestuny = extractElementsText(itemStudiesSelectedForReference);
+		List<ItemRelationshipTextElement> itensRelation = generateItensRelationshipTextElement(elementsOrign, elementsDestuny);
+		entity.setItemRelationshipTextElements(itensRelation);
+		relationshipTextElement = entity;
+		
+		ret.concat(getControl().doAction("save"));
+		if(ret.isValid()){
+			entity = getRelationshipTextElement(relationshipTextElement);
+			retAux.concat(createElementsItensStudy(elementsOrign, entity, entity.getStudy()));		
+			retAux.concat(createElementsItensStudy(elementsDestuny, entity, (Study) session.getAttribute("studyDestiny")));
+		}
+		
+		if(retAux.isValid()){
+			createIconsStudy(itemStudiesSelected);
+			createIconsStudy(itemStudiesSelectedForReference);
+		}
+		
+		detachPanels();
+		resetStyleAllItens();
+	}
 
+	@SuppressWarnings("rawtypes")
+	private void resetStyleAllItens() {
+		resetStyleItens();
+		BaseComposer composer = getParentComposer();
+		if(composer != null)
+			composer.resetStyleItens();
+		composer = composer.getParentComposer();
+		if(composer != null)
+			composer.resetStyleItens();
+		composer = getNavigationStudyComposer();
+		if(composer != null)
+			composer.resetStyleItens();
+	}
+
+	private void detachPanels() {
+		Component component = getComponentById("textReference");
+		if (component != null)
+			component.detach();
+		component = getComponentById("panelSearchText");
+		if (component != null)
+			component.detach();
+		component = getComponentById("selectTextReference");
+		if (component != null)
+			component.detach();
+		
+		component = getParentComposer().getComponentById("panelSearchText");
+		if (component != null)
+			component.detach();
+	}
+
+	private RelationshipTextElement getRelationshipTextElement(
+			RelationshipTextElement relationshipTextElement) {
+		Return ret = new Return(true);
+		ret.concat(getControl().searchThisRelationship(relationshipTextElement));
+		if(ret.isValid())
+			return (RelationshipTextElement) ret.getList().get(0);
+		return null;
+	}
+
+	private Return createElementsItensStudy(List<ElementText> list, RelationshipTextElement relation, Study study) {
+		ElementsItensStudy elementsItensStudy;
+		
+		for (ElementText elementText : list) {
+			elementsItensStudy = new ElementsItensStudy();
+			elementsItensStudy.setElementText(elementText);
+			elementsItensStudy.setItemOfStudy(relation);
+			elementsItensStudy.setStudy(study);
+			elementsItensStudies.add(elementsItensStudy);
+		}
+		
+		return saveElementsItensStudy();
+	}
+
+	private List<ItemRelationshipTextElement> generateItensRelationshipTextElement(
+			List<ElementText> elementsOrign, List<ElementText> elementsDestuny) {
+		List<ItemRelationshipTextElement> list = new ArrayList<ItemRelationshipTextElement>();
+		ItemRelationshipTextElement item;
+		for (ElementText elementOrign : elementsOrign) {
+			for (ElementText elementDestiny : elementsDestuny) {
+				item = new ItemRelationshipTextElement();
+				item.setElementTextOrign(elementOrign);
+				item.setElementTextDestiny(elementDestiny);
+				item.setRelationshipTextElement(entity);
+				list.add(item);
+			}
+		}
+		return list;
+	}
+
+	private List<ElementText> extractElementsText(List<ItemStudy> itens) {
+		List<ElementText> list = new ArrayList<ElementText>();
+		ElementText elementText;
+		for (ItemStudy itemStudy : itens) {
+			elementText = new ElementText();
+			elementText = getNavigationStudyControl(null).getElementText(
+					Long.parseLong(itemStudy.getIdElement()));
+			list.add(HibernateUtils.materializeProxy(elementText));
+		}
+		return list;
+	}
+
+	private void extractDataForEntity() {
+		entity.setStudy((Study) session.getAttribute("studyOrign"));
+		entity.setTextOrigin((Text) session.getAttribute("textOrign"));
+		entity.setTextDestiny((Text) session.getAttribute("textDestiny"));
+		entity.setTypePrivacy((TypePrivacy) session.getAttribute("typePrivacy"));
 	}
 
 	public void callThisTextForReference() {
+		session.setAttribute("studyOrign", study);
+		session.setAttribute("studyDestiny", study);
+		session.setAttribute("textOrign", HibernateUtils.materializeProxy(study.getText()));
+		session.setAttribute("textDestiny", HibernateUtils.materializeProxy(study.getText()));
+		session.setAttribute("typePrivacy", getTypePrivacy());
+		openTextForStudy();
+	}
+
+	private void openTextForStudy() {
 		session.setAttribute("isTextReferenceMode", true);
 		session.setAttribute("study", study);
-		Text text = HibernateUtils.materializeProxy(study.getText());
-		setTextOrign(text);
-		setTextDestiny(text);
-		setStudyOrign(study);
 		callModalWindow("/template/frms/frmTextReference.zul");
 	}
 	
 	public void callSearchTextForReference() {
 		session.setAttribute("isTextReferenceMode", true);
 		session.setAttribute("itensStudiesTextOrigin", itemStudiesSelected);
-		setStudyOrign(study);
+		session.setAttribute("studyOrign", study);
+		session.setAttribute("textOrign", HibernateUtils.materializeProxy(study.getText()));
+		session.setAttribute("typePrivacy", getTypePrivacy());
 		callModalWindow("/template/frms/panelSearchText.zul");
-	}
-
-	private void extractDataForEntity() {
-		entity.setStudy(getStudyOrign());
-		entity.setTextOrigin(getTextOrign());
-		entity.setTextDestiny(getTextDestiny());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -144,11 +244,9 @@ public class RelationshipTextElementComposer
 		setUpListTextInComponent((List<Text>) ret.getList(), "resultSearch",
 				getComponent(), "ItemText", false, null);
 	}
-
 	
 	public void openText(String idText) {
 		Text text = getTextControl(null).getTextById(Long.parseLong(idText));
-		entity.setTextDestiny(text);
 		Study study = new Study();
 		study.setUserBookway((UserBookway) getUserLogged());
 		study.setText(text);
@@ -157,8 +255,9 @@ public class RelationshipTextElementComposer
 			setStudy(study);
 		else
 			setStudy(createStudy(text));
-		setTextDestiny(HibernateUtils.materializeProxy(getStudy().getText()));
-		callThisTextForReference();
+		session.setAttribute("studyDestiny", getStudy());
+		session.setAttribute("textDestiny", text);
+		openTextForStudy();
 	}
 
 }

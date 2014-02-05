@@ -29,9 +29,22 @@ import br.ueg.tcc.bookway.view.macros.ItemStudy;
 public abstract class BaseNavigationStudyComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		extends BaseComposer<E, G> {
 	
+	private NavigationStudyComposer navigationStudyComposer;
+
+	public NavigationStudyComposer getNavigationStudyComposer() {
+		return navigationStudyComposer;
+	}
+
+	public void setNavigationStudyComposer(
+			NavigationStudyComposer navigationStudyComposer) {
+		this.navigationStudyComposer = navigationStudyComposer;
+	}
+	
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
+		if(parentComposer instanceof NavigationStudyComposer)
+			setNavigationStudyComposer((NavigationStudyComposer) parentComposer);
 		loadBinder();
 	}
 	
