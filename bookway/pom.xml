@@ -105,6 +105,13 @@
 			<version>0.0.1-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
+		<!-- Dependencia com a módulo de redes sociais -->
+		<dependency>
+			<groupId>br.com.vexillum</groupId>
+			<artifactId>vexsocial</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>compile</scope>
+		</dependency>
 		<!-- Dependencia com AspectJ para geração de Logs de erros -->
 		<dependency>
 			<groupId>org.aspectj</groupId>

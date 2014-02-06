@@ -7,6 +7,9 @@
         <dependent-module archiveName="vexillum-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/vexillum/vexillum">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="vexsocial-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/vexsocial/vexsocial">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="bookway"/>
         <property name="java-output-path" value="/bookway/target/classes"/>
     </wb-module>

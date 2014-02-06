@@ -1,5 +1,6 @@
 package br.ueg.tcc.bookway.view.composer;
 
+import java.awt.event.ItemEvent;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
@@ -104,7 +105,31 @@ public class NavigationStudyComposer extends
 		
 		return null;
 	}
+	
+	public void shareInFacebook(){
+		String message = "Está estudando os itens \"" + extractContentForShare() + "\" do texto \"" + study.getText().getTitle() + "\"";
+		postStatusMessageFacebook(message );
+		getComponentById("selectSocialWeb").detach();
+	}
 
+	private String extractContentForShare() {
+		String itensSharing = "";
+		for (ElementText elem : itensSelected) {
+			itensSharing += elem.getValue() + " ";
+		}
+		return itensSharing;
+	}
+	
+	public void shareInTwitter(){
+		String message = "Está estudando os itens \"" + extractContentForShare() + "\" do texto \"" + study.getText().getTitle() + "\"";
+		updateStatusTwitter(message);
+		getComponentById("selectSocialWeb").detach();
+	}
+	
+	public void shareInGooglePlus(){
+		
+	}
+	
 	@Override
 	protected String getUpdatePage() {
 		return null;

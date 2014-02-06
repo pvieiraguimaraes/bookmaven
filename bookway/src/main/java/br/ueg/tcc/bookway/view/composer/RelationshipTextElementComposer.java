@@ -115,6 +115,8 @@ public class RelationshipTextElementComposer
 		
 		detachPanels();
 		resetStyleAllItens();
+		treatReturn(ret);
+		loadBinder();
 	}
 
 	@SuppressWarnings("rawtypes")

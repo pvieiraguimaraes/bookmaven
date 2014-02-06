@@ -24,7 +24,7 @@ import br.com.vexillum.model.ICommonEntity;
 import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
-import br.com.vexillum.view.CRUDComposer;
+import br.com.vexillum.vexsocial.view.composer.SocialComposer;
 import br.ueg.tcc.bookway.control.ElementsItensStudyControl;
 import br.ueg.tcc.bookway.control.NavigationStudyControl;
 import br.ueg.tcc.bookway.control.RelationshipTextUserControl;
@@ -42,7 +42,7 @@ import br.ueg.tcc.bookway.view.macros.MyText;
 
 @SuppressWarnings("serial")
 public abstract class BaseComposer<E extends ICommonEntity, G extends GenericControl<E>>
-		extends CRUDComposer<E, G> {
+		extends SocialComposer<E, G> {
 	
 	private final String UNDER_ON = "text-decoration: underline;";
 	private final String UNDER_OFF = "text-decoration: none;";

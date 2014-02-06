@@ -20,6 +20,7 @@ import br.ueg.tcc.bookway.control.ElementsItensStudyControl;
 import br.ueg.tcc.bookway.model.Annotation;
 import br.ueg.tcc.bookway.model.ElementText;
 import br.ueg.tcc.bookway.model.ElementsItensStudy;
+import br.ueg.tcc.bookway.model.ItemRelationshipTextElement;
 import br.ueg.tcc.bookway.model.ItensOfStudy;
 import br.ueg.tcc.bookway.model.MarkingOfUser;
 import br.ueg.tcc.bookway.model.MarkingUsed;
@@ -154,11 +155,17 @@ public class ElementsItensStudyComposer extends
 		tabpanel.appendChild(vlayout);
 		tabpanels.appendChild(tabpanel);
 		
-//		for (RelationshipTextElement relation : getRelationshipTextElements()()) {
-//			MarkingOfUser markingOfUser = markingUsed.getMarkingOfUser();
-			//TODO Colocar pra funcionar a visibilidade dos botões.
-//			vlayout.appendChild(new ItemOfPanel("MarkingOfUser", markingOfUser.getName(), null, markingOfUser.getColor(), true, true, false, true, false, false));
-//		}
+		String content = "";
+		for (RelationshipTextElement relation : getRelationshipTextElements()) {
+			List<ItemRelationshipTextElement> itens = relation.getItemRelationshipTextElements();
+			for (ItemRelationshipTextElement itemRelationshipTextElement : itens) {
+				content = itemRelationshipTextElement.getElementTextDestiny().getValue() + " " +
+				itemRelationshipTextElement.getElementTextOrign().getValue();
+				
+				vlayout.appendChild(new ItemOfPanel("Relationship", null, content, null, false, false, true, false, false, false));
+
+			}
+		}
 		
 		return tab;
 	}
