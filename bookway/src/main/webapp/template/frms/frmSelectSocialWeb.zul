@@ -1,0 +1,10 @@
+<zk>
+	<window id="selectSocialWeb" title="Compartilhar nas Redes Sociais" border="normal" 
+		position="center, center" closable="true" apply="br.ueg.tcc.bookway.view.composer.NavigationStudyComposer">
+		<hlayout>
+			<image src="/images/facebook.png" onClick="controller.shareInFacebook()"/>
+			<image src="/images/twitter.png" onClick="controller.shareInTwitter()"/>
+			<image src="/images/googleplus.png" onClick="controller.shareInGooglePlus()"/>
+		</hlayout>
+	</window>
+</zk>

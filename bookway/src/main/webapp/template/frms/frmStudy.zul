@@ -10,7 +10,7 @@
 				onClick='controller.callModalWindow("/pages/marking/modalMarkingUser.zul")' />
 			<button label="Referência"
 				onClick='controller.callModalWindow("/template/frms/frmSelectTextReference.zul")' />
-			<button label="Compartilhar" />
+			<button label="Compartilhar" onClick='controller.callModalWindow("/template/frms/frmSelectSocialWeb.zul")' />
 		</div>
 		<tabbox id="panelStudy" width="90%" height="auto"
 			style="padding-top: 50px;">

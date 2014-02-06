@@ -67,7 +67,16 @@
 		<property name="pathName" value="properties/config/configuration.properties"/>
 	</bean>
 	
-	     <!-- DAOs -->
+	
+	<!-- Beans da comunicação com as Redes Sociais -->
+	<bean id="socialConnections" class="br.com.vexillum.vexsocial.core.SocialConnections" scope="session"/>
+	
+	<bean id="socialProperties" class="br.com.vexillum.configuration.Properties">
+		<property name="pathName" value="properties/social/social.properties"/>
+ 	</bean>
+	
+
+    <!-- DAOs -->
     <bean id="genericPersistence" class="br.com.vexillum.control.persistence.GenericPersistence">
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>

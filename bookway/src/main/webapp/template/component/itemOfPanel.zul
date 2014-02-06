@@ -14,4 +14,13 @@
 			</hlayout>
 		</div>
 	</div>
+	<div id="relationship" sclass="well itemofpanel" width="360px">
+		<label id="relationshipItens" width="100%" value="${arg.descriptionItem}" />
+		<div align="right" style="padding-top: 20px;">
+			<hlayout hflex="1">
+				<button id="btnEditRelationship" label="Editar" visible="false" />
+				<button id="btnExcludeRelationship" label="Excluir" visible="false" />
+			</hlayout>
+		</div>
+	</div>
 </zk>

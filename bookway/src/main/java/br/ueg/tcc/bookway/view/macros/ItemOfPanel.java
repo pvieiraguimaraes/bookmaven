@@ -30,10 +30,19 @@ public class ItemOfPanel extends HtmlMacroComponent {
 	private Button btnExcludeAnnot;
 	
 	@Wire
+	private Button btnEditRelationship;
+	
+	@Wire
+	private Button btnExcludeRelationship;
+	
+	@Wire
 	private Div marking;
 	
 	@Wire
 	private Div annotation;
+	
+	@Wire
+	private Div relationship;
 
 	public ItemOfPanel() {
 		compose();
@@ -52,6 +61,7 @@ public class ItemOfPanel extends HtmlMacroComponent {
 		if (typeItem.equalsIgnoreCase("MarkingOfUser")) {
 			marking.setVisible(true);
 			annotation.setVisible(false);
+			relationship.setVisible(false);
 			if(backgroundColor != null)
 				marking.setStyle("background-color: " + backgroundColor);
 			setMarking(title);
@@ -62,12 +72,23 @@ public class ItemOfPanel extends HtmlMacroComponent {
 		if (typeItem.equalsIgnoreCase("Annotation")) {
 			annotation.setVisible(true);
 			marking.setVisible(false);
+			relationship.setVisible(false);
 			setTitle(title);
 			titleItem.setVisible(titleVisible);
 			setDescription(description);
 			descriptionItem.setVisible(descriptionVisible);
 			btnEditAnnot.setVisible(btnEditAnnotVisible);
 			btnExcludeAnnot.setVisible(btnExcludeAnnotVisible);
+		}
+		
+		if (typeItem.equalsIgnoreCase("Relationship")){
+			annotation.setVisible(true);
+			marking.setVisible(false);
+			relationship.setVisible(false);
+			setDescription(description);
+			descriptionItem.setVisible(descriptionVisible);
+			btnEditRelationship.setVisible(true);
+			btnExcludeRelationship.setVisible(true);
 		}
 	}
 	
