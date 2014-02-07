@@ -16,6 +16,8 @@
 			access="ROLE_USER" />
 			<security:intercept-url pattern="/pages/annotation/**"
 			access="ROLE_USER" />
+			<security:intercept-url pattern="/pages/relationship/**"
+			access="ROLE_USER" />
 			<security:intercept-url pattern="/pages/marking/**"
 			access="ROLE_USER" />
 		<security:intercept-url pattern="/pages/**"

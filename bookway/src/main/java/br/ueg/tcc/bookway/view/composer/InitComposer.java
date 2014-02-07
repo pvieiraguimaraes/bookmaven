@@ -29,9 +29,6 @@ import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.FriendshipBookwayControl;
-import br.ueg.tcc.bookway.control.RelationshipTextUserControl;
-import br.ueg.tcc.bookway.control.TextControl;
-import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.model.enums.TypePrivacy;
@@ -51,10 +48,6 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	protected Checkbox chckTypeText;
 	@Wire
 	protected Combobox fldTypeText;
-	
-	private List<Text> allMyTexts;
-	
-	private List<Study> myStudies;
 	
 	private List<Friendship> allMyFriends;
 	
@@ -130,22 +123,6 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		this.allMyFriends = allMyFriends;
 	}
 
-	public List<Study> getMyStudies() {
-		return myStudies;
-	}
-
-	public void setMyStudies(List<Study> myStudies) {
-		this.myStudies = myStudies;
-	}
-
-	public List<Text> getAllMyTexts() {
-		return allMyTexts;
-	}
-
-	public void setAllMyTexts(List<Text> allMyTexts) {
-		this.allMyTexts = allMyTexts;
-	}
-
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		String page = Executions.getCurrent().getDesktop().getRequestPath();
@@ -161,20 +138,6 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		createElementsInvitesRequests();
 	}
 	
-	public void loadListText() {
-		List<Study> studies = getMyStudies();
-		List<Text> texts = getAllMyTexts();
-
-		for (Study study : studies) {
-			Text text = study.getText();
-			if (!texts.contains(text)) {
-				texts.remove(text);
-			}
-		}
-
-		setAllMyTexts(texts);
-	}
-
 	@SuppressWarnings("unchecked")
 	private void loadListRequestsInvites() {
 		setUser((UserBookway) getUserLogged());
@@ -234,26 +197,16 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	}
 	
 	public void initListTypeText() {
-		setListTypesText(getControlText().initTypesText());
+		setListTypesText(getTextControl(null).initTypesText());
 	}
 
-	@SuppressWarnings("unchecked")
 	public void createListTextUser() {
-		Return retListText = new Return(true);
-		List<Text> listTextUser = new ArrayList<>();
-		retListText.concat(getControlText().listTextsUser());
-		if (retListText.isValid()) {
-			listTextUser = (List<Text>) retListText.getList();
-			retListText = new Return(true);
-			retListText.concat(getRelationControl().listTextAddOfUser());
-		}
-		if (retListText.isValid())
-			listTextUser.addAll((List<Text>) retListText.getList());
+		List<Text> listTextUser = getAllTextsOfUser();
 		setAllMyTexts(listTextUser);
-		setUpListTextInComponent(getAllMyTexts(), "panelMyTexts", getComponent(),
+		setUpListTextInComponent(listTextUser, "panelMyTexts", getComponent(),
 				"MyText", true, 4);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public void createListFriendshipUser() {
 		Return ret = new Return(true);
@@ -281,17 +234,6 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		return friends;
 	}
 
-	private TextControl getControlText() {
-		return SpringFactory.getController("textControl", TextControl.class,
-				ReflectionUtils.prepareDataForPersistence(this));
-	}
-
-	private RelationshipTextUserControl getRelationControl() {
-		return SpringFactory.getController("relationshipTextUserControl",
-				RelationshipTextUserControl.class,
-				ReflectionUtils.prepareDataForPersistence(this));
-	}
-	
 	private FriendshipBookwayControl getFriendshipControl() {
 		return SpringFactory.getController("friendshipBookwayControl",
 				FriendshipBookwayControl.class,
