@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import br.com.vexillum.model.annotations.ValidatorClass;
 
@@ -28,6 +29,17 @@ public class RelationshipTextElement extends ItensOfStudy {
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "relationshipTextElement", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ItemRelationshipTextElement> itemRelationshipTextElements;
+
+	@Transient
+	private String contentItensRelationship;
+	
+	public String getContentItensRelationship() {
+		return contentItensRelationship;
+	}
+
+	public void setContentItensRelationship(String contentItensRelationship) {
+		this.contentItensRelationship = contentItensRelationship;
+	}
 
 	public Text getTextOrigin() {
 		return textOrigin;
@@ -52,6 +64,14 @@ public class RelationshipTextElement extends ItensOfStudy {
 	public void setItemRelationshipTextElements(
 			List<ItemRelationshipTextElement> itemRelationshipTextElements) {
 		this.itemRelationshipTextElements = itemRelationshipTextElements;
+		String aux = "";
+		if(itemRelationshipTextElements != null && !itemRelationshipTextElements.isEmpty()){
+			for (ItemRelationshipTextElement itemRelationshipTextElement : itemRelationshipTextElements) {
+				contentItensRelationship += itemRelationshipTextElement.getElementTextOrign() + " ";
+				aux += itemRelationshipTextElement.getElementTextDestiny() + " ";
+			}
+			contentItensRelationship += aux;
+		}
 	}
 
 }

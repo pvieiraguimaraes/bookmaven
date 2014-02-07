@@ -13,6 +13,8 @@ import org.zkoss.zul.Tabpanels;
 import org.zkoss.zul.Tabs;
 
 import br.com.vexillum.control.GenericControl;
+import br.com.vexillum.control.manager.ConfigurationManager;
+import br.com.vexillum.model.Configuration;
 import br.com.vexillum.model.ICommonEntity;
 import br.com.vexillum.util.HibernateUtils;
 import br.com.vexillum.util.Return;
@@ -96,7 +98,7 @@ public abstract class BaseNavigationStudyComposer<E extends ICommonEntity, G ext
 	public Component createTabPanelStudy(Study study, LevelText rootLevel) {
 		Tabpanel tabpanel = new Tabpanel();
 		tabpanel.setSclass("tabpanelstudy");
-		tabpanel.setStyle("text-align: justify;");
+		tabpanel.setStyle("text-align: justify; background-color: " + getThisConfigurationValue("color_background").getValue() + ";");
 		
 //		if (continueStudy) {
 //			LevelText page = getPageElement(study.getLastElementStop().getIdLevel());
@@ -172,6 +174,11 @@ public abstract class BaseNavigationStudyComposer<E extends ICommonEntity, G ext
 		return itemStudy;
 	}
 	
+	private Configuration getThisConfigurationValue(String key) {
+		return ConfigurationManager.getManager().getConfigurationInstance(key,
+				getUserLogged());
+	}
+	
 	public MarkingOfUser checkExistingMarking(List<ElementsItensStudy> list) {
 		List<MarkingUsed> markingUseds = new ArrayList<MarkingUsed>();
 		MarkingUsed resultMark = null;
@@ -233,6 +240,8 @@ public abstract class BaseNavigationStudyComposer<E extends ICommonEntity, G ext
 						} else {
 							itemStudy = (ItemStudy) addEnventForNavigationStudy(itemStudy, elementText);
 						}
+						
+						itemStudy.contentElement.setStyle("font-size: "+getThisConfigurationValue("size_font").getValue()+"px;");
 						
 						retAux = checkExistingItensStudies(elementText, getStudy());
 						if(retAux.isValid() && !retAux.getList().isEmpty())

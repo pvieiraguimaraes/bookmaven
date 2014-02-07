@@ -261,5 +261,18 @@ public class RelationshipTextElementComposer
 		session.setAttribute("textDestiny", text);
 		openTextForStudy();
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public Return searchRelationship(){
+		Return ret = getControl().doAction("searchRelationship");
+		if (ret.isValid() && !ret.getList().isEmpty()) {
+			setListEntity((List<RelationshipTextElement>) ret.getList());
+			getComponentById("resultList").setVisible(true);
+			loadBinder();
+		}
+		return ret;
+	}
+	
+	public void editRelationship(){}
+	public void deleteRelationship(){}
 }

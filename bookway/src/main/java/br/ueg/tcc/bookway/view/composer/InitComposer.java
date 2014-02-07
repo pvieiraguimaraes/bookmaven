@@ -160,6 +160,20 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		loadListRequestsInvites();
 		createElementsInvitesRequests();
 	}
+	
+	public void loadListText() {
+		List<Study> studies = getMyStudies();
+		List<Text> texts = getAllMyTexts();
+
+		for (Study study : studies) {
+			Text text = study.getText();
+			if (!texts.contains(text)) {
+				texts.remove(text);
+			}
+		}
+
+		setAllMyTexts(texts);
+	}
 
 	@SuppressWarnings("unchecked")
 	private void loadListRequestsInvites() {

@@ -18,7 +18,6 @@ import br.ueg.tcc.bookway.model.Annotation;
 import br.ueg.tcc.bookway.model.ElementText;
 import br.ueg.tcc.bookway.model.ElementsItensStudy;
 import br.ueg.tcc.bookway.model.Study;
-import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 
@@ -110,20 +109,6 @@ public class AnnotationComposer extends
 		if(ret.isValid())
 			return (Annotation) ret.getList().get(0);
 		return null;
-	}
-
-	public void loadListText() {
-		List<Study> studies = getMyStudies();
-		List<Text> texts = getAllMyTexts();
-
-		for (Study study : studies) {
-			Text text = study.getText();
-			if (!texts.contains(text)) {
-				texts.remove(text);
-			}
-		}
-
-		setAllMyTexts(texts);
 	}
 
 	private StudyControl getStudyControl() {
