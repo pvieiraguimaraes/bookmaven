@@ -61,6 +61,10 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 	
 	protected Study study;
 	
+	private List<Text> allMyTexts;
+	
+	private List<Study> myStudies;
+	
 	protected Boolean continueStudy;
 	
 	protected Boolean isTextReferenceMode;
@@ -84,6 +88,22 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 	
 	private Text selectedText;
 	
+	public List<Text> getAllMyTexts() {
+		return allMyTexts;
+	}
+
+	public List<Study> getMyStudies() {
+		return myStudies;
+	}
+
+	public void setMyStudies(List<Study> myStudies) {
+		this.myStudies = myStudies;
+	}
+
+	public void setAllMyTexts(List<Text> allMyTexts) {
+		this.allMyTexts = allMyTexts;
+	}
+
 	public List<ElementText> getItensSelectedForReference() {
 		return itensSelectedForReference;
 	}
@@ -198,6 +218,38 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		initUpdatePage();
 		setParentComposer((BaseComposer<E, G>) arg.get("thisComposer"));
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<Text> getAllTextsOfUser() {
+		Return retListText = new Return(true);
+		List<Text> listTextUser = new ArrayList<>();
+		newMap.put("userLogged", getUserLogged());
+		retListText.concat(getTextControl(newMap).listTextsUser());
+		if (retListText.isValid()) {
+			listTextUser = (List<Text>) retListText.getList();
+			retListText = new Return(true);
+			retListText.concat(getRelationshipTextUserControl().listTextAddOfUser());
+		}
+		if (retListText.isValid())
+			listTextUser.addAll((List<Text>) retListText.getList());
+		return listTextUser;
+	}
+	
+	public void loadListText() {
+		List<Study> studies = getStudyControl(null).getMyStudies((UserBookway) getUserLogged());
+		List<Text> texts = getAllTextsOfUser();
+
+		for (Study study : studies) {
+			Text text = study.getText();
+			if (!texts.contains(text)) {
+				texts.remove(text);
+			}
+		}
+
+		setAllMyTexts(texts);
+		loadBinder();
+	}
+
 
 	@SuppressWarnings("unchecked")
 	private void initObjects() {
