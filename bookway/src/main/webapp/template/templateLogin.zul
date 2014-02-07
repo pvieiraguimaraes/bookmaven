@@ -1,0 +1,22 @@
+<?page title="Posicões da tela" contentType="text/html;charset=UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<zk>
+	<style src="/css/cerulean.css" />
+	<style src="/css/bookway.css" />
+	<borderlayout hflex="0" vflex="0">
+		<north height="7%" border="none">
+			<div>
+				<include src="/template/menu/navbarlogin.zul" />
+			</div>
+
+		</north>
+		<west width="8%" border="none"></west>
+		<east width="8%" border="none"></east>
+		<center self="@insert(content)" border="none">
+
+		</center>
+		<south height="7%" border="none">
+			<include src="/template/menu/footer.zul" />
+		</south>
+	</borderlayout>
+</zk>

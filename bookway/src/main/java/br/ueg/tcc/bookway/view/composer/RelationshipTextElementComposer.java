@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Listitem;
 
 import br.com.vexillum.util.HibernateUtils;
 import br.com.vexillum.util.ReflectionUtils;
@@ -61,9 +63,13 @@ public class RelationshipTextElementComposer
 		if (study != null)
 			createAmbientStudy(HibernateUtils
 					.materializeProxy(getNavigationStudyControl(null)
-							.getLevelText(
-									study.getText().getRootLevelText().getId())));
-
+							.getLevelText(study.getText().getRootLevelText().getId())));
+		
+//		List<ItemRelationshipTextElement> itens = (List<ItemRelationshipTextElement>) session.getAttribute("yetSelectedRelationshipItens");
+//		if(itens != null && !itens.isEmpty())
+//			
+//			changeItemStyle(itemStudy);
+			
 		loadBinder();
 	}
 
@@ -74,7 +80,7 @@ public class RelationshipTextElementComposer
 
 	@Override
 	protected String getDeactivationMessage() {
-		return null;
+		return "Deseja realmente excluir esta referência?";
 	}
 
 	@Override
@@ -265,14 +271,90 @@ public class RelationshipTextElementComposer
 	@SuppressWarnings("unchecked")
 	public Return searchRelationship(){
 		Return ret = getControl().doAction("searchRelationship");
+		List<RelationshipTextElement> resultList = null;
 		if (ret.isValid() && !ret.getList().isEmpty()) {
-			setListEntity((List<RelationshipTextElement>) ret.getList());
+			resultList  = (List<RelationshipTextElement>) ret.getList();
+			resultList = generateListRelationship(resultList);
+			setListEntity(resultList);
 			getComponentById("resultList").setVisible(true);
 			loadBinder();
 		}
 		return ret;
 	}
 	
-	public void editRelationship(){}
-	public void deleteRelationship(){}
+	private List<RelationshipTextElement> generateListRelationship(
+			List<RelationshipTextElement> resultList) {
+		String auxDest = "", auxOrig = "";
+		for (RelationshipTextElement relationshipTextElement : resultList) {
+			List<ItemRelationshipTextElement> itemRelationshipTextElements = relationshipTextElement
+					.getItemRelationshipTextElements();
+			if (itemRelationshipTextElements != null
+					&& !itemRelationshipTextElements.isEmpty()) {
+				for (ItemRelationshipTextElement itemRelationshipTextElement : itemRelationshipTextElements) {
+					auxOrig += itemRelationshipTextElement.getElementTextOrign().getValue() + " ";
+					auxDest += itemRelationshipTextElement.getElementTextDestiny().getValue() + " ";
+				}
+				relationshipTextElement.setContentItensRelationship(auxOrig + auxDest);
+				auxOrig = ""; auxDest = "";
+			}
+		}
+
+		return resultList;
+	}
+
+	private void getSelectedEntityFromListbox() {
+		Listbox listbox = (Listbox) getComponentById("resultList");
+		int index = 0;
+		if (listbox != null) {
+			Listitem selectedItem = listbox.getSelectedItem();
+			if (selectedItem != null) {
+				index = selectedItem.getIndex();
+				RelationshipTextElement rel = (RelationshipTextElement) listbox.getModel().getElementAt(
+						index);
+				selectedEntity = rel;
+			}
+		}
+	}
+	
+	public void editRelationship(){
+		getSelectedEntityFromListbox();
+		setStudy(selectedEntity.getStudy());
+		extractElementsAndItensStudy(selectedEntity.getItemRelationshipTextElements());
+		openTextForStudy();
+	}
+	
+	
+	private void extractElementsAndItensStudy(List<ItemRelationshipTextElement> itemRelationshipTextElements) {
+		List<ElementText> elementTextsOrign = new ArrayList<ElementText>(), elementTextsDestiny = new ArrayList<ElementText>();
+		List<String> itemStudiesOrign = new ArrayList<String>(), itemStudiesDestiny = new ArrayList<String>();
+		
+		for (ItemRelationshipTextElement itemRelationshipTextElement : itemRelationshipTextElements) {
+			ElementText itemDestiny = HibernateUtils.materializeProxy(itemRelationshipTextElement.getElementTextDestiny());
+			ElementText itemOrign = HibernateUtils.materializeProxy(itemRelationshipTextElement.getElementTextOrign());
+
+			elementTextsDestiny.add(itemDestiny);
+			itemStudiesDestiny.add(itemDestiny.getId().toString());
+			
+			elementTextsOrign.add(itemOrign);
+			itemStudiesOrign.add(itemOrign.getId().toString());
+		}
+		
+		session.setAttribute("yetSelectedRelationshipItens", HibernateUtils.materializeProxy(selectedEntity.getItemRelationshipTextElements()));
+	}
+
+	public void deleteRelationship(){
+		getSelectedEntityFromListbox();
+		entity = getSelectedEntity();
+		showActionConfirmation(getDeactivationMessage(), "deleteThisRelationship");
+		loadBinder();
+	}
+	
+	public Return deleteThisRelationship(){
+		RelationshipTextElement thisRel = entity;
+		Return ret = getControl().doAction("delete");
+		if(ret.isValid())
+			listEntity.remove(thisRel);
+		loadBinder();
+		return ret;
+	}
 }

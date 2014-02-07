@@ -32,6 +32,10 @@ public class RelationshipTextElement extends ItensOfStudy {
 
 	@Transient
 	private String contentItensRelationship;
+
+	public RelationshipTextElement() {
+		contentItensRelationship = "";
+	}
 	
 	public String getContentItensRelationship() {
 		return contentItensRelationship;
@@ -63,15 +67,6 @@ public class RelationshipTextElement extends ItensOfStudy {
 
 	public void setItemRelationshipTextElements(
 			List<ItemRelationshipTextElement> itemRelationshipTextElements) {
-		this.itemRelationshipTextElements = itemRelationshipTextElements;
-		String aux = "";
-		if(itemRelationshipTextElements != null && !itemRelationshipTextElements.isEmpty()){
-			for (ItemRelationshipTextElement itemRelationshipTextElement : itemRelationshipTextElements) {
-				contentItensRelationship += itemRelationshipTextElement.getElementTextOrign() + " ";
-				aux += itemRelationshipTextElement.getElementTextDestiny() + " ";
-			}
-			contentItensRelationship += aux;
-		}
 	}
 
 }

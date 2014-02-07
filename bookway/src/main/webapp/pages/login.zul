@@ -1,30 +1,46 @@
-<?page title="" contentType="text/html;charset=UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<?page title="Login"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/templateLogin.zul"?>
 <zk xmlns:h="native">
-	<window border="normal" width="300px" mode="modal" position="center" onCreate="j_username.focus();">
-		<h:form id="f" name="f" action="/bookway/j_spring_security_check" method="POST">
-			<grid>
-				<rows>
-					<row>
-						<label value="E-mail:" onClick="j_username.focus();" />
-						<textbox id="j_username" name="j_username" />
-					</row>
-					<row>
-						<label value="Senha:" onClick="j_password.focus();" />
-						<textbox id="j_password" type="password" name="j_password" />
-					</row>
-					<row spans="2" if="${not empty param.error}">
-						<hbox style="color: red;">Dados inválidos!</hbox>
-					</row>
-					<row spans="2" if="${not empty param.account}">
-						<hbox style="color: red;">Conta inativa, acesse seu e-mail para ativá-la!</hbox>
-					</row>
-					<row spans="2">
-						<hbox>
-							<h:input type="submit" value="Entrar"/>
-						</hbox>
-					</row>
-				</rows>
-			</grid>
-		</h:form>
-	</window>
+	<div self="@define(content)" >
+		<vbox width="100%" align="center">
+			<image src="/images/logo.png" style="opacity: 0.3;"/>
+			<groupbox width="500px">
+				<h:form id="f" name="f" action="/bookway/j_spring_security_check" method="POST">
+					<grid sclass="nostyle" hflex="min">
+						<columns>
+							<column width="100px"/>
+							<column width="300px"/>
+						</columns>
+						<rows>
+							<row>
+								<label value="E-mail:" onClick="j_username.focus();" />
+								<textbox id="j_username" name="j_username" />
+							</row>
+							<row>
+								<label value="Senha:" onClick="j_password.focus();" />
+								<textbox id="j_password" type="password" name="j_password" />
+							</row>
+							<row spans="2" if="${not empty param.error}">
+								<hbox style="color: red;">Dados inválidos!</hbox>
+							</row>
+							<row spans="2" if="${not empty param.account}">
+								<hbox style="color: red;">Conta inativa, acesse seu e-mail para ativá-la!</hbox>
+							</row>
+							<row spans="2">
+								<hbox>
+									<div align="left" width="280px">
+										<a href="/pages/register.zul">Ainda não possui uma conta?</a>
+									</div>
+									<div align="right">
+										<button label="Entrar" type="submit" sclass="btn btn-large btn-primary"/>
+									</div>
+								</hbox>
+							</row>
+						</rows>
+					</grid>
+				</h:form>
+			</groupbox>
+		</vbox>
+	</div>
 </zk>

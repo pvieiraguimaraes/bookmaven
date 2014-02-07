@@ -93,8 +93,21 @@ public class UserComposer extends InitComposer<UserBookway, UserBookwayControl> 
 	}
 
 	public void init() {
+//		checkUsersInactives30DaysLeft();
 		setUserProfile();
 		initLists();
+	}
+
+	@SuppressWarnings("unchecked")
+	private void checkUsersInactives30DaysLeft() {
+		Return ret = getControl().doAction("chechUsersFordelete");
+		List<UserBookway> users = (List<UserBookway>) ret.getList();
+		if(ret.isValid() && !users.isEmpty()){
+			for (UserBookway userBookway : users) {
+				entity = userBookway;
+				getControl().deleteAllElementsUser();
+			}
+		}
 	}
 
 	private void initLists() {
