@@ -1,0 +1,53 @@
+<?page title="Pesquisa de Referências" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/template/template.zul" ?>
+
+<zk>
+	<div self="@{define(content)}" align="center" sclass="searchant" apply="br.ueg.tcc.bookway.view.composer.RelationshipTextElementComposer" onCreate='controller.loadListText();'>
+		<grid sclass="nostyle" hflex="min">
+			<columns>
+				<column/><column/>
+			</columns>
+			<rows>
+				<row>
+					<label value="Texto" />
+					<combobox id="fldText" width="200px" model="@{controller.allMyTexts}" selectedItem="@{controller.selectedText}" />
+				</row>
+				<row align="right" spans="2">
+					<div align="right">
+						<button label="Pesquisar" onClick='controller.doAction("searchRelationship")' sclass="btn btn-primary" />
+					</div>
+				</row>
+			</rows>		
+		</grid>
+		<listbox id="resultList" model="@{controller.listEntity}" width="620px"
+					selectedItem="@{controller.selectedEntity}" hflex="min"
+					onAfterRender='self.clearSelection();' 
+					mold="paging" pageSize='10' visible="false">
+			<listhead>
+				<listheader label="Texto Origem" width="150px"/>
+				<listheader label="Texto Destino" width="150px"/>
+				<listheader label="Itens do Relacionamento" width="350px"/>
+				<listheader label="Ação" width="120px"/>
+			</listhead>
+			<listitem self="@{each=itm}">
+			 	<listcell label="@{itm.textOrigin}"/>
+			 	<listcell label="@{itm.textDestiny}"/>
+			 	<listcell label="@{itm.contentItensRelationship}"/>
+			 	<listcell>
+			 		<button label="Alterar">
+			 			<attribute name="onClick">
+			 				resultList.setSelectedItem((Listitem)self.getParent().getParent());
+			 				controller.editRelationship();
+			 			</attribute>
+			 		</button>
+			 		<button label="Excluir">
+				 		<attribute name="onClick">
+							resultList.setSelectedItem((Listitem) self.getParent().getParent());
+							controller.deleteRelationship();
+						</attribute>
+			 		</button>
+			 	</listcell>
+			</listitem>
+		</listbox>
+	</div>
+</zk>

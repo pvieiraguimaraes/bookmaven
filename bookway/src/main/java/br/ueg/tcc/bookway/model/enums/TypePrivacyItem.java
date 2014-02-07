@@ -2,7 +2,8 @@ package br.ueg.tcc.bookway.model.enums;
 
 public enum TypePrivacyItem{
 	PUBLICO("Público"), PRIVADO("Privado"), ONLY_FRIENDS("Somente Amigos");
-
+	//0, 1, 2;
+	
 	private String name;
 
 	public String getName() {
