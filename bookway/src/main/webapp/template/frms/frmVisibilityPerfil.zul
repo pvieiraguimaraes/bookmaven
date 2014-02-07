@@ -1,0 +1,67 @@
+<zk>
+	<hbox id="frmUser">
+		<div width="300px">
+			<grid hflex="min" sclass="nostyle">
+				<columns>
+					<column />
+					<column width="165px" />
+				</columns>
+				<rows>
+					<row>
+						<label value="E-mail: " />
+						<combobox id="fldTypePrivacyEmail" width="150px"
+							model="@{controller.listTypesPrivacyItem}"
+							selectedItem="@{controller.typePrivacyEntity.email}" />
+					</row>
+					<row>
+						<label value="Data Nascimento: " />
+						<combobox id="fldTypePrivacybirthDate" width="150px"
+							model="@{controller.listTypesPrivacyItem}"
+							selectedItem="@{controller.typePrivacyEntity.birthDate}" />
+					</row>
+					<row>
+						<label value="Sexo: " />
+						<combobox id="fldTypePrivacySex" width="150px"
+							model="@{controller.listTypesPrivacyItem}"
+							selectedItem="@{controller.typePrivacyEntity.sex}" />
+					</row>
+					<row>
+						<label value="Estado: " />
+						<combobox id="fldTypePrivacyState" width="150px"
+							model="@{controller.listTypesPrivacyItem}"
+							selectedItem="@{controller.typePrivacyEntity.state}" />
+					</row>
+					<row>
+						<label value="Cidade: " />
+						<combobox id="fldTypePrivacyCity" width="150px"
+							model="@{controller.listTypesPrivacyItem}"
+							selectedItem="@{controller.typePrivacyEntity.city}" />
+					</row>
+					<row>
+						<label value="Profissão: " />
+						<combobox id="fldTypePrivacyProfession" width="150px"
+							model="@{controller.listTypesPrivacyItem}"
+							selectedItem="@{controller.typePrivacyEntity.profession}" />
+					</row>
+					<row>
+						<label value="Graduação/Curso: " />
+						<combobox id="fldTypePrivacyAreaOfInterest" width="150px"
+							model="@{controller.listTypesPrivacyItem}"
+							selectedItem="@{controller.typePrivacyEntity.areaOfInterest}" />
+					</row>
+					<row>
+						<label value="Área de Interesse: " />
+						<combobox id="fldTypePrivacyGraduation" width="150px"
+							model="@{controller.listTypesPrivacyItem}"
+							selectedItem="@{controller.typePrivacyEntity.graduation}" />
+					</row>
+					<row spans="2">
+						<div align="right">
+							<button label="Salvar" onClick="controller.saveVisibilityAccount()" />
+						</div>
+					</row>
+				</rows>
+			</grid>
+		</div>
+	</hbox>
+</zk>

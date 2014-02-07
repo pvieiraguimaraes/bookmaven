@@ -1,6 +1,5 @@
 package br.ueg.tcc.bookway.view.composer;
 
-import java.awt.event.ItemEvent;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
@@ -122,6 +121,8 @@ public class NavigationStudyComposer extends
 	
 	public void shareInTwitter(){
 		String message = "Está estudando os itens \"" + extractContentForShare() + "\" do texto \"" + study.getText().getTitle() + "\"";
+		if(message.length() > 140)
+			message.substring(0, 139);
 		updateStatusTwitter(message);
 		getComponentById("selectSocialWeb").detach();
 	}
