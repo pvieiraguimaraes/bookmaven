@@ -19,12 +19,9 @@
 		</groupbox>
 		<groupbox width="600px">
 			<caption label="Configurações de Compartilhamento" />
-			<hbox>
-				<button label="Visibilidade de Informações"
-					onClick="controller.editDataUser()" />
-				<button label="Outras Redes Sociais"
-					onClick="controller.deleteAccount()" />
-			</hbox>
+			<div align="center">
+				<include src="/template/frms/frmVisibilityPerfil.zul"/>
+			</div>
 		</groupbox>
 	</div>
 </zk>
