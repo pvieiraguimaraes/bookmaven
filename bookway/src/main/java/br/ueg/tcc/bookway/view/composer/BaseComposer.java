@@ -473,6 +473,9 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 	
 	public void changeStyleMarkingThisItem(ItemStudy itemStudy, String color){
 		String style = "background-color: " + color + ";";
+		String styleItem = itemStudy.contentElement.getStyle();
+		if(!styleItem.isEmpty())
+			style += styleItem;
 		itemStudy.contentElement.setStyle(style);
 	}
 

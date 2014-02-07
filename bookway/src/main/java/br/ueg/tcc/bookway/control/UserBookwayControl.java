@@ -1,6 +1,8 @@
 package br.ueg.tcc.bookway.control;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
@@ -88,21 +90,30 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 		entity.setVerificationCode(generateCodeUserAction());
 		entity.setActive(false);
 		retDelete.concat(update());
-		// TODO Implementar uma tread que varerrá o sistema em busca dos usuário
-		// inativos e após um prazo deleterá todos os dados
+		
 		if (retDelete.isValid()) {
-			retDelete.concat(deleteAllElementsUser());
 			sendDeleteAccountEmail(entity.getEmail(), entity.getName(), entity.getVerificationCode());
 		}
 		return retDelete;
 	}
 
-	private Return deleteAllElementsUser() {
+	public Return deleteAllElementsUser() {
 		Return ret = new Return(true);
 		ret.concat(deletePermitedTexts());
-		// TODO Adicionar os elementos que serão removidos juntamente com a
-		// conta do usuário.
+		//TODO COlocar aqui todos os outros elementos que podem ser deletados.		
+		ret.concat(doAction("delete"));
 		return ret;
+	}
+	
+	public Return chechUsersFordelete(){
+		GregorianCalendar today = new GregorianCalendar();  
+		today.add(Calendar.DAY_OF_MONTH, -30); 
+		Date thisDay = today.getTime();
+		
+		String sql = "FROM UserBookway WHERE active = true AND solicitationExclusion <= '" + thisDay + "'";
+		data.put("sql", sql);
+		
+		return searchByHQL();
 	}
 
 	private Return deletePermitedTexts() {
@@ -159,7 +170,7 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 				+ end
 				+ " <span class='il'>Bookway</span>!<br>- A equipe <span class='il'><br></font>"
 				+ "</td></tr><tr><td align='right'><span style='font-family:'Lucida Grande','Segoe UI',Arial,Verdana,'Lucida Sans Unicode',Tahoma"
-				+ ",'Sans Serif';font-size:11px;color:#888'>&nbsp;2013&nbsp;<span class='il'>Bookway</span></span></td></tr></tbody></table></td>"
+				+ ",'Sans Serif';font-size:11px;color:#888'>&nbsp;2014&nbsp;<span class='il'>Bookway</span></span></td></tr></tbody></table></td>"
 				+ "</tr></tbody></table></div>";
 		return text;
 	}
@@ -190,8 +201,7 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 				"agora você faz parte da melhor Rede Social do Brasil", link,
 				"para ativar sua conta", "Bons Estudos com o");
 		email.sendEmail(emailAdres, subject, message);
-	}// TODO ALterar o caminho do logo quando estiver hospedado
-		// TODO Colocar minitemplator pra funcionar
+	}
 
 	public Return updateAccount() {
 		Return retUpdate = new Return(true);
