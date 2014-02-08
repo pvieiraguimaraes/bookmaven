@@ -123,7 +123,7 @@ public abstract class BaseNavigationStudyComposer<E extends ICommonEntity, G ext
 			List<ElementText> elements = HibernateUtils
 					.transaformBagInList(levelChild.getElements());
 				if(elements != null && !elements.isEmpty())
-					comp = createItemElementForStudy(elements, comp);
+					comp = createItemElementForStudy(HibernateUtils.materializeProxy(elements), comp);
 			List<LevelText> childs = HibernateUtils
 					.transaformBagInList(levelChild.getLevelsChildren());
 			for (LevelText levelText : childs) {
@@ -214,13 +214,12 @@ public abstract class BaseNavigationStudyComposer<E extends ICommonEntity, G ext
 		MarkingOfUser mark = null;
 		
 		if (elements != null) {
-			//TODO Aqui deve ser feito a verificação do tipo do ElementText e conforme diferença de tipo exibir diferente
 			for (ElementText elementText : elements) {
 				
-				if(!elementText.getIdLevel().getName().equalsIgnoreCase("pagina")){
+				LevelText level = HibernateUtils.materializeProxy(elementText.getIdLevel());
+				if(!level.getName().equalsIgnoreCase("pagina")){
 				
-					Long idText = HibernateUtils.materializeProxy(elementText
-							.getIdLevel().getIdText().getId());
+					Long idText = HibernateUtils.materializeProxy(level.getIdText().getId());
 					Long idLevel = HibernateUtils.materializeProxy(elementText.getId());
 					itemStudy = new ItemStudy();
 	
@@ -242,6 +241,8 @@ public abstract class BaseNavigationStudyComposer<E extends ICommonEntity, G ext
 						}
 						
 						itemStudy.contentElement.setStyle("font-size: "+getThisConfigurationValue("size_font").getValue()+"px;");
+						String sty = itemStudy.contentElement.getStyle();
+						itemStudy.contentElement.setStyle(sty + "color:" + getThisConfigurationValue("color_font").getValue() + ";");
 						
 						retAux = checkExistingItensStudies(elementText, getStudy());
 						if(retAux.isValid() && !retAux.getList().isEmpty())

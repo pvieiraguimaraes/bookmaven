@@ -26,6 +26,7 @@ import br.ueg.tcc.bookway.model.MarkingOfUser;
 import br.ueg.tcc.bookway.model.MarkingUsed;
 import br.ueg.tcc.bookway.model.RelationshipTextElement;
 import br.ueg.tcc.bookway.model.Study;
+import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.view.macros.ItemOfPanel;
 
 @SuppressWarnings("serial")
@@ -156,13 +157,16 @@ public class ElementsItensStudyComposer extends
 		tabpanels.appendChild(tabpanel);
 		
 		String content = "";
+		UserBookway user = (UserBookway) getUserLogged();
+		boolean userOwner = false;
 		for (RelationshipTextElement relation : getRelationshipTextElements()) {
+			if(relation.getStudy().getUserBookway() == user) userOwner = true;
 			List<ItemRelationshipTextElement> itens = relation.getItemRelationshipTextElements();
 			for (ItemRelationshipTextElement itemRelationshipTextElement : itens) {
 				content = itemRelationshipTextElement.getElementTextDestiny().getValue() + " " +
 				itemRelationshipTextElement.getElementTextOrign().getValue();
 				
-				vlayout.appendChild(new ItemOfPanel("Relationship", null, content, null, false, false, true, false, false, false));
+				vlayout.appendChild(new ItemOfPanel("Relationship", null, content, null, false, false, true, false, false, false, relation.getId().toString(), user.getName()));
 
 			}
 		}
@@ -182,10 +186,12 @@ public class ElementsItensStudyComposer extends
 
 		tabpanel.appendChild(vlayout);
 		tabpanels.appendChild(tabpanel);
-		
+		boolean userOwner = false;
+		UserBookway user = (UserBookway) getUserLogged();
 		for (Annotation annotation : getAnnotations()) {
+			if(annotation.getStudy().getUserBookway() == user) userOwner = true;
 			//TODO Verificar aqui a mudança da visibilidade do botão de acordo com o dono do item
-			vlayout.appendChild(new ItemOfPanel("Annotation", annotation.getTitle(), annotation.getContent(), null, true, false, true, false, true, true));
+			vlayout.appendChild(new ItemOfPanel("Annotation", annotation.getTitle(), annotation.getContent(), null, true, false, true, false, userOwner, userOwner, annotation.getId().toString(),user.getName()));
 		}
 		
 		return tab;
@@ -203,11 +209,13 @@ public class ElementsItensStudyComposer extends
 
 		tabpanel.appendChild(vlayout);
 		tabpanels.appendChild(tabpanel);
-		
+		UserBookway user = (UserBookway) getUserLogged();
+		boolean userOwner = false;
 		for (MarkingUsed markingUsed : getMarkingUseds()) {
 			MarkingOfUser markingOfUser = markingUsed.getMarkingOfUser();
+			if(markingOfUser.getUserBookway() == user) userOwner = true;
 			//TODO Colocar pra funcionar a visibilidade dos botões.
-			vlayout.appendChild(new ItemOfPanel("MarkingOfUser", markingOfUser.getName(), null, markingOfUser.getColor(), true, true, false, true, false, false));
+			vlayout.appendChild(new ItemOfPanel("MarkingOfUser", markingOfUser.getName(), null, markingOfUser.getColor(), true, true, false, userOwner, false, false, markingOfUser.getId().toString(), user.getName()));
 		}
 		
 		return tab;

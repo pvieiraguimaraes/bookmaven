@@ -4,7 +4,6 @@
 		<hlayout>
 			<image src="/images/facebook.png" onClick="controller.shareInFacebook()"/>
 			<image src="/images/twitter.png" onClick="controller.shareInTwitter()"/>
-			<image src="/images/googleplus.png" onClick="controller.shareInGooglePlus()"/>
 		</hlayout>
 	</window>
 </zk>

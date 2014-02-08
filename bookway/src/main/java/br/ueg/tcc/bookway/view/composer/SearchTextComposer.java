@@ -1,6 +1,5 @@
 package br.ueg.tcc.bookway.view.composer;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.context.annotation.Scope;
@@ -88,9 +87,11 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 			else
 				setCommunity(false);
 			ret.concat(getControl().doAction("searchTexts"));
+			ret.concat(getRelationControl().listTextAddOfUser());
 			setUpListTextInComponent((List<Text>) ret.getList(), "resultSearch",
 					getComponent(), "ItemText", false, null);
 		} else {
+			setCheckMyTexts(false);
 			if(entity.getTypeText() == null)
 				entity.setTypeText(TypePrivacy.PUBLICO);
 			ret.concat(getControl().doAction("searchTexts"));
@@ -107,7 +108,7 @@ public class SearchTextComposer extends InitComposer<Text, TextControl> {
 	 */
 	public void editText(String id) {
 		Text text = getControl().getTextById(Long.parseLong(id));
-		setSelectedText(text);
+		session.setAttribute("thisEditText", text);
 		callModalWindow("/pages/user/frmtext.zul");
 	}
 
