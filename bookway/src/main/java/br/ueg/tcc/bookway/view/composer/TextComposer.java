@@ -157,11 +157,13 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
-		if (isUpdateText())
-			entity = getSelectedText();
+		super.doAfterCompose(comp);
+		Text text = (Text) session.getAttribute("thisEditText");
+		if (text != null)
+			entity = text;
 		else {
 			initListTypeText();
-			super.doAfterCompose(comp);
+			
 		}
 		loadBinder();
 	}
@@ -208,6 +210,15 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 		if (retSave.isValid())
 			resetEntity();
 		createListTextUser();
+		loadBinder();
+	}
+	
+	public void updateText(){
+		Return ret = new Return(true);
+		ret.concat(getControl().doAction("update"));
+		if(ret.isValid())
+			getComponentById("frmText").detach();
+		treatReturn(ret);
 		loadBinder();
 	}
 

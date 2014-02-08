@@ -1,5 +1,5 @@
 <zk>
-	<window title="Alteração de Texto" mode="modal"
+	<window title="Alteração de Texto" mode="modal" id="frmText"
 		apply="br.ueg.tcc.bookway.view.composer.TextComposer"
 		closable="true">
 		<vlayout spacing="5px">
@@ -32,7 +32,7 @@
 				value="*Atenção: O conteúdo do texto não poderá ser editado, 
 					deverá ser feito um novo cadastro" />
 			<div align="right">
-				<button label="Salvar" onClick="controller.saveText()"
+				<button label="Salvar" onClick="controller.updateText()"
 					sclass="btn btn-primary" />
 			</div>
 		</vlayout>

@@ -55,6 +55,16 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 	
 	private List<Friendship> requestsList;
 	
+	private String userName;
+	
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
 	public List<Friendship> getInvitesList() {
 		return invitesList;
 	}
@@ -188,9 +198,13 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 
 	private void initUserData() {
 		Image image = (Image) getComponentById("photoUserbookway");
+		Image iconPhotoUser = (Image) getComponentById("iconPhotoUser");
 		UserBookway userProfile = (UserBookway) getUserLogged();
+		setUserName(getUserLogged().getName());
 		if(image != null && userProfile != null)
 			showUserBookwayPhoto(image, userProfile);
+		if(iconPhotoUser != null && userProfile != null)
+			showUserBookwayPhoto(iconPhotoUser, userProfile);
 		createListTextUser();
 		createListFriendshipUser();
 		initListTypeText();

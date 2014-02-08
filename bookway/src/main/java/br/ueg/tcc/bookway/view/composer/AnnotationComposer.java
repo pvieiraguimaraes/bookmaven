@@ -42,7 +42,11 @@ public class AnnotationComposer extends
 		super.doAfterCompose(comp);
 		setMyStudies(getStudyControl().getMyStudies(
 				(UserBookway) getUserLogged()));
-		getSelectedEntityFromListbox();
+		Annotation anote = (Annotation) session.getAttribute("editThisNote");
+		if(anote != null)
+			selectedEntity = anote;
+		else
+			getSelectedEntityFromListbox();
 		loadBinder();
 	}
 
@@ -98,6 +102,10 @@ public class AnnotationComposer extends
 				getParentComposer().loadBinder();
 				loadBinder();
 			}
+		} else if(update){
+			ret.concat(getControl().doAction("update"));
+			getComponentById("modalWindow").detach();
+			loadBinder();
 		} else
 			ret.setValid(false);
 		return ret;

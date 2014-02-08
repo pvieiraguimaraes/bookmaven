@@ -1,26 +1,33 @@
 <zk>
+	<label visible="false" id="idItem" value="${arg.idItem}"/>
+	<label id="nameUser" />
 	<div id="marking" width="360px" height="26px">
 		<label id="nameMarking" width="100%" value="${arg.titleItem}" />
-		<button id="btnExcludeMarking" label="Excluir" style="float: right;" />
+		<button id="btnExcludeMarking" visible="false" label="Excluir" style="float: right;" />
 	</div>
 	<div id="annotation" sclass="well itemofpanel" width="320px">
 		<label id="titleItem" width="100px" value="${arg.titleItem}" />
 		<separator id="separator" width="90%" bar="true"/>
 		<label id="descriptionItem" width="100px" height="300px" value="${arg.descriptionItem}"/>
 		<div align="right" style="padding-top: 20px;">
-			<hlayout hflex="1">
-				<button id="btnEditAnnot" label="Editar" />
+			<hlayout id="actAnote" hflex="1" visible="false">
+				<button id="btnEditAnnot" label="Editar" apply="br.ueg.tcc.bookway.view.composer.AnnotationComposer">
+					<attribute name="onClick">
+						session.setAttribute("editThisNote", idItem.getValue());
+						controller.callModalWindow("/pages/annotation/modalAnnotation.zul");
+					</attribute>
+				</button>
 				<button id="btnExcludeAnnot" label="Excluir" />
 			</hlayout>
 		</div>
 	</div>
 	<div id="relationship" sclass="well itemofpanel" width="360px">
 		<label id="relationshipItens" width="100%" value="${arg.descriptionItem}" />
-		<div align="right" style="padding-top: 20px;">
-			<hlayout hflex="1">
-				<button id="btnEditRelationship" label="Editar" visible="false" />
-				<button id="btnExcludeRelationship" label="Excluir" visible="false" />
-			</hlayout>
-		</div>
+<!-- 		<div align="right" style="padding-top: 20px;"> -->
+<!-- 			<hlayout id="actRelation" hflex="1" visible="false"> -->
+<!-- 				<button id="btnEditRelationship" label="Editar" visible="false" /> -->
+<!-- 				<button id="btnExcludeRelationship" label="Excluir" visible="false" /> -->
+<!-- 			</hlayout> -->
+<!-- 		</div> -->
 	</div>
 </zk>
