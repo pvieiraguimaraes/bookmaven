@@ -6,6 +6,12 @@ import javax.persistence.Entity;
 import br.com.vexillum.model.annotations.Validate;
 import br.com.vexillum.model.annotations.ValidatorClass;
 
+/**
+ * Entidade modelo de negócio utilizada no caso de uso Manter Anotações
+ * 
+ * @author pedro
+ * 
+ */
 @ValidatorClass(validatorClass = "br.ueg.tcc.bookway.control.validator.AnnotationValidator")
 @SuppressWarnings("serial")
 @DiscriminatorValue("A")

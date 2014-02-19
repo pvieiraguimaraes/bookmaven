@@ -22,6 +22,13 @@ import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 
+/**
+ * Classe que manipula os objetos na camada de visão do caso de uso Manter
+ * Anotações
+ * 
+ * @author pedro
+ * 
+ */
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
 @Scope("prototype")
@@ -44,10 +51,12 @@ public class AnnotationComposer extends
 		setMyStudies(getStudyControl().getMyStudies(
 				(UserBookway) getUserLogged()));
 		String anote = (String) session.getAttribute("editThisNote");
-		if(anote != null){
-			ElementsItensStudy ele = getElementsItensStudyControl(null).searchExistingItensById(anote);
-			if(ele != null)
-				selectedEntity = (Annotation) HibernateUtils.materializeProxy(ele.getItemOfStudy());
+		if (anote != null) {
+			ElementsItensStudy ele = getElementsItensStudyControl(null)
+					.searchExistingItensById(anote);
+			if (ele != null)
+				selectedEntity = (Annotation) HibernateUtils
+						.materializeProxy(ele.getItemOfStudy());
 		} else
 			getSelectedEntityFromListbox();
 		loadBinder();
@@ -73,19 +82,19 @@ public class AnnotationComposer extends
 	public Return saveEntity() {
 		Return ret = new Return(true), retAux = new Return(true);
 		Annotation annotation;
-		
+
 		if (!update && entity.getStudy() == null) {
 			ElementsItensStudy elementsItensStudy;
-			
+
 			entity.setStudy((Study) session.getAttribute("study"));
 			entity.setDateItem(new Date());
 			annotation = entity;
-			
+
 			ret.concat(super.saveEntity());
-			
+
 			if (ret.isValid() && !update) {
 				entity = getAnnotation(annotation);
-				
+
 				for (ElementText elementText : itensSelected) {
 					elementsItensStudy = new ElementsItensStudy();
 					elementsItensStudy.setElementText(elementText);
@@ -93,19 +102,20 @@ public class AnnotationComposer extends
 					elementsItensStudy.setStudy(study);
 					elementsItensStudies.add(elementsItensStudy);
 				}
-				
+
 				retAux.concat(saveElementsItensStudy());
-				
-				if(retAux.isValid()){
+
+				if (retAux.isValid()) {
 					createIconsStudy(getItemStudiesSelected());
 				}
-				
+
 				getComponentById("winAnnotation").detach();
-				((BaseComposer<Annotation, AnnotationControl>) getParentComposer()).resetStyleItens();
+				((BaseComposer<Annotation, AnnotationControl>) getParentComposer())
+						.resetStyleItens();
 				getParentComposer().loadBinder();
 				loadBinder();
 			}
-		} else if(update){
+		} else if (update) {
 			ret.concat(getControl().doAction("update"));
 			getComponentById("modalWindow").detach();
 			loadBinder();
@@ -114,14 +124,27 @@ public class AnnotationComposer extends
 		return ret;
 	}
 
+	/**
+	 * Realiza a chamada do método que busca uma anotação para o controlador do
+	 * caso de uso
+	 * 
+	 * @param annot
+	 *            , contém dados do objeto que se deseja buscar
+	 * @return {@link Annotation}
+	 */
 	private Annotation getAnnotation(Annotation annot) {
 		Return ret = new Return(true);
 		ret.concat(getControl().searchThisAnnotation(annot));
-		if(ret.isValid())
+		if (ret.isValid())
 			return (Annotation) ret.getList().get(0);
 		return null;
 	}
 
+	/**
+	 * Retorna uma nova instancia do controlador do ambiente de estudo
+	 * 
+	 * @return {@link StudyControl}
+	 */
 	private StudyControl getStudyControl() {
 		StudyControl control = SpringFactory.getController("studyControl",
 				StudyControl.class,
@@ -129,6 +152,12 @@ public class AnnotationComposer extends
 		return control;
 	}
 
+	/**
+	 * Faz a chamada ao controlador da busca pelas anotaçãoes de acordo com os
+	 * parâmetros inseridos na tela
+	 * 
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public Return searchAnnotation() {
 		Return ret = getControl().doAction("searchAnnotation");
@@ -140,28 +169,46 @@ public class AnnotationComposer extends
 		return ret;
 	}
 
+	/**
+	 * Faz uma chamada de um objeto selecionado na lista para edição no
+	 * formulário de alteração
+	 */
 	public void editAnnotation() {
 		getSelectedEntityFromListbox();
 		callModalWindow("/pages/annotation/modalAnnotation.zul");
 		loadBinder();
 	}
-	
-	public void deleteAnnotation(){
+
+	/**
+	 * Faz uma chamada de um objeto selecionado na lista para deleção, com uma
+	 * chamada para confirmação da ação em questão
+	 */
+	public void deleteAnnotation() {
 		getSelectedEntityFromListbox();
 		entity = getSelectedEntity();
-		showActionConfirmation(getDeactivationMessage(), "deleteThisAnnotation");		
+		showActionConfirmation(getDeactivationMessage(), "deleteThisAnnotation");
 		loadBinder();
 	}
-	
-	public Return deleteThisAnnotation(){
+
+	/**
+	 * Faz a chamada ao método do controlador que realiza a exclusão de uma
+	 * anotação específica
+	 * 
+	 * @return {@link Return}
+	 */
+	public Return deleteThisAnnotation() {
 		Annotation thisAnot = entity;
 		Return ret = getControl().doAction("delete");
-		if(ret.isValid())
+		if (ret.isValid())
 			listEntity.remove(thisAnot);
 		loadBinder();
 		return ret;
 	}
 
+	/**
+	 * Atribui um objeto da lista como a entidade selecionada para realizar as
+	 * interações
+	 */
 	private void getSelectedEntityFromListbox() {
 		Listbox listbox = (Listbox) getComponentById("resultList");
 		int index = 0;

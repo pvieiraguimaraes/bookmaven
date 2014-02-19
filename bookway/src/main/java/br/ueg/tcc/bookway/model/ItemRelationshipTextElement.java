@@ -9,6 +9,14 @@ import br.com.vexillum.model.CommonEntity;
 import br.com.vexillum.model.annotations.Validate;
 import br.com.vexillum.model.annotations.ValidatorClass;
 
+/**
+ * Entidade modelo de negócio utilizada no caso de uso Manter Relacionamento
+ * entre trechos e textos, onde representa cada item do relacionamento relacionando-se com a classe
+ * {@link RelationshipTextElement}
+ * 
+ * @author pedro
+ * 
+ */
 @ValidatorClass(validatorClass = "br.ueg.tcc.bookway.control.validator.ItemRelationshipTextElementValidator")
 @Entity
 @SuppressWarnings("serial")
@@ -23,7 +31,7 @@ public class ItemRelationshipTextElement extends CommonEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_elementtext_destiny", nullable = false)
 	private ElementText elementTextDestiny;
-	
+
 	@Validate(notNull = true)
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_relationshiptextelement", nullable = false)

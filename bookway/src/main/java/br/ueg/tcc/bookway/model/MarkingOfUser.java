@@ -17,6 +17,12 @@ import br.com.vexillum.model.ICommonEntity;
 import br.com.vexillum.model.annotations.Validate;
 import br.com.vexillum.model.annotations.ValidatorClass;
 
+/**
+ * Entidade modelo de negócio utilizada no caso de uso Manter Marcações
+ * 
+ * @author pedro
+ * 
+ */
 @ValidatorClass(validatorClass = "br.ueg.tcc.bookway.control.validator.MarkingValidator")
 @SuppressWarnings("serial")
 @Entity
@@ -34,7 +40,7 @@ public class MarkingOfUser extends CommonEntity implements ICommonEntity {
 	@Cascade(CascadeType.ALL)
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "marking", orphanRemoval = true)
 	private List<TagsOfMarking> tagsOfMarkings;
-	
+
 	@Cascade(CascadeType.ALL)
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "markingOfUser", orphanRemoval = true)
 	private List<MarkingUsed> markingUseds;

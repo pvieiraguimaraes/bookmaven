@@ -14,6 +14,14 @@ import org.hibernate.annotations.CascadeType;
 
 import br.com.vexillum.model.CommonEntity;
 
+/**
+ * Entidade modelo de negócio utilizada no mapeamento do texto, onde um nível
+ * poderá ter vários subníveis formando uma hierarquia ilimitada de níveis para
+ * o texto.
+ * 
+ * @author pedro
+ * 
+ */
 @Entity
 public class LevelText extends CommonEntity {
 
@@ -36,7 +44,6 @@ public class LevelText extends CommonEntity {
 	@OneToMany(mappedBy = "idLevel", fetch = FetchType.LAZY)
 	@Cascade(CascadeType.ALL)
 	private List<ElementText> elements;
-	
 
 	public LevelText() {
 		levelsChildren = new ArrayList<>();

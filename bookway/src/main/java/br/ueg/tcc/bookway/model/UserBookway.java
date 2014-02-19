@@ -18,6 +18,13 @@ import br.com.vexillum.model.annotations.ValidatorClass;
 import br.ueg.tcc.bookway.model.enums.AreaOfInterest;
 import br.ueg.tcc.bookway.model.enums.State;
 
+/**
+ * Entidade que manter os usuários do sistema, que farão as interações com as
+ * funcionalidades do sistema.
+ * 
+ * @author pedro
+ * 
+ */
 @ValidatorClass(validatorClass = "br.ueg.tcc.bookway.control.validator.UserValidator")
 @SuppressWarnings("serial")
 @DiscriminatorValue("1")

@@ -8,6 +8,13 @@ import javax.persistence.Table;
 
 import br.com.vexillum.model.CommonEntity;
 
+/**
+ * Entidade utilizada para registrar os relacionamento entre os textos e os
+ * usuários do sistema.
+ * 
+ * @author pedro
+ * 
+ */
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "relationship_texts")
@@ -16,7 +23,7 @@ public class RelationshipTextUser extends CommonEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_text", insertable = true, updatable = true, nullable = false)
 	private Text text;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_user", insertable = true, updatable = true, nullable = false)
 	private UserBookway userBookway;
@@ -36,5 +43,5 @@ public class RelationshipTextUser extends CommonEntity {
 	public void setUserBookway(UserBookway userBookway) {
 		this.userBookway = userBookway;
 	}
-	
+
 }

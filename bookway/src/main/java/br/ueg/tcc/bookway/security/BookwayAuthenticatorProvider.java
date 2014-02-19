@@ -18,15 +18,27 @@ import br.com.vexillum.util.SpringFactory;
 import br.ueg.tcc.bookway.control.UserBookwayControl;
 import br.ueg.tcc.bookway.model.UserBookway;
 
+/**
+ * Autenticador utilizado para realizar a verificação de autenticação e
+ * segurança do filtro do framework Spring Security, contém as regras principais
+ * para atender as necessidades de segurança específica do sistema e herda todas
+ * as funcionalidades do autenticador padrão da arquitetura
+ * 
+ * @author pedro
+ * 
+ */
 @SuppressWarnings("rawtypes")
 public class BookwayAuthenticatorProvider extends AuthenticatorProvider
 		implements AuthenticationProvider {
-	
+
+	/**
+	 * Controlador específico para acessar a camada de negócio específica.
+	 */
 	protected UserBookwayControl bookwayControl;
-	
+
 	public BookwayAuthenticatorProvider() {
-		bookwayControl = SpringFactory.getController(
-				"userBookwayControl", UserBookwayControl.class,
+		bookwayControl = SpringFactory.getController("userBookwayControl",
+				UserBookwayControl.class,
 				ReflectionUtils.prepareDataForPersistence(this));
 	}
 
@@ -37,7 +49,8 @@ public class BookwayAuthenticatorProvider extends AuthenticatorProvider
 		String userName = token.getName();
 		String password = token.getCredentials() != null ? token
 				.getCredentials().toString() : null;
-		UserBookway user = bookwayControl.getUser(userName, EncryptUtils.encryptOnSHA512(password));
+		UserBookway user = bookwayControl.getUser(userName,
+				EncryptUtils.encryptOnSHA512(password));
 		if (user == null)
 			return null;
 		// TODO Tratar permissoes depois sem ser como categoria
