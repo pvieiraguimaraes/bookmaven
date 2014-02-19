@@ -6,6 +6,12 @@ import org.springframework.stereotype.Service;
 import br.com.vexillum.control.GenericControl;
 import br.ueg.tcc.bookway.model.TagsOfMarking;
 
+/**
+ * Controlador utilizado para manter as Tags das Marcações
+ * 
+ * @author pedro
+ * 
+ */
 @Service
 @Scope("prototype")
 public class TagsOfMarkingControl extends GenericControl<TagsOfMarking> {

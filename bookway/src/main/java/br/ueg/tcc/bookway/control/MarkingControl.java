@@ -13,14 +13,28 @@ import br.ueg.tcc.bookway.model.MarkingOfUser;
 import br.ueg.tcc.bookway.model.TagsOfMarking;
 import br.ueg.tcc.bookway.model.UserBookway;
 
+/**
+ * Controlador que contempla todas as regras de negócio envolvidas no caso de
+ * uso Manter Marcações e Tags
+ * 
+ * @author pedro
+ * 
+ */
 @Service
 @Scope("prototype")
-public class MarkingControl extends GenericControl<MarkingOfUser> implements IGenericControl<MarkingOfUser> {
+public class MarkingControl extends GenericControl<MarkingOfUser> implements
+		IGenericControl<MarkingOfUser> {
 
 	public MarkingControl() {
 		super(MarkingOfUser.class);
 	}
 
+	/**
+	 * Realiza a busca de todas as marcações do usuário logado de acordo com os
+	 * parâmetros de busca utilizados
+	 * 
+	 * @return {@link Return}
+	 */
 	@SuppressWarnings("unchecked")
 	public Return searchMarking() {
 		String name = entity.getName();
@@ -46,7 +60,8 @@ public class MarkingControl extends GenericControl<MarkingOfUser> implements IGe
 			}
 
 			if (tagValue != null) {
-				sql = "FROM TagsOfMarking WHERE id_user = '" + user.getId() + "' AND name LIKE '%" + tagValue + "%'";
+				sql = "FROM TagsOfMarking WHERE id_user = '" + user.getId()
+						+ "' AND name LIKE '%" + tagValue + "%'";
 				data.put("sql", sql);
 				tags.addAll((List<TagsOfMarking>) searchByHQL().getList());
 			}
@@ -62,8 +77,15 @@ public class MarkingControl extends GenericControl<MarkingOfUser> implements IGe
 
 		return new Return(true, markings);
 	}
-	
-	public Return getMarkingOfUser(UserBookway user){
+
+	/**
+	 * Retorna as marcações de um usuário específico de acordo com um id passado
+	 * 
+	 * @param user
+	 *            , usuário que se deseja a lista de marcações
+	 * @return {@link Return}
+	 */
+	public Return getMarkingOfUser(UserBookway user) {
 		String sql = "FROM MarkingOfUser WHERE id_user = '" + user.getId()
 				+ "'";
 		data.put("sql", sql);

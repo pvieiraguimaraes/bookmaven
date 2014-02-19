@@ -22,11 +22,35 @@ import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 import br.ueg.tcc.bookway.utils.FolderUtils;
 
+/**
+ * Controlador responsável por garantir as funcionalidades envolidas no Manter Texto
+ * @author pedro
+ *
+ */
+/**
+ * @author pedro
+ *
+ */
+/**
+ * @author pedro
+ *
+ */
+/**
+ * @author pedro
+ * 
+ */
 @Service
 @Scope("prototype")
 public class TextControl extends GenericControl<Text> {
 
+	/**
+	 * Classe de escrita de arquivos do texto
+	 */
 	private TextWriter txtWriter;
+
+	/**
+	 * Classe de leitura dos arquivos do texto
+	 */
 	private TextReader txtReader;
 	HashMap<String, Object> map;
 	private Properties configuration;
@@ -40,6 +64,11 @@ public class TextControl extends GenericControl<Text> {
 		txtReader = new TextReader(map);
 	}
 
+	/**
+	 * Realiza a inserção de um arquivo em um repositório
+	 * 
+	 * @return {@link Return}
+	 */
 	public Return insertTextIntoRepository() {
 		Return retRepository = new Return(true);
 		UserBookway user = ((UserBookway) data.get("userLogged"));
@@ -50,6 +79,11 @@ public class TextControl extends GenericControl<Text> {
 		return retRepository;
 	}
 
+	/**
+	 * Faz o mapeamento do objeto texto para o banco de dados
+	 * 
+	 * @return {@link Return}
+	 */
 	public Return mapedTextForDataBase() {
 		Return retMaping = new Return(true);
 		retMaping.concat(txtReader.mappingText());
@@ -59,6 +93,12 @@ public class TextControl extends GenericControl<Text> {
 		return retMaping;
 	}
 
+	/**
+	 * Método responsável por criar o objeto texto de acordo com os dados da
+	 * camada de visão
+	 * 
+	 * @return {@link Return}
+	 */
 	public Return createText() {
 		String stream = (String) data.get("stream");
 		String type = (String) data.get("type");
@@ -73,6 +113,11 @@ public class TextControl extends GenericControl<Text> {
 		return retUpload;
 	}
 
+	/**
+	 * Cria o objeto texto com o usuário proprietário
+	 * 
+	 * @return {@link Text}
+	 */
 	private Text createObjectText() {
 		Text text = (Text) data.get("entity");
 		UserBookway user = (UserBookway) data.get("userLogged");
@@ -81,6 +126,12 @@ public class TextControl extends GenericControl<Text> {
 		return text;
 	}
 
+	/**
+	 * Verifica os dados inseridos e direciona para a criação do arquivo de
+	 * validação correto para validar o conteúdo do arquivo DTD
+	 * 
+	 * @return script de validação da extensão XML
+	 */
 	@SuppressWarnings("unchecked")
 	private String createDTDValidator() {
 		ArrayList<String> levels = (ArrayList<String>) data.get("levels");
@@ -99,8 +150,7 @@ public class TextControl extends GenericControl<Text> {
 	 * Este método armazenará o arquivo no repositório e também mapeará no banco
 	 * de dados.
 	 * 
-	 * @param list
-	 * @return Return
+	 * @return {@link Return}
 	 */
 	private Return afterCreateText() {
 		Return retAfterUpload = new Return(true);
@@ -113,12 +163,22 @@ public class TextControl extends GenericControl<Text> {
 		return retAfterUpload;
 	}
 
+	/**
+	 * Faz a chamada para a persistência do objeto texto no banco de dados.
+	 * 
+	 * @return {@link Return}
+	 */
 	public Return insertTextIntoDataBase() {
 		Return retInsert = new Return(true);
 		retInsert.concat(save());
 		return retInsert;
 	}
 
+	/**
+	 * Deleta do texto e todas as referências e arquivos envolvidos
+	 * 
+	 * @return {@link Return}
+	 */
 	public Return deleteText() {
 		Return retDelete = new Return(true);
 		String filePath = entity.getFilePath();
@@ -127,16 +187,29 @@ public class TextControl extends GenericControl<Text> {
 			retDelete.concat(removeTextFromRepository(filePath));
 		return retDelete;
 	}
-	
-	public Text getTextById(Long id){
+
+	/**
+	 * Busca um texto de acordo com um código passado
+	 * 
+	 * @param id
+	 *            , código para realizar a busca em questão
+	 * @return {@link Text}
+	 */
+	public Text getTextById(Long id) {
 		Return ret = new Return(true);
 		String sql = "FROM Text where id = '" + id + "'";
 		data.put("sql", sql);
 		ret.concat(searchByHQL());
-		Text text = HibernateUtils.materializeProxy((Text) ret.getList().get(0));
+		Text text = HibernateUtils
+				.materializeProxy((Text) ret.getList().get(0));
 		return text;
 	}
 
+	/**
+	 * Lista os tipos de privacidade que poderão existir para o texto
+	 * 
+	 * @return
+	 */
 	public List<TypePrivacy> initTypesText() {
 		return EnumUtils.getEnumList(TypePrivacy.class);
 	}
@@ -148,13 +221,14 @@ public class TextControl extends GenericControl<Text> {
 	 */
 	public Return listTextsUser() {
 		Return ret = new Return(true);
-		String title = ""; Text thisText = null;
+		String title = "";
+		Text thisText = null;
 		UserBookway user = (UserBookway) data.get("userLogged");
 		Object text = (Object) data.get("entity");
-		
-		if(text instanceof Text)
+
+		if (text instanceof Text)
 			thisText = (Text) text;
-		
+
 		if (thisText != null)
 			title = thisText.getTitle() == null ? "" : thisText.getTitle();
 
@@ -175,37 +249,48 @@ public class TextControl extends GenericControl<Text> {
 	 */
 	public Return searchTexts() {
 		Return ret = new Return(true);
-		
+
 		UserBookway user = (UserBookway) data.get("userLogged");
 		Text text = (Text) data.get("entity");
 		String title = text.getTitle() == null ? "" : text.getTitle();
 		boolean myTexts = (boolean) data.get("checkMyTexts");
 		boolean community = (boolean) data.get("community");
-		
+
 		TypePrivacy typeText = text.getTypeText();
-		
+
 		String sql = "FROM Text WHERE title like '%" + title + "%'";
-		
-		if(community)
+
+		if (community)
 			sql += " AND community = '" + community + "'";
-		
-		if(typeText != null)
+
+		if (typeText != null)
 			sql += " AND typeText = '" + typeText.ordinal() + "'";
-		
-		if(myTexts)
+
+		if (myTexts)
 			sql += " AND userOwning = '" + user.getId() + "'";
-		
+
 		data.put("sql", sql);
 		ret.concat(searchByHQL());
 		return ret;
 	}
 
+	/**
+	 * Remove todos os elementos envolvendo so textos do usuário
+	 * 
+	 * @return {@link Return}
+	 */
 	public Return deleteElementsTextsOfUser() {
 		Return ret = new Return(true);
 		ret.concat(removePermitedTexts());
 		return ret;
 	}
 
+	/**
+	 * Deleta todos os textos permitidos, ou seja, aqueles que não estão sendo
+	 * estudados por nenhum outro usuário de forma simutânea
+	 * 
+	 * @return {@link Return}
+	 */
 	@SuppressWarnings("unchecked")
 	private Return removePermitedTexts() {
 		Return ret = new Return(true);
@@ -220,6 +305,13 @@ public class TextControl extends GenericControl<Text> {
 		return ret;
 	}
 
+	/**
+	 * Remove um texto de um diretório especificado
+	 * 
+	 * @param filePath
+	 *            , caminho do arquivo a ser removido
+	 * @return {@link Return}
+	 */
 	private Return removeTextFromRepository(String filePath) {
 		Return ret = new Return(true);
 		UserBookway user = ((UserBookway) data.get("userLogged"));
@@ -227,51 +319,86 @@ public class TextControl extends GenericControl<Text> {
 		ret.concat(txtWriter.removeTextFromRepository(filePath));
 		return ret;
 	}
-	
-	public Return disconnectionUserOfText(){
+
+	/**
+	 * Desfaz o vínculo existente entre o texto e o usuário
+	 * 
+	 * @return {@link Return}
+	 */
+	public Return disconnectionUserOfText() {
 		entity.setUserOwning(null);
 		String localeText = entity.getFilePath();
 		String filePath = getFilePath(entity);
 		entity.setFilePath(filePath);
 		Return ret = update();
-		if(ret.isValid())
+		if (ret.isValid())
 			relocaleTextRepository(localeText, getFilePath(entity));
 		return ret;
 	}
 
+	/**
+	 * Reloca o texto de um repositório para outro
+	 * 
+	 * @param srcPath
+	 *            , origem do arquivo
+	 * @param dstPath
+	 *            , destino do arquivo
+	 * @return {@link Return}
+	 */
 	private Return relocaleTextRepository(String srcPath, String dstPath) {
 		Return ret = new Return(true);
 		ret.concat(txtWriter.moveFile(srcPath, dstPath));
 		return ret;
 	}
 
-	public Return searchFriendTexts() {
-		// TODO Servirá para buscar todos os textos do amigos.
-		return new Return(true);
-	}
-	
-	public Return updateUserOwnerText(){
+	/**
+	 * Atualiza o proprietátio do texto em questão, atribuindo o usuário logado
+	 * 
+	 * @return {@link Return}
+	 */
+	public Return updateUserOwnerText() {
 		String localeText = getFilePath(entity);
 		entity.setUserOwning((UserBookway) data.get("userLogged"));
 		entity.setFilePath(getFilePath(entity));
 		Return ret = update();
-		if(ret.isValid()){
-			FolderUtils.createFolder(
-					configuration.getKey("PATH_REPOSITORY_TEXT"), entity.getUserOwning().getEmail());
+		if (ret.isValid()) {
+			FolderUtils.createFolder(configuration
+					.getKey("PATH_REPOSITORY_TEXT"), entity.getUserOwning()
+					.getEmail());
 			relocaleTextRepository(localeText, entity.getFilePath());
 		}
 		return ret;
 	}
-	
-	private String getNameText(Text text, String separator){
-		String aux = (text.getFilePath()).substring((text.getFilePath()).lastIndexOf(separator), text.getFilePath().length());
+
+	/**
+	 * Método utilizado para obter o nome do texto
+	 * 
+	 * @param text
+	 *            , texto do qual se deseja o nome
+	 * @param separator
+	 *            , separador padrão do sistema
+	 * @return nome do texto
+	 */
+	private String getNameText(Text text, String separator) {
+		String aux = (text.getFilePath()).substring((text.getFilePath())
+				.lastIndexOf(separator), text.getFilePath().length());
 		return aux;
 	}
-	
-	private String getFilePath(Text text){
+
+	/**
+	 * Utilizado para obter o caminho de um arquivo em um repositório, de acordo
+	 * com o objeto texto passado
+	 * 
+	 * @param text
+	 *            , objeto que se deseja o caminho do repositório
+	 * @return {@link Return}
+	 */
+	private String getFilePath(Text text) {
 		String separator = System.getProperty("file.separator");
-		String path = text.getUserOwning() != null ? text.getUserOwning().getEmail() : "public";
-		String name = configuration.getKey("PATH_REPOSITORY_TEXT") + separator + path  + getNameText(text, separator); 
+		String path = text.getUserOwning() != null ? text.getUserOwning()
+				.getEmail() : "public";
+		String name = configuration.getKey("PATH_REPOSITORY_TEXT") + separator
+				+ path + getNameText(text, separator);
 		return name;
 	}
 

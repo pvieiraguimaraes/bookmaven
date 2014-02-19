@@ -16,6 +16,15 @@ import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.utils.FolderUtils;
 
+/**
+ * Classe responsável pela interação que o arquivo do texto realização na
+ * escrita seja na inserção ou na exclusão de arquivo, onde estão presentes os
+ * métodos responsáveis pelas interações necessárias para manutenção dos
+ * repositórios dos arquivos de texto.
+ * 
+ * @author pedro
+ * 
+ */
 @SuppressWarnings("serial")
 public class TextWriter extends TextBookwayIO {
 
@@ -23,6 +32,12 @@ public class TextWriter extends TextBookwayIO {
 		textData = map;
 	}
 
+	/**
+	 * Método que insere o arquivo do texto em no repositório do usuário e caso
+	 * não exista tal repositório o mesmo é criado.
+	 * 
+	 * @return {@link Return}
+	 */
 	public Return insertTextIntoRepository() {
 		Return retTxtInsert = new Return(true);
 		try {
@@ -52,6 +67,13 @@ public class TextWriter extends TextBookwayIO {
 		return retTxtInsert;
 	}
 
+	/**
+	 * Remove um determinado arquivo do repositório do usuário
+	 * 
+	 * @param filePath
+	 *            , caminho completo do arquivo a ser deletado do repositório
+	 * @return {@link Return}
+	 */
 	public Return removeTextFromRepository(String filePath) {
 		Return ret = new Return(true);
 		String nameUser = ((UserBookway) textData.get("user")).getEmail();

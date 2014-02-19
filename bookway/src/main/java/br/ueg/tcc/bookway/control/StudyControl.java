@@ -10,6 +10,11 @@ import br.com.vexillum.control.GenericControl;
 import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.UserBookway;
 
+/**
+ * Controle utilizado para executar as tarefas relativas ao caso de uso de Estudar um texto
+ * @author pedro
+ *
+ */
 @Service
 @Scope("prototype")
 public class StudyControl extends GenericControl<Study> {
@@ -18,6 +23,10 @@ public class StudyControl extends GenericControl<Study> {
 		super(Study.class);
 	}
 
+	/**Realiza a busca de um estudo no sistema de acordo com os dados passados como parâmetro
+	 * @param study, entidade com dados preenchidos que servirá de parâmetro para a busca de um estudo
+	 * @return  {@link Study}
+	 */
 	public Study getThisStudy(Study study) {
 		SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 		String sql = "FROM Study where dateStudy =  '" + spf.format(study.getDateStudy())
@@ -28,6 +37,10 @@ public class StudyControl extends GenericControl<Study> {
 		return stu;
 	}
 	
+	/**Verifica a existência de um estudo para um determinado texto realizado por um determinado usuário
+	 * @param study, estudo que se deseja pesquisar sobre a existência
+	 * @return  {@link Study}
+	 */
 	public Study checksExistenceStudy(Study study) {
 		String sql = "FROM Study where text = '" + study.getText().getId()
 				+ "' and userBookway = '" + study.getUserBookway().getId()
@@ -39,6 +52,10 @@ public class StudyControl extends GenericControl<Study> {
 		return null;
 	}
 	
+	/**Busca todos os estudos realizados por um usuário em questão
+	 * @param user, usuário parâmetro da busca
+	 * @return lista de  {@link Study}
+	 */
 	@SuppressWarnings("unchecked")
 	public List<Study> getMyStudies(UserBookway user){
 		String sql = "FROM Study WHERE id_user = '" + user.getId() + "'";

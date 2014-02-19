@@ -13,6 +13,13 @@ import br.ueg.tcc.bookway.model.Annotation;
 import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.Text;
 
+/**
+ * Controlador responsável pelas regras de negócio do caso de uso Manter
+ * Anotações.
+ * 
+ * @author pedro
+ * 
+ */
 @Service
 @Scope("prototype")
 public class AnnotationControl extends GenericControl<Annotation> {
@@ -21,10 +28,17 @@ public class AnnotationControl extends GenericControl<Annotation> {
 		super(Annotation.class);
 	}
 
+	/**
+	 * Metodo que realiza a busca de uma anotação de acordo com o texto
+	 * selecionado e com o título da anotação inserido para a busca
+	 * 
+	 * @return {@link Return}
+	 */
 	@SuppressWarnings("unchecked")
 	public Return searchAnnotation() {
 		Text text = (Text) data.get("selectedText");
-		List<Study> studyAux = new ArrayList<>(), studies = (List<Study>) data.get("myStudies");
+		List<Study> studyAux = new ArrayList<>(), studies = (List<Study>) data
+				.get("myStudies");
 		String title = (String) data.get("title");
 
 		List<Annotation> annotations = new ArrayList<Annotation>();
@@ -52,6 +66,13 @@ public class AnnotationControl extends GenericControl<Annotation> {
 		return new Return(true, annotations);
 	}
 
+	/**
+	 * Seleciona uma anotação de acordo com os dados da {@link Annotation}
+	 * 
+	 * @param annotation
+	 *            , a ser buscada no banco de dados
+	 * @return {@link Return}
+	 */
 	public Return searchThisAnnotation(Annotation annotation) {
 		SimpleDateFormat spf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 		String sql = "FROM Annotation WHERE id_study = '"

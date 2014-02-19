@@ -7,6 +7,11 @@ import br.com.vexillum.util.Message;
 import br.com.vexillum.util.Return;
 import br.ueg.tcc.bookway.model.MarkingOfUser;
 
+/**Classe responsável pela validação da entidade {@link Marking} do sistema
+ * 
+ * @author pedro
+ *
+ */
 public class MarkingValidator extends Validator {
 
 	public MarkingValidator(Map<String, Object> mapData) {

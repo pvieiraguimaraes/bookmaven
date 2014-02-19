@@ -21,6 +21,10 @@ import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.model.enums.AreaOfInterest;
 import br.ueg.tcc.bookway.model.enums.State;
 
+/**Controlador utilizado no caso de uso de Manter Pessoas, herda as funcionalidades do usuário básico da arquitetura
+ * @author pedro
+ *
+ */
 @Service
 @Scope("prototype")
 public class UserBookwayControl extends UserBasicControl<UserBookway> {
@@ -53,6 +57,8 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 				+ email + "'";
 		data.put("sql", hql);
 		Return ret = searchByHQL();
+		if(ret.getList().isEmpty())
+			return null;
 		return (UserBookway) ret.getList().get(0);
 	}
 
@@ -83,6 +89,9 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 		return null;
 	}
 
+	/**Coloca a conta do usuário logado em estado inativo
+	 * @return {@link Return}
+	 */
 	public Return deleteAccount() {
 		Return retDelete = new Return(true);
 		entity = (UserBookway) data.get("userLogged");
@@ -97,6 +106,9 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 		return retDelete;
 	}
 
+	/**Deleta todos os elementos do usuário
+	 * @return {@link Return}
+	 */
 	public Return deleteAllElementsUser() {
 		Return ret = new Return(true);
 		ret.concat(deletePermitedTexts());
@@ -105,6 +117,9 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 		return ret;
 	}
 	
+	/** Verifica se exitem usúarios com pendentes de exlusão de suas contas
+	 * @return {@link Return}
+	 */
 	public Return chechUsersFordelete(){
 		GregorianCalendar today = new GregorianCalendar();  
 		today.add(Calendar.DAY_OF_MONTH, -30); 
@@ -116,6 +131,9 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 		return searchByHQL();
 	}
 
+	/**Realiza a chamada do controlador de textos para remover somente os textos que são permitidos
+	 * @return {@link Return}
+	 */
 	private Return deletePermitedTexts() {
 		Return ret = new Return(true);
 		TextControl control = SpringFactory.getController("textControl",
@@ -124,6 +142,9 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 		return ret;
 	}
 
+	/**Registra uma conta de usuário no sistema.
+ 	 * @return {@link Return}
+	 */
 	public Return registerUser() {
 		Return retRegister = new Return(true);
 		entity = createUserBookway();
@@ -135,6 +156,9 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 		return retRegister;
 	}
 
+	/**Cria um novo usuário padrão para uso do sistema
+	 * @return {@link UserBookway}
+	 */
 	private UserBookway createUserBookway() {
 		UserBookway user = entity;
 		user.setPassword(EncryptUtils.encryptOnSHA512(entity.getPassword()));
@@ -143,6 +167,10 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 		return user;
 	}
 
+	/**Busca uma categoria de usuário
+	 * @param name, nome parâmetro da busca
+	 * @return {@link Category}
+	 */
 	private Category getCategoryByName(String name) {
 		String hql = "from Category where name ='" + name + "'";
 		data.put("sql", hql);
@@ -150,6 +178,15 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 		return (Category) retCategory.getList().get(0);
 	}
 
+	/**Cria uma mensagem HMTL para envio de um e-mail de acordo com os parâmetros passados
+	 * @param vocative, utilizado para iniciar o diálogo
+	 * @param nameUser, nome da pessoa que deseja contactar
+	 * @param message, mensagem que deverá ser transmitida
+	 * @param link, um link para acesso
+	 * @param action, ação relacionada a mensagem que deverá ser enviada
+	 * @param end, saudação do fim da mensagem
+	 * @return uma mensagem de acordo com os parâmetros passados
+	 */
 	private String createMessageEmail(String vocative, String nameUser,
 			String message, String link, String action, String end) {
 		String text = "<div><table width='650' align='center' style='font-size:14px' cellpadding='0' cellspacing='0'><tbody><tr>"
@@ -175,6 +212,11 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 		return text;
 	}
 
+	/**Envia um email com uma mensagem de recebimento de solicitação de exclusão de conta
+	 * @param emailAdres, email em questão
+	 * @param nameUser, nome do usuário que se deseja contactar
+	 * @param code, código que será utilizado para validação
+	 */
 	private void sendDeleteAccountEmail(String emailAdres, String nameUser,
 			String code) {
 		EmailManager email = new EmailManager("HtmlEmail");
@@ -191,6 +233,11 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 		email.sendEmail(emailAdres, subject, message);
 	}
 
+	/**Emite uma mensagem para validação de uma conta criada no sistema
+	 * @param emailAdres, email para onde deverá ser enviado
+	 * @param nameUser, nome do usuário que criou a conta
+	 * @param code, código para interação
+	 */
 	private void sendValidationEmailAccount(String emailAdres, String nameUser,
 			String code) {
 		EmailManager email = new EmailManager("HtmlEmail");
@@ -203,20 +250,32 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 		email.sendEmail(emailAdres, subject, message);
 	}
 
+	/**Atualiza a conta de um usuário
+	 * @return {@link Return}
+	 */
 	public Return updateAccount() {
 		Return retUpdate = new Return(true);
 		retUpdate.concat(update());
 		return retUpdate;
 	}
 
+	/**Lista os tipos de área de interesse que envolve a {@link AreaOfInterest}
+	 * @return lista de {@link AreaOfInterest}
+	 */
 	public List<AreaOfInterest> initListAreaOfInterest() {
 		return EnumUtils.getEnumList(AreaOfInterest.class);
 	}
 
+	/**Lista os estados existends
+	 * @return lista de {@link State}
+	 */
 	public List<State> initListState() {
 		return EnumUtils.getEnumList(State.class);
 	}
 
+	/**Gera um código aleatorio para ser utilizado em operações diversas envolvendo usuários
+	 * @return o codigo em questão
+	 */
 	private String generateCodeUserAction() {
 		Random rand = new Random();
 		String code = "";
@@ -229,6 +288,9 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 		return code;
 	}
 
+	/**Valida a conta do usuário de acordo com um codigo passado
+	 * @return {@link Return}
+	 */
 	public Return validateAccountUser() {
 		String code = (String) data.get("code");
 		Return retValid = new Return(true);
@@ -243,6 +305,9 @@ public class UserBookwayControl extends UserBasicControl<UserBookway> {
 		return retValid;
 	}
 
+	/**Método que realiza a troca de senha do usuário
+	 * @return {@link Return}
+	 */
 	public Return changePasswordUser() {
 		Return ret = new Return(true);
 		entity.setPassword(EncryptUtils.encryptOnSHA512((String) data.get("newPassword")));
