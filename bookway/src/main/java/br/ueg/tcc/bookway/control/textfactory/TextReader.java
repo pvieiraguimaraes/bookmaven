@@ -26,6 +26,12 @@ import br.ueg.tcc.bookway.model.ElementText;
 import br.ueg.tcc.bookway.model.LevelText;
 import br.ueg.tcc.bookway.model.Text;
 
+/**
+ * Classe responsável pelas ações de leitura dos arquivos do texto.
+ * 
+ * @author pedro
+ * 
+ */
 @Service
 @Scope("prototype")
 @SuppressWarnings("serial")
@@ -35,8 +41,18 @@ public class TextReader extends TextBookwayIO {
 		textData = map;
 	}
 
+	/**
+	 * Elementos padrão do sistema para o mapeamento do texto.
+	 */
 	protected Properties elements;
 
+	/**
+	 * Metodo que cria o arquivo de validação do arquivo xml inserido
+	 * 
+	 * @param arrayList
+	 *            , Vetor de string contendo os níveis para criação do script.
+	 * @return script validador da estrutura XML do arquivo de texto.
+	 */
 	public String createDTDValidator(ArrayList<String> arrayList) {
 		ArrayList<String> levelsMapped = addBannedLevels(arrayList);
 		String docType = "<!DOCTYPE " + configuration.getKey("LEVEL_ROOT")
@@ -61,11 +77,26 @@ public class TextReader extends TextBookwayIO {
 		return docType + " ]>";
 	}
 
+	/**
+	 * @param levelNumber
+	 *            , numero do nível
+	 * @param elementNumber
+	 *            , numero do elemento
+	 * @return Valor do elemento específico do arquivo properties dos elementos
+	 *         padrão para mapeamento do texto.
+	 */
 	protected String getElement(int levelNumber, int elementNumber) {
 		return elements.getKey("nivel" + levelNumber + "_element"
 				+ elementNumber);
 	}
 
+	/**
+	 * Método que retorna um vetor com os levels padrão do sistema
+	 * 
+	 * @param quantLevels
+	 *            , quantidade de levels desejado
+	 * @return vetor de string com os níveis padrão do sistema.
+	 */
 	public ArrayList<String> getDefaultLevels(Integer quantLevels) {
 		ArrayList<String> defaultLevels = new ArrayList<>();
 		for (int i = 1; i <= quantLevels; i++) {
@@ -74,6 +105,11 @@ public class TextReader extends TextBookwayIO {
 		return defaultLevels;
 	}
 
+	/**
+	 * @param arrayList
+	 *            , vetor de string com os níveis que deverão ser banidos
+	 * @return vetor de string com os níveis banidos para o mapeamento do texto.
+	 */
 	public ArrayList<String> addBannedLevels(ArrayList<String> arrayList) {
 		ArrayList<String> levels = new ArrayList<>();
 		levels.add(configuration.getKey("LEVEL_ROOT"));
@@ -84,6 +120,17 @@ public class TextReader extends TextBookwayIO {
 		return levels;
 	}
 
+	/**
+	 * Método responsável por devolver o valor possível para os elementos da
+	 * validação DTD sendo que para cada nível do vetor existem de 0 a N
+	 * "filhos" possíveis.
+	 * 
+	 * @param arrayList
+	 *            , vetor de string que será varrido em busca dos elementos
+	 * @param selectedLevel
+	 *            , nível o qual será retornado o "filho" para validação.
+	 * @return o valor String necessário para mapeamento do validador DTD
+	 */
 	public String getChild(ArrayList<String> arrayList, String selectedLevel) {
 		String child = "";
 		int p = 0;
@@ -95,15 +142,34 @@ public class TextReader extends TextBookwayIO {
 			}
 		}
 		if (child.equalsIgnoreCase(configuration.getKey("LEVEL_PAGE")))
-			return configuration.getKey("LEVEL_PAGE") + "," + configuration.getKey("LEVEL_CONTENT") + ","
+			return configuration.getKey("LEVEL_PAGE") + ","
+					+ configuration.getKey("LEVEL_CONTENT") + ","
 					+ configuration.getKey("LEVEL_REFERENCE") + "*";
-		if (child.equalsIgnoreCase(configuration.getKey("LEVEL_REFERENCE"))	|| child.equalsIgnoreCase(""))
+		if (child.equalsIgnoreCase(configuration.getKey("LEVEL_REFERENCE"))
+				|| child.equalsIgnoreCase(""))
 			return "#PCDATA";
 		if (child.equalsIgnoreCase(configuration.getKey("LEVEL_CONTENT")))
 			return "#PCDATA";
 		return child + "*";
 	}
 
+	/**
+	 * Método que verifica o tipo do documento inserido e direciona para outro
+	 * método responsável pela criação do arquivo de texto a ser inserido no
+	 * sistema, que poderá ser realizado de duas formas, via TXT ou via XML.
+	 * 
+	 * @param docTypeValid
+	 *            , script de validação do arquivo de XML
+	 * @param source
+	 *            , conteúdo do texto a ser inserido
+	 * @param type
+	 *            , tipo do texto em questão TXT ou XML
+	 * @param linesForPage
+	 *            , quantidade de linhas por páginas para o mapeamento txt
+	 * @param pagesForChapter
+	 *            , quantidade de páginas por capítulo do mapeamento txt.
+	 * @return {@link Return}
+	 */
 	public Return createText(String docTypeValid, String source, String type,
 			Integer linesForPage, Integer pagesForChapter) {
 		Return retCreate = new Return(true);
@@ -113,9 +179,20 @@ public class TextReader extends TextBookwayIO {
 			retCreate.concat(createDocumentByTXT(source, linesForPage,
 					pagesForChapter));
 		return retCreate;
-		// TODO Resolver as menssagens deste metodo
 	}
 
+	/**
+	 * Cria o arquivo de XML apartir de um arquivo TXT inserido onde serão
+	 * mapeados os níveis para inserção do texto.
+	 * 
+	 * @param source
+	 *            , conteúdo do arquivo
+	 * @param linesForPage
+	 *            , quantidade de linhas por cada página para o mapeamento
+	 * @param pagesForChapter
+	 *            , quantidade de páginas por cada capítulo para o mapeamento
+	 * @return {@link Return}
+	 */
 	private Return createDocumentByTXT(String source, Integer linesForPage,
 			Integer pagesForChapter) {
 		Return retTxt = new Return(true);
@@ -151,6 +228,16 @@ public class TextReader extends TextBookwayIO {
 		return retTxt;
 	}
 
+	/**
+	 * Mapeia os capítulos de acordo com as páginas mapeadas e com a quantidade
+	 * informada da quantidade de páginas por capítulo.
+	 * 
+	 * @param mapPages
+	 *            , mapa contendo as páginas mapeadas do arquivo
+	 * @param pagesForChapter
+	 *            , quantidade de páginas por capítulo.
+	 * @return Mapa com os capítulos mapeados.
+	 */
 	private HashMap<String, Element> mappingChapters(
 			HashMap<String, Element> mapPages, Integer pagesForChapter) {
 		HashMap<String, Element> mapChapter = new HashMap<String, Element>();
@@ -166,7 +253,7 @@ public class TextReader extends TextBookwayIO {
 				page = mapPages.get(key);
 				countPages = 2;
 			}
-			if(page != null)
+			if (page != null)
 				chapter.addContent(page);
 			key = "page" + i++;
 			page = mapPages.get(key);
@@ -177,6 +264,16 @@ public class TextReader extends TextBookwayIO {
 		return mapChapter;
 	}
 
+	/**
+	 * Mapeia as páginas de acordo com uma lista das linhas lidas no arquivo e
+	 * com a quantidade informada de linhas por página.
+	 * 
+	 * @param linesOfPage
+	 *            , lista de linhas lidas
+	 * @param linesForPage
+	 *            , quantidade de linhas que deverá existir por página
+	 * @return um mapa com as páginas mapeadas.
+	 */
 	private HashMap<String, Element> mappingPages(List<String> linesOfPage,
 			Integer linesForPage) {
 		HashMap<String, Element> mapPages = new HashMap<String, Element>();
@@ -199,6 +296,13 @@ public class TextReader extends TextBookwayIO {
 		return mapPages;
 	}
 
+	/**
+	 * Método que contatena uma lista de String em uma única String
+	 * 
+	 * @param list
+	 *            , lista a ser concatenada
+	 * @return String com todas as strings concatenadas
+	 */
 	private String extractListString(List<String> list) {
 		String aux = "";
 		for (int i = 0; i < list.size(); i++) {
@@ -295,6 +399,11 @@ public class TextReader extends TextBookwayIO {
 		return retHierarchy;
 	}
 
+	/**Método que mapeia os dados dos do Documento criado pela leitura XML
+	 * da classe {@link Document} em um objeto do tipo texto para ser persistido
+	 * no sistema.
+	 * @return {@link Return}
+	 */
 	public Return mappingText() {
 		Return retMapp = new Return(true);
 		try {
@@ -310,6 +419,12 @@ public class TextReader extends TextBookwayIO {
 		return retMapp;
 	}
 
+	/**Método recursivo responsável pelo mapeamento dos níveis do texto em um único
+	 * objeto do tipo texto
+	 * @param rootElement, elemento raiz por onde será iniciado o mapeamento
+	 * @param text, objeto final onde serão reunidos todos os níveis mapeados
+	 * @return {@link Return}
+	 */
 	private LevelText extractLevelsText(Element rootElement, Text text) {
 		LevelText level = extractLevel(rootElement, text);
 		for (Element child : rootElement.getChildren()) {
@@ -318,6 +433,12 @@ public class TextReader extends TextBookwayIO {
 		return level;
 	}
 
+	/** Extrai o conteúdo de um elemento do tipo {@link Element} mapeado no mapeamento
+	 * XML em um objeto do tipo nível do texto
+	 * @param element, elemento do qual serão extraidas as informações
+	 * @param text, o texto que receberá os níveis compatíveis mapeados
+	 * @return {@link LevelText} de acordo com as extração em questão.
+	 */
 	private LevelText extractLevel(Element element, Text text) {
 		LevelText levelText = new LevelText();
 		String nameElement = element.getName();
@@ -344,10 +465,15 @@ public class TextReader extends TextBookwayIO {
 			elementText.setIdLevel(level);
 			listElementsText.add(elementText);
 		}
-		if (element.getName().equalsIgnoreCase(configuration.getKey("LEVEL_CONTENT")) || element.getName().equalsIgnoreCase(configuration.getKey("LEVEL_PAGE"))
-				|| element.getName().equalsIgnoreCase(configuration.getKey("LEVEL_REFERENCE"))) {
+		if (element.getName().equalsIgnoreCase(
+				configuration.getKey("LEVEL_CONTENT"))
+				|| element.getName().equalsIgnoreCase(
+						configuration.getKey("LEVEL_PAGE"))
+				|| element.getName().equalsIgnoreCase(
+						configuration.getKey("LEVEL_REFERENCE"))) {
 			elementText.setIdLevel(level);
-			if(element.getName().equalsIgnoreCase(configuration.getKey("LEVEL_PAGE")))
+			if (element.getName().equalsIgnoreCase(
+					configuration.getKey("LEVEL_PAGE")))
 				elementText.setName(configuration.getKey("LEVEL_PAGE"));
 			else
 				elementText.setName(configuration.getKey("LEVEL_VALUE"));

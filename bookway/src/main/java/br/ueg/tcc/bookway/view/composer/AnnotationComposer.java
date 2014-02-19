@@ -9,6 +9,7 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
 
+import br.com.vexillum.util.HibernateUtils;
 import br.com.vexillum.util.ReflectionUtils;
 import br.com.vexillum.util.Return;
 import br.com.vexillum.util.SpringFactory;
@@ -42,10 +43,12 @@ public class AnnotationComposer extends
 		super.doAfterCompose(comp);
 		setMyStudies(getStudyControl().getMyStudies(
 				(UserBookway) getUserLogged()));
-		Annotation anote = (Annotation) session.getAttribute("editThisNote");
-		if(anote != null)
-			selectedEntity = anote;
-		else
+		String anote = (String) session.getAttribute("editThisNote");
+		if(anote != null){
+			ElementsItensStudy ele = getElementsItensStudyControl(null).searchExistingItensById(anote);
+			if(ele != null)
+				selectedEntity = (Annotation) HibernateUtils.materializeProxy(ele.getItemOfStudy());
+		} else
 			getSelectedEntityFromListbox();
 		loadBinder();
 	}

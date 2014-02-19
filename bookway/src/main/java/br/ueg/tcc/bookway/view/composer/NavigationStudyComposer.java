@@ -14,7 +14,6 @@ import br.ueg.tcc.bookway.control.MarkingControl;
 import br.ueg.tcc.bookway.control.NavigationStudyControl;
 import br.ueg.tcc.bookway.model.ElementText;
 import br.ueg.tcc.bookway.model.ItemNavigationStudy;
-import br.ueg.tcc.bookway.model.LevelText;
 import br.ueg.tcc.bookway.model.MarkingOfUser;
 import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.UserBookway;
@@ -97,13 +96,6 @@ public class NavigationStudyComposer extends
 	public ItemNavigationStudy getEntityObject() {
 		return new ItemNavigationStudy();
 	}
-
-	private LevelText getPageElement(LevelText level) {
-		 HibernateUtils.materializeProxy(level.getElements());
-		ElementText page;
-		
-		return null;
-	}
 	
 	public void shareInFacebook(){
 		String message = "Está estudando os itens \"" + extractContentForShare() + "\" do texto \"" + study.getText().getTitle() + "\"";
@@ -126,10 +118,7 @@ public class NavigationStudyComposer extends
 		updateStatusTwitter(message);
 		getComponentById("selectSocialWeb").detach();
 	}
-	
-	public void shareInGooglePlus(){
-		
-	}
+
 	
 	@Override
 	protected String getUpdatePage() {
