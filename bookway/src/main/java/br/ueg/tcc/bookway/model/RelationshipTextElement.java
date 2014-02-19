@@ -13,6 +13,13 @@ import javax.persistence.Transient;
 
 import br.com.vexillum.model.annotations.ValidatorClass;
 
+/**
+ * Entidade modelo de negócio utilizada no caso de uso Manter Relacionamento
+ * entre trechos e textos
+ * 
+ * @author pedro
+ * 
+ */
 @ValidatorClass(validatorClass = "br.ueg.tcc.bookway.control.validator.RelationshipTextElementValidator")
 @SuppressWarnings("serial")
 @Entity
@@ -26,7 +33,7 @@ public class RelationshipTextElement extends ItensOfStudy {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_text_destiny", insertable = true, updatable = false, nullable = true)
 	private Text textDestiny;
-	
+
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "relationshipTextElement", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ItemRelationshipTextElement> itemRelationshipTextElements;
 
@@ -36,7 +43,7 @@ public class RelationshipTextElement extends ItensOfStudy {
 	public RelationshipTextElement() {
 		contentItensRelationship = "";
 	}
-	
+
 	public String getContentItensRelationship() {
 		return contentItensRelationship;
 	}

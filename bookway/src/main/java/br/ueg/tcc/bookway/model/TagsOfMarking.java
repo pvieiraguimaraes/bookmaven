@@ -8,6 +8,13 @@ import javax.persistence.ManyToOne;
 import br.com.vexillum.model.CommonEntity;
 import br.com.vexillum.model.annotations.ValidatorClass;
 
+/**
+ * Entidade de negócio utilizada para manter as tags que poderão existir em cada
+ * marcação
+ * 
+ * @author pedro
+ * 
+ */
 @ValidatorClass(validatorClass = "br.ueg.tcc.bookway.control.validator.TagsOfMarkingValidator")
 @SuppressWarnings("serial")
 @Entity
@@ -22,7 +29,7 @@ public class TagsOfMarking extends CommonEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_user", insertable = true, updatable = false, nullable = true)
 	private UserBookway userBookway;
-	
+
 	public UserBookway getUserBookway() {
 		return userBookway;
 	}

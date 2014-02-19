@@ -18,6 +18,13 @@ import br.com.vexillum.model.annotations.Validate;
 import br.com.vexillum.model.annotations.ValidatorClass;
 import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 
+/**
+ * Modelo responsável pela regras da principal entidade do sistema, o objeto
+ * texto, que será o alvo das interações do ambiente de estudo
+ * 
+ * @author pedro
+ * 
+ */
 @ValidatorClass(validatorClass = "br.ueg.tcc.bookway.control.validator.TextValidator")
 @Entity
 public class Text extends CommonEntity {
@@ -131,7 +138,7 @@ public class Text extends CommonEntity {
 	public void setStudy(List<Study> study) {
 		this.study = study;
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.getUserOwning().getName() + " - " + this.getTitle();

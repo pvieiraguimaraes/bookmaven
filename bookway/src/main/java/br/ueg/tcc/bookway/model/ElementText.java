@@ -12,6 +12,13 @@ import javax.persistence.OneToMany;
 
 import br.com.vexillum.model.CommonEntity;
 
+/**
+ * Entidade modelo utilizada para definir os elementos que um nível do texto
+ * poderá ter
+ * 
+ * @author pedro
+ * 
+ */
 @Entity
 public class ElementText extends CommonEntity {
 
@@ -21,7 +28,7 @@ public class ElementText extends CommonEntity {
 	private static final long serialVersionUID = 1L;
 
 	private String name;
-	
+
 	@Column(length = 4000)
 	private String value;
 

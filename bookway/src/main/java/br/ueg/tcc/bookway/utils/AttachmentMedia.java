@@ -14,8 +14,14 @@ import br.com.vexillum.util.SpringFactory;
 import br.com.vexillum.util.ZKUtils;
 import br.ueg.tcc.bookway.model.UserBookway;
 
+/**
+ * Classe que manipula os objetos relacionados com o upload de arquivos
+ * 
+ * @author pedro
+ * 
+ */
 public class AttachmentMedia implements Attachment<Media, UserBookway> {
-	
+
 	protected Properties configuration;
 
 	public AttachmentMedia() {
@@ -28,7 +34,8 @@ public class AttachmentMedia implements Attachment<Media, UserBookway> {
 		Return ret = new Return(true);
 		try {
 			InputStream in = ZKUtils.mediaToStream(file);
-			Files.copy(new File(configuration.getKey("PATH_PHOTO") + "\\" + user.getId() + "\\" + name), in);
+			Files.copy(new File(configuration.getKey("PATH_PHOTO") + "\\"
+					+ user.getId() + "\\" + name), in);
 		} catch (Exception e) {
 			ret.concat(new ExceptionManager(e).treatException());
 		}
@@ -40,9 +47,9 @@ public class AttachmentMedia implements Attachment<Media, UserBookway> {
 		Return ret = new Return(true);
 		try {
 			File f = getAttachment(name, user);
-			if(f == null || f.exists()){
+			if (f == null || f.exists()) {
 				f.delete();
-			}	
+			}
 		} catch (Exception e) {
 			ret.concat(new ExceptionManager(e).treatException());
 		}
@@ -51,8 +58,10 @@ public class AttachmentMedia implements Attachment<Media, UserBookway> {
 
 	@Override
 	public File getAttachment(String name, UserBookway user) {
-		File f = new File(configuration.getKey("PATH_PHOTO") + "\\" + user.getId() + "\\" + name); 
-		if(!f.exists()) return null;
+		File f = new File(configuration.getKey("PATH_PHOTO") + "\\"
+				+ user.getId() + "\\" + name);
+		if (!f.exists())
+			return null;
 		return f;
 	}
 

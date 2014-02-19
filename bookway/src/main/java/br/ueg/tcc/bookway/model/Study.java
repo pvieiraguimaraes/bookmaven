@@ -13,6 +13,13 @@ import javax.persistence.OneToMany;
 import br.com.vexillum.model.CommonEntity;
 import br.com.vexillum.model.annotations.ValidatorClass;
 
+/**
+ * Classe de negócio utilizada para manipular um estudo de um texto no sistema,
+ * onde oferecerá o relacionamento com os outros elementos de estudo
+ * 
+ * @author pedro
+ * 
+ */
 @ValidatorClass(validatorClass = "br.ueg.tcc.bookway.control.validator.StudyValidator")
 @SuppressWarnings("serial")
 @Entity
@@ -37,7 +44,7 @@ public class Study extends CommonEntity {
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "study", cascade = CascadeType.ALL)
 	private List<ElementsItensStudy> elementsItensStudies;
-	
+
 	public List<ElementsItensStudy> getElementsItensStudies() {
 		return elementsItensStudies;
 	}

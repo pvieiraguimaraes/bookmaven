@@ -1,9 +1,16 @@
 package br.ueg.tcc.bookway.model.enums;
 
-public enum TypePrivacyItem{
+/**
+ * Enumerador utilizado para definir o tipo que os itens do perfil poderá
+ * possuir.
+ * 
+ * @author pedro
+ * 
+ */
+public enum TypePrivacyItem {
 	PUBLICO("Público"), PRIVADO("Privado"), ONLY_FRIENDS("Somente Amigos");
-	//0, 1, 2;
-	
+	// 0, 1, 2;
+
 	private String name;
 
 	public String getName() {
@@ -21,7 +28,7 @@ public enum TypePrivacyItem{
 	public static TypePrivacyItem getTypePrivacyById(Integer id) {
 		return TypePrivacyItem.values()[id];
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.name;

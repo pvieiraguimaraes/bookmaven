@@ -2,6 +2,12 @@ package br.ueg.tcc.bookway.model;
 
 import br.com.vexillum.model.CommonEntity;
 
+/**
+ * Define a entidade modelo para a navegação de texto
+ * 
+ * @author pedro
+ * 
+ */
 @SuppressWarnings("serial")
 public class ItemNavigationStudy extends CommonEntity {
 

@@ -8,6 +8,13 @@ import javax.persistence.Table;
 
 import br.com.vexillum.model.CommonEntity;
 
+/**
+ * Entidade modelo de negócio utilizada para relacionar os elementos de um texto
+ * com um estudo específico
+ * 
+ * @author pedro
+ * 
+ */
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "elements_itensstudy")
@@ -20,7 +27,7 @@ public class ElementsItensStudy extends CommonEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_elementtext", insertable = true, updatable = true, nullable = false)
 	private ElementText elementText;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_study", insertable = true, updatable = true, nullable = false)
 	private Study study;

@@ -43,51 +43,103 @@ import br.ueg.tcc.bookway.view.macros.MyText;
 @SuppressWarnings("serial")
 public abstract class BaseComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		extends SocialComposer<E, G> {
-	
+
+	/**
+	 * Define o estilo do elmento como sublinhado
+	 */
 	private final String UNDER_ON = "text-decoration: underline;";
+
+	/**
+	 * Remove o estilo sublinhado de um elemento
+	 */
 	private final String UNDER_OFF = "text-decoration: none;";
-	
+
+	/**
+	 * Checkbox que se for marcado a interação será realizada de acordo com a
+	 * lista de textos do usuário
+	 */
 	@Wire
 	public Checkbox myTexts;
 
+	/**
+	 * Composer executado anteriormente ao atual
+	 */
 	protected BaseComposer<E, G> parentComposer;
 
+	/**
+	 * Lista de elementos de texto selecionados
+	 */
 	protected List<ElementText> itensSelected;
 
 	/**
 	 * Lista que representa os Elementos de Texto que participará da referência
 	 */
 	protected List<ElementText> itensSelectedForReference;
-	
+
+	/**
+	 * Objeto de estudo na execução
+	 */
 	protected Study study;
-	
+
+	/**
+	 * Lista de todos os textos do usuário
+	 */
 	private List<Text> allMyTexts;
-	
+
+	/**
+	 * Lista de todos os estudos do usuário
+	 */
 	private List<Study> myStudies;
-	
+
+	/**
+	 * Se verdadeiro determina que deverá ser continuado o estudo do último
+	 * elemento que parou
+	 */
 	protected Boolean continueStudy;
-	
+
+	/**
+	 * Verdadeiro se a execução da criação do ambiente de estudo é em modo de
+	 * referência textual
+	 */
 	protected Boolean isTextReferenceMode;
-	
+
+	/**
+	 * Mapa de objetos utilizado para transferir dados para a camada de controle
+	 */
 	protected HashMap<String, Object> newMap;
-	
+
+	/**
+	 * Lista com todos os elementos de estudo mapeados para o estudo
+	 */
 	protected List<ItemStudy> itemStudies;
-	
+
+	/**
+	 * Lista com todos os elementos de estudo selecionados
+	 */
 	protected List<ItemStudy> itemStudiesSelected;
 
+	/**
+	 * Lista de elementos selecionados no ambiente que serão utilizados para
+	 * realizar a referência
+	 */
 	protected List<ItemStudy> itemStudiesSelectedForReference;
 	/**
-	 * Lista que representa o relacionamento entre os elementos do texto e os itens de estudo
+	 * Lista que representa o relacionamento entre os elementos do texto e os
+	 * itens de estudo
 	 */
 	protected List<ElementsItensStudy> elementsItensStudies;
-	
+
 	/**
-	 * Utilizado nos casos de uso dos Itens De Estudo, onde é necessário informar o tipo de visualização PUBLICO / PRIVADO
+	 * Utilizado nos casos de uso dos Itens De Estudo, onde é necessário
+	 * informar o tipo de visualização PUBLICO / PRIVADO
 	 */
 	protected TypePrivacy typePrivacy = TypePrivacy.PRIVADO;
-	
+
+	/**
+	 * Objeto texto selecionado
+	 */
 	private Text selectedText;
-	
+
 	public List<Text> getAllMyTexts() {
 		return allMyTexts;
 	}
@@ -145,7 +197,7 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 	public void setTypePrivacy(TypePrivacy typePrivacy) {
 		this.typePrivacy = typePrivacy;
 	}
-	
+
 	public List<ElementsItensStudy> getElementsItensStudies() {
 		return elementsItensStudies;
 	}
@@ -219,6 +271,12 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		setParentComposer((BaseComposer<E, G>) arg.get("thisComposer"));
 	}
 
+	/**
+	 * Método que realiza chamadas a camada de controladores e busca todos os
+	 * textos do usuário.
+	 * 
+	 * @return lista de {@link Text} do usuário
+	 */
 	@SuppressWarnings("unchecked")
 	public List<Text> getAllTextsOfUser() {
 		Return retListText = new Return(true);
@@ -228,15 +286,20 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		if (retListText.isValid()) {
 			listTextUser = (List<Text>) retListText.getList();
 			retListText = new Return(true);
-			retListText.concat(getRelationshipTextUserControl().listTextAddOfUser());
+			retListText.concat(getRelationshipTextUserControl()
+					.listTextAddOfUser());
 		}
 		if (retListText.isValid())
 			listTextUser.addAll((List<Text>) retListText.getList());
 		return listTextUser;
 	}
-	
+
+	/**
+	 * Carrega todos os textos do usuário
+	 */
 	public void loadListText() {
-		List<Study> studies = getStudyControl(null).getMyStudies((UserBookway) getUserLogged());
+		List<Study> studies = getStudyControl(null).getMyStudies(
+				(UserBookway) getUserLogged());
 		List<Text> texts = getAllTextsOfUser();
 
 		for (Study study : studies) {
@@ -250,39 +313,47 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		loadBinder();
 	}
 
-
+	/**
+	 * Método que inicializa os objetos de acordo com execuções de objetos na
+	 * sessão, onde faz a verificação da existência dos objetos em execuções
+	 * anteriores a atual.
+	 */
 	@SuppressWarnings("unchecked")
 	private void initObjects() {
 		if (arg.get("itensSelected") == null)
 			itensSelected = new ArrayList<>();
 		else
 			itensSelected = (List<ElementText>) arg.get("itensSelected");
-		
+
 		if (arg.get("itensSelectedForReference") == null)
 			itensSelectedForReference = new ArrayList<>();
 		else
-			itensSelectedForReference = (List<ElementText>) arg.get("itensSelectedForReference");
+			itensSelectedForReference = (List<ElementText>) arg
+					.get("itensSelectedForReference");
 
 		if (arg.get("itemStudies") == null)
 			itemStudies = new ArrayList<>();
 		else
 			itemStudies = (List<ItemStudy>) arg.get("itemStudies");
-		
+
 		if (arg.get("itemStudiesSelected") == null)
 			itemStudiesSelected = new ArrayList<>();
 		else
-			itemStudiesSelected = (List<ItemStudy>) arg.get("itemStudiesSelected");
-		
+			itemStudiesSelected = (List<ItemStudy>) arg
+					.get("itemStudiesSelected");
+
 		if (itemStudiesSelectedForReference == null)
 			itemStudiesSelectedForReference = new ArrayList<>();
 		else
-			itemStudiesSelectedForReference = (List<ItemStudy>) arg.get("itemStudiesSelectedForReference");
-		
+			itemStudiesSelectedForReference = (List<ItemStudy>) arg
+					.get("itemStudiesSelectedForReference");
+
 		if (arg.get("elementsItensStudies") == null)
 			elementsItensStudies = new ArrayList<>();
 		else
-			elementsItensStudies = (List<ElementsItensStudy>) arg.get("elementsItensStudies");
-		
+			elementsItensStudies = (List<ElementsItensStudy>) arg
+					.get("elementsItensStudies");
+
 		if (arg.get("study") == null)
 			study = new Study();
 		else
@@ -292,7 +363,7 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 			continueStudy = false;
 		else
 			continueStudy = (Boolean) arg.get("continueStudy");
-		
+
 		if (arg.get("isTextReferenceMode") == null)
 			isTextReferenceMode = false;
 		else
@@ -304,6 +375,9 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 			newMap = (HashMap<String, Object>) arg.get("newMap");
 	}
 
+	/**
+	 * Inicializa a página de alteração de entidade
+	 */
 	@SuppressWarnings("unchecked")
 	protected void initUpdatePage() {
 		if (arg.get("selectedEntity") != null) {
@@ -312,6 +386,9 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		}
 	}
 
+	/**
+	 * Faz chamada da página de alteração de uma entidade
+	 */
 	public void callUpdateModal() {
 		Return ret = validateSelectedEntity();
 		if (ret.isValid()) {
@@ -319,30 +396,65 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		}
 	}
 
+	/**
+	 * Faz chamada da mensagem de desativação
+	 */
 	public void callDeactivationConfirmation() {
 		super.showDeactivateConfirmation(getDeactivationMessage());
 	}
 
+	/**
+	 * Faz chamada da mensagem de ativação
+	 */
 	public void callActivationConfirmation() {
 		super.showActivateConfirmation(getActivationMessage());
 	}
 
+	/**
+	 * Método que deverá ser implementado para definir a página de alteração de
+	 * entidade
+	 * 
+	 * @return caminho da página que deverá ser executada para alteração
+	 */
 	protected abstract String getUpdatePage();
 
+	/**
+	 * Ao ser implementado retornará a mensagem padronizada para a confirmação
+	 * da desativação de uma entidade
+	 * 
+	 * @return mensagem que será exibida para confirmação de desativação
+	 */
 	protected abstract String getDeactivationMessage();
 
+	/**
+	 * Mensagem padronizada para ativação de uma entidade
+	 * 
+	 * @return mensagem em questão
+	 */
 	protected String getActivationMessage() {
 		return "Você tem certeza que deseja ativar?";
 	}
 
+	/**
+	 * Carrega os componentes presentes na tela do composer pai da execução
+	 * atual
+	 */
 	public void loadBinderParentComposer() {
 		getParentComposer().loadBinder();
 	}
 
+	/**
+	 * Realiza a chamada da mensagem de confirmação de exclusão
+	 */
 	public void callDeletionConfirmation() {
 		super.showDeleteConfirmation(getDeleteMessage());
 	}
 
+	/**
+	 * Mensagem padrão para confirmar a exclusão
+	 * 
+	 * @return mensagem em questão
+	 */
 	protected String getDeleteMessage() {
 		return "Confirma exclusão?";
 	}
@@ -360,11 +472,14 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		return ret;
 	}
 
+	/**
+	 * Limpa o formulário
+	 */
 	public void resetForm() {
 		clearForm();
 		loadBinder();
 	}
-	
+
 	@Override
 	public boolean doAction(String action) {
 		if (!itensSelected.isEmpty() && study != null) {
@@ -374,16 +489,31 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		return super.doAction(action);
 	}
 
-	private ElementText getMaxItemFromItensSelected(List<ElementText> itensSelected) {
+	/**
+	 * Busca o "maior" item de uma lista de itens selecionados para ser definido
+	 * como o último para a interação da parada de estudo.
+	 * 
+	 * @param itensSelected
+	 *            , lista de itens selecionados
+	 * @return o {@link ElementText} de maior ID para armazenamento.
+	 */
+	private ElementText getMaxItemFromItensSelected(
+			List<ElementText> itensSelected) {
 		ElementText aux, levelText = itensSelected.get(0);
 		for (int i = 1; i < itensSelected.size(); i++) {
 			aux = itensSelected.get(i);
-			if(aux.getId() > levelText.getId())
+			if (aux.getId() > levelText.getId())
 				levelText = aux;
 		}
 		return levelText;
 	}
 
+	/**
+	 * Faz a chamada o controle de Estudo para salvar ou atualizar o último
+	 * elemento de parada
+	 * 
+	 * @return {@link Return}
+	 */
 	public Return saveOrUpdateStudy() {
 		Return ret = new Return(true);
 		newMap.put("entity", getStudy());
@@ -391,8 +521,12 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		ret.concat(getStudyControl(newMap).doAction("save"));
 		return ret;
 	}
-	
-	public Return saveElementsItensStudy(){
+
+	/**Realiza a chamada para a camada de controle para criar os relacionamentos necessários
+	 * entre os elementos do texto e o estudo em questão
+	 * @return {@link Return}
+	 */
+	public Return saveElementsItensStudy() {
 		Return ret = new Return(true);
 		List<ElementsItensStudy> list = getElementsItensStudies();
 
@@ -406,10 +540,13 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 			}
 		} else
 			ret.setValid(false);
-			
+
 		return ret;
 	}
-	
+
+	/**Cria os ícones de estudo de acordo para uma lista de elementos informada
+	 * @param list, lista de elementos que deverá ser inserido o ícone de estudo
+	 */
 	public void createIconsStudy(List<ItemStudy> list) {
 		for (ItemStudy itemStudy : list) {
 			Component comp = createComponentIconStudy(itemStudy);
@@ -417,36 +554,56 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 				itemStudy.appendChild(comp);
 		}
 	}
-	
+
+	/** Instancia o controle de {@link StudyControl}
+	 * @param newMap
+	 * @return nova instância do controlador {@link StudyControl}
+	 */
 	public StudyControl getStudyControl(HashMap<String, Object> newMap) {
 		return SpringFactory.getController("studyControl", StudyControl.class,
 				newMap);
 	}
-	
-	public ElementsItensStudyControl getElementsItensStudyControl(HashMap<String, Object> newMap) {
-		return SpringFactory.getController("elementsItensStudyControl", ElementsItensStudyControl.class,
-				newMap);
+
+	/** Instancia o controle de {@link StudyControl}
+	 * @param newMap
+	 * @return nova instância do controlador {@link StudyControl}
+	 */
+	public ElementsItensStudyControl getElementsItensStudyControl(
+			HashMap<String, Object> newMap) {
+		return SpringFactory.getController("elementsItensStudyControl",
+				ElementsItensStudyControl.class, newMap);
 	}
-	
-	public NavigationStudyControl getNavigationStudyControl(HashMap<String, Object> newMap) {
-		return SpringFactory.getController("navigationStudyControl", NavigationStudyControl.class,
-				newMap);
+
+	/** Instancia o controle de {@link StudyControl}
+	 * @param newMap
+	 * @return nova instância do controlador {@link StudyControl}
+	 */
+	public NavigationStudyControl getNavigationStudyControl(
+			HashMap<String, Object> newMap) {
+		return SpringFactory.getController("navigationStudyControl",
+				NavigationStudyControl.class, newMap);
 	}
-	
+
+	/** Instancia o controle de {@link StudyControl}
+	 * @param newMap
+	 * @return nova instância do controlador {@link StudyControl}
+	 */
 	public TextControl getTextControl(HashMap<String, Object> newMap) {
 		return SpringFactory.getController("textControl", TextControl.class,
 				newMap);
 	}
-	
+
 	public void changeItemStyle(ItemStudy itemStudy) {
 		String style = itemStudy.contentElement.getStyle();
 		if (style == null)
 			itemStudy.contentElement.setStyle(UNDER_ON);
 		else {
 			if (style.equalsIgnoreCase("") || style.contains(UNDER_OFF))
-				itemStudy.contentElement.setStyle(style.replace(UNDER_OFF, UNDER_ON));
+				itemStudy.contentElement.setStyle(style.replace(UNDER_OFF,
+						UNDER_ON));
 			else if (style.contains(UNDER_ON))
-				itemStudy.contentElement.setStyle(style.replace(UNDER_ON, UNDER_OFF));
+				itemStudy.contentElement.setStyle(style.replace(UNDER_ON,
+						UNDER_OFF));
 			else
 				itemStudy.contentElement.setStyle(style.concat(UNDER_ON));
 		}
@@ -461,8 +618,9 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		setItensSelected(new ArrayList<ElementText>());
 		checkPanelActionVisibility();
 	}
-	
-	public void changeStyleMarkingInItens(List<ItemStudy> itemStudiesSelected, String color) {
+
+	public void changeStyleMarkingInItens(List<ItemStudy> itemStudiesSelected,
+			String color) {
 		for (ItemStudy itemStudy : itemStudiesSelected) {
 			changeStyleMarkingThisItem(itemStudy, color);
 		}
@@ -470,11 +628,11 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		parentComposer.setItensSelected(new ArrayList<ElementText>());
 		parentComposer.checkPanelActionVisibility();
 	}
-	
-	public void changeStyleMarkingThisItem(ItemStudy itemStudy, String color){
+
+	public void changeStyleMarkingThisItem(ItemStudy itemStudy, String color) {
 		String style = "background-color: " + color + ";";
 		String styleItem = itemStudy.contentElement.getStyle();
-		if(!styleItem.isEmpty())
+		if (!styleItem.isEmpty())
 			style += styleItem;
 		itemStudy.contentElement.setStyle(style);
 	}
@@ -491,18 +649,20 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		if (panel != null)
 			panel.setVisible(visibility);
 		else {
-			if(parentComposer != null)
-				panel = parentComposer.getComponentById(component, "panelActions");
+			if (parentComposer != null)
+				panel = parentComposer.getComponentById(component,
+						"panelActions");
 			if (panel != null)
 				panel.setVisible(visibility);
 		}
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public ItemStudy insertIconStudy(ItemStudy itemStudy, Long idLevel, boolean hasItensStudies) {
+	public ItemStudy insertIconStudy(ItemStudy itemStudy, Long idLevel,
+			boolean hasItensStudies) {
 		itemStudy.setIdIconStudy("idIconStudy" + idLevel.toString());
 
-		if(hasItensStudies)
+		if (hasItensStudies)
 			itemStudy.appendChild(createComponentIconStudy(itemStudy));
 
 		itemStudy.addEventListener(Events.ON_MOUSE_OUT, new EventListener() {
@@ -513,7 +673,7 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 
 					Image imageChild = ((Image) getComponentById(item
 							.getIdIconStudy()));
-					if(imageChild != null)
+					if (imageChild != null)
 						imageChild.setVisible(false);
 				}
 			}
@@ -528,17 +688,17 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 
 					Image imageChild = ((Image) getComponentById(item
 							.getIdIconStudy()));
-					
-					if(imageChild != null)
+
+					if (imageChild != null)
 						imageChild.setVisible(true);
 				}
 			}
 
 		});
-		
+
 		return itemStudy;
 	}
-	
+
 	public Component createTabWithName(String nameTab) {
 		Tab tab = new Tab();
 		tab.setLabel(nameTab);
@@ -550,23 +710,24 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		newMap.put("idElementText", itemStudy.getIdElement());
 		List<Component> children = itemStudy.getChildren();
 		for (Component component : children) {
-			if(component instanceof ItemStudy)
+			if (component instanceof ItemStudy)
 				return null;
 		}
-		return Executions.createComponents("/template/component/iconItemStudy.zul", itemStudy, newMap);
+		return Executions.createComponents(
+				"/template/component/iconItemStudy.zul", itemStudy, newMap);
 	}
-	
+
 	public List<TypePrivacy> getListTypesPrivacy() {
 		return Arrays.asList(TypePrivacy.values());
 	}
-	
+
 	public void resetResultListSearch() {
 		Component resultSearch = getComponentById(getComponent(),
 				"resultSearch");
 		if (resultSearch != null)
 			Components.removeAllChildren(resultSearch);
 	}
-	
+
 	/**
 	 * Método para setar a lista de elementos visual que represetarão o texto
 	 * que serao criados pela pesquisa ou na inicialização, listandos todos os
@@ -603,9 +764,11 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 			}
 		}
 	}
-	
-	/**Método que cria o objeto de estudo caso não existe salva no banco e
+
+	/**
+	 * Método que cria o objeto de estudo caso não existe salva no banco e
 	 * retorna ele para o usuário, para se relacionar com os outros objetos
+	 * 
 	 * @param text
 	 * @return
 	 */
@@ -614,18 +777,19 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		study.setDateStudy(new Date());
 		study.setText(text);
 		study.setUserBookway((UserBookway) getUserLogged());
-		
+
 		Return ret = saveOrUpdateStudy();
 
 		if (ret.isValid())
 			return getStudyControl(null).getThisStudy(study);
 		return null;
 	}
-	
+
 	private ItemText createItemText(Text text) {
 		setSelectedText(text);
 		boolean has = getRelationshipTextUserControl().verifyUserHasText();
-		ItemText item = new ItemText((UserBookway) userLogged, text, has, isTextReferenceMode);
+		ItemText item = new ItemText((UserBookway) userLogged, text, has,
+				isTextReferenceMode);
 		String userOwning = text.getUserOwning() != null ? text.getUserOwning()
 				.getName() : "";
 		item.setUser(userOwning);
@@ -641,7 +805,7 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		myText.setDescription(text.getDescription());
 		return myText;
 	}
-	
+
 	public RelationshipTextUserControl getRelationshipTextUserControl() {
 		return SpringFactory.getController("relationshipTextUserControl",
 				RelationshipTextUserControl.class,
