@@ -20,11 +20,17 @@ import br.ueg.tcc.bookway.control.UserBookwayControl;
 import br.ueg.tcc.bookway.model.TypePrivacyEntity;
 import br.ueg.tcc.bookway.model.enums.TypePrivacyItem;
 
+/**
+ * Contém as regras e controles da visão para os casos de uso de configuração
+ * 
+ * @author pedro
+ * 
+ */
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
 @Scope("prototype")
 public class ConfigurationComposer extends PageConfigurationComposer {
-	
+
 	private TypePrivacyEntity typePrivacyEntity;
 
 	public TypePrivacyEntity getTypePrivacyEntity() {
@@ -38,14 +44,15 @@ public class ConfigurationComposer extends PageConfigurationComposer {
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
-		if(typePrivacyEntity == null) typePrivacyEntity = new TypePrivacyEntity();
+		if (typePrivacyEntity == null)
+			typePrivacyEntity = new TypePrivacyEntity();
 		loadConfigurationsVisibilityUser();
 		loadBinder();
 	}
 
 	/**
-	 * Carrega no combobox o valor correto determinado pelo usuário e se não existir
-	 * trás o valor padrão
+	 * Carrega no combobox o valor correto determinado pelo usuário e se não
+	 * existir trás o valor padrão
 	 */
 	private void loadConfigurationsVisibilityUser() {
 		typePrivacyEntity.setEmail(TypePrivacyItem.getTypePrivacyById(Integer
@@ -69,7 +76,14 @@ public class ConfigurationComposer extends PageConfigurationComposer {
 				.getTypePrivacyById(Integer.parseInt(getThisConfigurationValue(
 						"view_graduation").getValue())));
 	}
-	
+
+	/**
+	 * Carrega uma configuração de acordo com uma chave passada
+	 * 
+	 * @param key
+	 *            , chava de busca para a configuração desejada
+	 * @return
+	 */
 	private Configuration getThisConfigurationValue(String key) {
 		return ConfigurationManager.getManager().getConfigurationInstance(key,
 				getUserLogged());
@@ -81,7 +95,12 @@ public class ConfigurationComposer extends PageConfigurationComposer {
 				ConfigurationControl.class,
 				ReflectionUtils.prepareDataForPersistence(this));
 	}
-	
+
+	/**
+	 * Utilizado para listar os tipos de privacidade que um item poderá assumir
+	 * 
+	 * @return lista de tipos de privacidade
+	 */
 	public List<TypePrivacyItem> getListTypesPrivacyItem() {
 		return Arrays.asList(TypePrivacyItem.values());
 	}
@@ -91,45 +110,61 @@ public class ConfigurationComposer extends PageConfigurationComposer {
 		return new Configuration();
 	}
 
+	/**
+	 * Redireciona para a edição do perfil do usuário
+	 */
 	public void editDataUser() {
 		Executions.sendRedirect("./perfil.zul");
 	}
 
+	/**
+	 * Exibe confirmação de exclusão para conta do usuário
+	 */
 	public void deleteAccount() {
-		showActionConfirmation(messages.getKey("account_deletion_confirmation"), "deleteAccountUser");
+		showActionConfirmation(
+				messages.getKey("account_deletion_confirmation"),
+				"deleteAccountUser");
 	}
 
+	/**
+	 * Faz chamada para o controle para excluir a conta do usuário
+	 */
 	public void deleteAccountUser() {
 		Return ret = new Return(true);
 		UserBookwayControl control = SpringFactory.getController(
 				"userBookwayControl", UserBookwayControl.class,
 				ReflectionUtils.prepareDataForPersistence(this));
 		ret.concat(control.doAction("deleteAccount"));
-		if(ret.isValid())
+		if (ret.isValid())
 			Executions.sendRedirect("/j_spring_security_logout");
 	}
-	
+
 	@Override
 	public List<UserPropertiesCategory> getUserPropertiesCategory() {
 		List<UserPropertiesCategory> list = super.getUserPropertiesCategory();
 		UserPropertiesCategory category = getCategoryVisibilityPerfil();
-		if(category != null && list.contains(category))
+		if (category != null && list.contains(category))
 			list.remove(category);
 		return list;
 	}
 
-	/**Carrega a categoria de visibilidade de itens de perfil
-	 * se existir, caso contrário null
+	/**
+	 * Carrega a categoria de visibilidade de itens de perfil se existir, caso
+	 * contrário null
+	 * 
 	 * @return categoria de visibilidade de itens de perfil
 	 */
 	private UserPropertiesCategory getCategoryVisibilityPerfil() {
 		UserPropertiesCategory category = null;
 		Return ret = getControl().getCategoryById((long) 2);
-		if(ret.isValid())
+		if (ret.isValid())
 			category = (UserPropertiesCategory) ret.getList().get(0);
 		return category;
 	}
-	
+
+	/**
+	 * Salva os valores setados das configurações dos itens
+	 */
 	public void saveVisibilityAccount() {
 		Return ret = new Return(true);
 		List<Configuration> configs = new ArrayList<>();
@@ -156,8 +191,17 @@ public class ConfigurationComposer extends PageConfigurationComposer {
 		treatReturn(ret);
 		loadBinder();
 	}
-	
-	private Configuration changeValueConfiguration(String key, String value){
+
+	/**
+	 * Busca uma configuração e seta um novo valor para essa propriedade
+	 * 
+	 * @param key
+	 *            , chave da configuração
+	 * @param value
+	 *            , da configuração
+	 * @return {@link Configuration}
+	 */
+	private Configuration changeValueConfiguration(String key, String value) {
 		Configuration config = getThisConfigurationValue(key);
 		config.setValue(value);
 		return config;

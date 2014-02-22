@@ -29,6 +29,12 @@ import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.UserBookway;
 import br.ueg.tcc.bookway.view.macros.ItemOfPanel;
 
+/**
+ * Classe que controla a camada de visão dos itens elementos do estudo
+ * 
+ * @author pedro
+ * 
+ */
 @SuppressWarnings("serial")
 public class ElementsItensStudyComposer extends
 		BaseComposer<ElementsItensStudy, ElementsItensStudyControl> {
@@ -36,11 +42,11 @@ public class ElementsItensStudyComposer extends
 	private ElementText checkElementText;
 
 	private Study checkStudy;
-	
+
 	private List<Annotation> annotations;
-	
+
 	private List<MarkingUsed> markingUseds;
-	
+
 	private List<RelationshipTextElement> relationshipTextElements;
 
 	public List<RelationshipTextElement> getRelationshipTextElements() {
@@ -93,94 +99,138 @@ public class ElementsItensStudyComposer extends
 			createPanelItensStudy(idElementText);
 	}
 
+	/**
+	 * Cria o painel com os elementos de estudo presentes no elemento do texto
+	 * para aquele estudo
+	 * 
+	 * @param idElementText
+	 *            , código do elemento de estudo que possui os itens de estudo
+	 */
 	@SuppressWarnings("unchecked")
 	private void createPanelItensStudy(String idElementText) {
 		Window win = (Window) getComponentById("panelItensStudy");
 
-		setCheckElementText(getNavigationStudyControl(null)
-				.getElementText(Long.parseLong(idElementText)));
+		setCheckElementText(getNavigationStudyControl(null).getElementText(
+				Long.parseLong(idElementText)));
 		setCheckStudy(study);
 
 		Return ret = getControl().searchExistingItensStudies();
-		if(ret.isValid() && !ret.getList().isEmpty()){
-			
-			List<ElementsItensStudy> list = (List<ElementsItensStudy>) ret.getList();
+		if (ret.isValid() && !ret.getList().isEmpty()) {
+
+			List<ElementsItensStudy> list = (List<ElementsItensStudy>) ret
+					.getList();
 			win.appendChild(createComponentsInPanel(list));
 		}
 	}
 
+	/**
+	 * Verifica o tipo do item de estudo existente e cria o tipo específico e
+	 * adiciona no painel
+	 * 
+	 * @param list
+	 *            , lista de elementos a serem adicionados no painel
+	 * @return painel com todos os itens adicionados
+	 */
 	private Component createComponentsInPanel(List<ElementsItensStudy> list) {
 		separateItensStudyList(list);
-		
+
 		boolean flag = false;
-		
+
 		Tabbox tabbox = new Tabbox();
 		Tabs tabs = new Tabs();
 		Tabpanels tabpanels = new Tabpanels();
-		
+
 		tabbox.appendChild(tabs);
 		tabbox.appendChild(tabpanels);
-		
+
 		if (!getAnnotations().isEmpty()) {
 			tabs.appendChild(createItemPanelAnnotation(tabs, tabpanels));
 			flag = true;
 		}
-		
+
 		if (!getMarkingUseds().isEmpty()) {
 			tabs.appendChild(createItemPanelMarking(tabs, tabpanels));
 			flag = true;
 		}
-		
+
 		if (!getRelationshipTextElements().isEmpty()) {
-			tabs.appendChild(createItemPanelRelationshipTextElement(tabs, tabpanels));
+			tabs.appendChild(createItemPanelRelationshipTextElement(tabs,
+					tabpanels));
 			flag = true;
 		}
-		
-		if(flag)
-			((Tab)tabbox.getTabs().getFirstChild()).setSelected(true);
-		
+
+		if (flag)
+			((Tab) tabbox.getTabs().getFirstChild()).setSelected(true);
+
 		return tabbox;
 	}
 
+	/**
+	 * Cria um elemento para representação do relacionamento entre trechos e
+	 * textos
+	 * 
+	 * @param tabs
+	 *            , as tabs do painel de itens de estudo.
+	 * @param tabpanels
+	 *            , painel com os itens adicionadaos
+	 * @return componente com o item adicionado
+	 */
 	private Component createItemPanelRelationshipTextElement(Tabs tabs,
 			Tabpanels tabpanels) {
 		Tab tab = new Tab("Referências");
 		Tabpanel tabpanel = new Tabpanel();
 		Vlayout vlayout = new Vlayout();
-		
+
 		tabs.appendChild(tab);
-		
+
 		vlayout.setHeight("400px");
 		vlayout.setStyle("overflow-y: scroll;");
 
 		tabpanel.appendChild(vlayout);
 		tabpanels.appendChild(tabpanel);
-		
+
 		String content = "";
 		UserBookway user = (UserBookway) getUserLogged();
 		boolean userOwner = false;
 		for (RelationshipTextElement relation : getRelationshipTextElements()) {
-			if(relation.getStudy().getUserBookway() == user) userOwner = true;
-			List<ItemRelationshipTextElement> itens = relation.getItemRelationshipTextElements();
+			if (relation.getStudy().getUserBookway() == user)
+				userOwner = true;
+			List<ItemRelationshipTextElement> itens = relation
+					.getItemRelationshipTextElements();
 			for (ItemRelationshipTextElement itemRelationshipTextElement : itens) {
-				content = itemRelationshipTextElement.getElementTextDestiny().getValue() + " " +
-				itemRelationshipTextElement.getElementTextOrign().getValue();
-				
-				vlayout.appendChild(new ItemOfPanel("Relationship", null, content, null, false, false, true, false, false, false, relation.getId().toString(), user.getName()));
+				content = itemRelationshipTextElement.getElementTextDestiny()
+						.getValue()
+						+ " "
+						+ itemRelationshipTextElement.getElementTextOrign()
+								.getValue();
+
+				vlayout.appendChild(new ItemOfPanel("Relationship", null,
+						content, null, false, false, true, false, false, false,
+						relation.getId().toString(), user.getName()));
 
 			}
 		}
-		
+
 		return tab;
 	}
 
+	/**
+	 * Cria um item específico para adição de elementos do tipo anotações no
+	 * painel de itens de estudo
+	 * 
+	 * @param tabs
+	 *            , as tabs do painel de itens de estudo.
+	 * @param tabpanels
+	 *            , painel com os itens adicionadaos
+	 * @return componente com o item adicionado
+	 */
 	private Tab createItemPanelAnnotation(Tabs tabs, Tabpanels tabpanels) {
 		Tab tab = new Tab("Anotações");
 		Tabpanel tabpanel = new Tabpanel();
 		Vlayout vlayout = new Vlayout();
-		
+
 		tabs.appendChild(tab);
-		
+
 		vlayout.setHeight("400px");
 		vlayout.setStyle("overflow-y: scroll;");
 
@@ -189,21 +239,36 @@ public class ElementsItensStudyComposer extends
 		boolean userOwner = false;
 		UserBookway user = (UserBookway) getUserLogged();
 		for (Annotation annotation : getAnnotations()) {
-			if(annotation.getStudy().getUserBookway() == user) userOwner = true;
-			//TODO Verificar aqui a mudança da visibilidade do botão de acordo com o dono do item
-			vlayout.appendChild(new ItemOfPanel("Annotation", annotation.getTitle(), annotation.getContent(), null, true, false, true, false, userOwner, userOwner, annotation.getId().toString(),user.getName()));
+			if (annotation.getStudy().getUserBookway() == user)
+				userOwner = true;
+			// TODO Verificar aqui a mudança da visibilidade do botão de acordo
+			// com o dono do item
+			vlayout.appendChild(new ItemOfPanel("Annotation", annotation
+					.getTitle(), annotation.getContent(), null, true, false,
+					true, false, userOwner, userOwner, annotation.getId()
+							.toString(), user.getName()));
 		}
-		
+
 		return tab;
 	}
-	
+
+	/**
+	 * Cria os itens do painel de itens de estudo para o tipo específico
+	 * marcações
+	 * 
+	 * @param tabs
+	 *            , as tabs do painel de itens de estudo.
+	 * @param tabpanels
+	 *            , painel com os itens adicionadaos
+	 * @return componente com o item adicionado
+	 */
 	private Tab createItemPanelMarking(Tabs tabs, Tabpanels tabpanels) {
 		Tab tab = new Tab("Marcações");
 		Tabpanel tabpanel = new Tabpanel();
 		Vlayout vlayout = new Vlayout();
-		
+
 		tabs.appendChild(tab);
-		
+
 		vlayout.setHeight("400px");
 		vlayout.setStyle("overflow-y: scroll;");
 
@@ -213,14 +278,26 @@ public class ElementsItensStudyComposer extends
 		boolean userOwner = false;
 		for (MarkingUsed markingUsed : getMarkingUseds()) {
 			MarkingOfUser markingOfUser = markingUsed.getMarkingOfUser();
-			if(markingOfUser.getUserBookway() == user) userOwner = true;
-			//TODO Colocar pra funcionar a visibilidade dos botões.
-			vlayout.appendChild(new ItemOfPanel("MarkingOfUser", markingOfUser.getName(), null, markingOfUser.getColor(), true, true, false, userOwner, false, false, markingOfUser.getId().toString(), user.getName()));
+			if (markingOfUser.getUserBookway() == user)
+				userOwner = true;
+			// TODO Colocar pra funcionar a visibilidade dos botões.
+			vlayout.appendChild(new ItemOfPanel("MarkingOfUser", markingOfUser
+					.getName(), null, markingOfUser.getColor(), true, true,
+					false, userOwner, false, false, markingOfUser.getId()
+							.toString(), user.getName()));
 		}
-		
+
 		return tab;
 	}
 
+	/**
+	 * Realiza a separação dos itens de estudo em listas específicas de acordo
+	 * com o tipo
+	 * 
+	 * @param list
+	 *            , lista com todos os elementos de estudo presentes do elemento
+	 *            do texto
+	 */
 	private void separateItensStudyList(List<ElementsItensStudy> list) {
 		resetListsItens();
 		for (ElementsItensStudy elementsItensStudy : list) {
@@ -228,14 +305,18 @@ public class ElementsItensStudyComposer extends
 					.materializeProxy(elementsItensStudy.getItemOfStudy());
 			if (itemOfStudy instanceof Annotation)
 				annotations.add((Annotation) itemOfStudy);
-			if(itemOfStudy instanceof MarkingUsed)
+			if (itemOfStudy instanceof MarkingUsed)
 				markingUseds.add((MarkingUsed) itemOfStudy);
-			if(itemOfStudy instanceof RelationshipTextElement)
-				relationshipTextElements.add((RelationshipTextElement) itemOfStudy);
+			if (itemOfStudy instanceof RelationshipTextElement)
+				relationshipTextElements
+						.add((RelationshipTextElement) itemOfStudy);
 		}
 	}
-	
-	private void resetListsItens(){
+
+	/**
+	 * Inicializa a lista dos tipos de itens de estudo
+	 */
+	private void resetListsItens() {
 		setAnnotations(new ArrayList<Annotation>());
 		setMarkingUseds(new ArrayList<MarkingUsed>());
 		setRelationshipTextElements(new ArrayList<RelationshipTextElement>());

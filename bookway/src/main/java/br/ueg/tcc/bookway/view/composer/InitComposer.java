@@ -36,6 +36,12 @@ import br.ueg.tcc.bookway.utils.AttachmentMedia;
 import br.ueg.tcc.bookway.view.macros.ItemFriend;
 import br.ueg.tcc.bookway.view.macros.MyFriend;
 
+/**Classe que contém as principais funcionalidades necessárias para a inicialização da camada base da visão
+ * @author pedro
+ *
+ * @param <E>
+ * @param <G>
+ */
 @SuppressWarnings({ "serial" })
 @org.springframework.stereotype.Component
 @Scope("prototype")
@@ -143,11 +149,17 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		initUserData();
 	}
 
+	/**
+	 * Carrega os convites realizados e recebidos do usuário
+	 */
 	private void loadRequestAndInvites() {
 		loadListRequestsInvites();
 		createElementsInvitesRequests();
 	}
 	
+	/**
+	 * Realiza chamada para o controlador e retorna os convites realizados e recebidos pelo usuário
+	 */
 	@SuppressWarnings("unchecked")
 	private void loadListRequestsInvites() {
 		setUser((UserBookway) getUserLogged());
@@ -161,6 +173,9 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		
 	}
 
+	/**
+	 * Cria os elementos na visão com os convites na página inicial
+	 */
 	private void createElementsInvitesRequests() {
 		Div div = (Div) getComponentById(component, "panelRequestsInvites");
 		Tabbox tabbox =  new Tabbox();
@@ -196,6 +211,9 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		}
 	}
 
+	/**
+	 * Inicializa os dados básicos do usuário
+	 */
 	private void initUserData() {
 		Image image = (Image) getComponentById("photoUserbookway");
 		Image iconPhotoUser = (Image) getComponentById("iconPhotoUser");
@@ -210,10 +228,16 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		initListTypeText();
 	}
 	
+	/**
+	 * Inicializa a lista com o tipo de texto
+	 */
 	public void initListTypeText() {
 		setListTypesText(getTextControl(null).initTypesText());
 	}
 
+	/**
+	 * Cria a lista com os componentes do painel dos meus textos.
+	 */
 	public void createListTextUser() {
 		List<Text> listTextUser = getAllTextsOfUser();
 		setAllMyTexts(listTextUser);
@@ -221,6 +245,9 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 				"MyText", true, 4);
 	}
 
+	/**
+	 * Cria a lista de amigos do usuário no painel de amigos
+	 */
 	@SuppressWarnings("unchecked")
 	public void createListFriendshipUser() {
 		Return ret = new Return(true);
@@ -232,6 +259,10 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		}
 	}
 	
+	/**Método que extrai os usuários de uma lista de amizades
+	 * @param friendships, lista de amizades que serão extraídas os usuários
+	 * @return lista de {@link UserBookway} amigos
+	 */
 	public List<UserBookway> extractUsersFriends(List<Friendship> friendships) {
 		List<UserBookway> friends = new ArrayList<UserBookway>();
 		UserBookway uo = new UserBookway(), uf = new UserBookway();
@@ -248,6 +279,9 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		return friends;
 	}
 
+	/**Instancia o controlador para o caso de uso Manter Amizades. 
+	 * @return uma nova instância do controle {@link FriendshipBookwayControl}
+	 */
 	private FriendshipBookwayControl getFriendshipControl() {
 		return SpringFactory.getController("friendshipBookwayControl",
 				FriendshipBookwayControl.class,
@@ -292,6 +326,10 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		}
 	}
 
+	/**Método que valida o tipo de convite, se próprio ou de outro
+	 * @param friend, usuário para verificação da existência do convite
+	 * @return valor string que corresponde ao tipo de convite
+	 */
 	private String checkInvitation(UserBookway friend) {
 		setOwner((UserBookway) getUserLogged());
 		setFriend(friend);
@@ -304,6 +342,12 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		return "";
 	}
 	
+	/**
+	 * @param friendship
+	 * @param hasFriend
+	 * @param existInvite
+	 * @return
+	 */
 	private ItemFriend createItemFriend(UserBookway friendship, boolean hasFriend, String existInvite) {
 		ItemFriend item = new ItemFriend(friendship, hasFriend, existInvite);
 		showUserBookwayPhoto(item.imageFriend, friendship);
