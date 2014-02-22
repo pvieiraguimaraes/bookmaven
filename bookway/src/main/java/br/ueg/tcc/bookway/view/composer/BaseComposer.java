@@ -593,6 +593,9 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 				newMap);
 	}
 
+	/**Altera o estilo de um item de estudo
+	 * @param itemStudy, item que deve ser alterado seu estilo
+	 */
 	public void changeItemStyle(ItemStudy itemStudy) {
 		String style = itemStudy.contentElement.getStyle();
 		if (style == null)
@@ -609,6 +612,9 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		}
 	}
 
+	/**
+	 * Remove a selação dos itens de estudo selecionados
+	 */
 	public void resetStyleItens() {
 		List<ItemStudy> list = getItemStudiesSelected();
 		for (ItemStudy itemStudy : list) {
@@ -619,6 +625,10 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		checkPanelActionVisibility();
 	}
 
+	/**Verifica se existem itens selecionados para serem marcados e direciona para executar a marcação
+	 * @param itemStudiesSelected, lista de itens selecionados durante o estudo
+	 * @param color, cor deseja para a marcação
+	 */
 	public void changeStyleMarkingInItens(List<ItemStudy> itemStudiesSelected,
 			String color) {
 		for (ItemStudy itemStudy : itemStudiesSelected) {
@@ -629,6 +639,10 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		parentComposer.checkPanelActionVisibility();
 	}
 
+	/**Altera o cor de fundo de um elemento de acordo com a anotação inserida
+	 * @param itemStudy, item que deverá ser colocado a anotação
+	 * @param color, cor que será representada o item.
+	 */
 	public void changeStyleMarkingThisItem(ItemStudy itemStudy, String color) {
 		String style = "background-color: " + color + ";";
 		String styleItem = itemStudy.contentElement.getStyle();
@@ -637,6 +651,9 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		itemStudy.contentElement.setStyle(style);
 	}
 
+	/**
+	 * Verica se existem itens de estudo selecionados e caso exista faz chamada do método para alterar a visibilidade
+	 */
 	public void checkPanelActionVisibility() {
 		if (getItemStudiesSelected().isEmpty())
 			changeVisibilityPanelAction(false);
@@ -644,6 +661,9 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 			changeVisibilityPanelAction(true);
 	}
 
+	/**Altera a visibilidado do painel de ações caso exista na página
+	 * @param visibility, visibilidade que se deseja para o painel
+	 */
 	public void changeVisibilityPanelAction(boolean visibility) {
 		Component panel = getComponentById(component, "panelActions");
 		if (panel != null)
@@ -657,6 +677,12 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		}
 	}
 
+	/**Adiciona um icone de estudo a um item do estudo.
+	 * @param itemStudy, item que será adicionado
+	 * @param idLevel, código que representa o elemento do texto interado
+	 * @param hasItensStudies, se verdadeiro exitem elementos de estudo no item específicado denvendo então ser mapeando um ícone para representar essa existência 
+	 * @return {@link ItemStudy} com informações dos elementos setadas e pronto para interação do usuário
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ItemStudy insertIconStudy(ItemStudy itemStudy, Long idLevel,
 			boolean hasItensStudies) {
@@ -699,12 +725,21 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		return itemStudy;
 	}
 
+	/**Cria uma tab de acordo com um nome passado
+	 * @param nameTab, nome que será utiizado na criação
+	 * @return component tab criado
+	 */
 	public Component createTabWithName(String nameTab) {
 		Tab tab = new Tab();
 		tab.setLabel(nameTab);
 		return tab;
 	}
 
+	/**Utilizado para criar um novo componente do tipo ícone de estudo que será utilizado para repreentar
+	 * a existência de elementos de estudo inseridos no estudo.
+	 * @param itemStudy, que será utilizado para obter as informações necessárias
+	 * @return um componente mapeado para o ambiente de estudo.
+	 */
 	public Component createComponentIconStudy(ItemStudy itemStudy) {
 		newMap.put("idIconStudy", itemStudy.getIdIconStudy());
 		newMap.put("idElementText", itemStudy.getIdElement());
@@ -717,10 +752,16 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 				"/template/component/iconItemStudy.zul", itemStudy, newMap);
 	}
 
+	/**Devolve uma lista de tipos de privacidade
+	 * @return lista com os tipos {@link TypePrivacy}
+	 */
 	public List<TypePrivacy> getListTypesPrivacy() {
 		return Arrays.asList(TypePrivacy.values());
 	}
 
+	/**
+	 * Remove todos os componentes "filhos" do painel de resultado de busca.
+	 */
 	public void resetResultListSearch() {
 		Component resultSearch = getComponentById(getComponent(),
 				"resultSearch");
@@ -770,7 +811,7 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 	 * retorna ele para o usuário, para se relacionar com os outros objetos
 	 * 
 	 * @param text
-	 * @return
+	 * @return {@link Study} que está sendo realizado
 	 */
 	public Study createStudy(Text text) {
 		study = new Study();
@@ -785,6 +826,10 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		return null;
 	}
 
+	/**Cria um item que representará o texto na visão na tela de busca de textos 
+	 * @param text, texto de onde serão retiradas as informações
+	 * @return {@link ItemText} com os dados do usuário preenchidos.
+	 */
 	private ItemText createItemText(Text text) {
 		setSelectedText(text);
 		boolean has = getRelationshipTextUserControl().verifyUserHasText();
@@ -799,6 +844,10 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		return item;
 	}
 
+	/**Cria o componento de representação do texto no painel dos meus textos
+	 * @param text, objeto de onde serão obtidas todas as informações
+	 * @return {@link MyText} com os dados do texto preenchidos
+	 */
 	private MyText createMyText(Text text) {
 		MyText myText = new MyText();
 		myText.setTitle(text.getTitle());
@@ -806,6 +855,10 @@ public abstract class BaseComposer<E extends ICommonEntity, G extends GenericCon
 		return myText;
 	}
 
+	/**Retorna uma instância do coontrolador do caso de uso que manter relacionamento entre 
+	 * os textos e os usuários.
+	 * @return {@link RelationshipTextUserControl} uma nova instância dessse controlador
+	 */
 	public RelationshipTextUserControl getRelationshipTextUserControl() {
 		return SpringFactory.getController("relationshipTextUserControl",
 				RelationshipTextUserControl.class,
