@@ -23,18 +23,30 @@ import br.ueg.tcc.bookway.model.MarkingOfUser;
 import br.ueg.tcc.bookway.model.MarkingUsed;
 import br.ueg.tcc.bookway.model.TagsOfMarking;
 import br.ueg.tcc.bookway.model.UserBookway;
-import br.ueg.tcc.bookway.view.macros.ItemStudy;
 
+/**
+ * Classe de controle das funcionalidades relacionadas ao caso de uso Manter
+ * Marcações
+ * 
+ * @author pedro
+ * 
+ */
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
 @Scope("prototype")
 public class MarkingComposer extends
 		BaseComposer<MarkingOfUser, MarkingControl> {
 
+	/**
+	 * Valor da tag
+	 */
 	private String tagValue;
 
+	/**
+	 * Tag selecionada
+	 */
 	private TagsOfMarking tagSelected;
-	
+
 	public TagsOfMarking getTagSelected() {
 		return tagSelected;
 	}
@@ -59,7 +71,10 @@ public class MarkingComposer extends
 		loadMarkingsOfUser();
 		loadBinder();
 	}
-	
+
+	/**
+	 * Busca as marcações do usuário logado na sessão
+	 */
 	@SuppressWarnings("unchecked")
 	private void loadMarkingsOfUser() {
 		List<MarkingOfUser> list = (List<MarkingOfUser>) session
@@ -89,6 +104,11 @@ public class MarkingComposer extends
 		return new MarkingOfUser();
 	}
 
+	/**
+	 * Faz chamada para um método de busca de marcações do controlador
+	 * 
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public Return searchMarking() {
 		Return ret = getControl().doAction("searchMarking");
@@ -100,12 +120,18 @@ public class MarkingComposer extends
 		return ret;
 	}
 
+	/**
+	 * Chama o formulário para edição de uma marcação selecionada em lista
+	 */
 	public void editMarking() {
 		getSelectedEntityFromListbox();
 		callModalWindow("/pages/marking/modalMarking.zul");
 		loadBinder();
 	}
 
+	/**
+	 * Faz chamada para janela de confirmação de exlusão de uma marcação
+	 */
 	public void deleteMarking() {
 		getSelectedEntityFromListbox();
 		entity = getSelectedEntity();
@@ -113,10 +139,16 @@ public class MarkingComposer extends
 		loadBinder();
 	}
 
+	/**
+	 * Realiza chamda a camada de controle para exclusão de uma marcação
+	 * selecionada
+	 * 
+	 * @return {@link Return}
+	 */
 	public Return deleteThisMarking() {
 		MarkingOfUser markingOfUser = entity;
 		Return ret = getControl().doAction("delete");
-		if (ret.isValid()){
+		if (ret.isValid()) {
 			listEntity.remove(markingOfUser);
 			resetForm();
 		}
@@ -133,7 +165,11 @@ public class MarkingComposer extends
 		getParentComposer().setSelectedEntity(null);
 		super.resetForm();
 	}
-	
+
+	/**
+	 * Seta como a entidade do controle a entidade selecionada na camada de
+	 * visão
+	 */
 	private void getSelectedEntityFromListbox() {
 		Listbox listbox = (Listbox) getComponentById("resultList");
 		int index = 0;
@@ -148,6 +184,9 @@ public class MarkingComposer extends
 		}
 	}
 
+	/**
+	 * Remove uma tag selecionada da marcação
+	 */
 	public void removeTagFromMarking() {
 		Listbox listbox = (Listbox) getComponentById("fldlstTags");
 		int index = 0;
@@ -164,6 +203,12 @@ public class MarkingComposer extends
 		loadBinder();
 	}
 
+	/**
+	 * Adiciona uma tag a lista de tags da marcação de acordo com os dados
+	 * preenchidos do usuário
+	 * 
+	 * @return {@link Return}
+	 */
 	public Return addTagInList() {
 		Return ret = new Return(true);
 		TagsOfMarking tag;
@@ -205,6 +250,10 @@ public class MarkingComposer extends
 		return ret;
 	}
 
+	/**
+	 * Verifica se existem tags para marcação dada, caso exista exibe todas em
+	 * uma lista
+	 */
 	private void checkTagsOfMarking() {
 		List<TagsOfMarking> tagsOfMarkings = entity.getTagsOfMarkings();
 		setTagValue(null);
@@ -216,11 +265,15 @@ public class MarkingComposer extends
 				comp.setVisible(false);
 		}
 	}
-	
-	private void checkListEntity(){
+
+	/**
+	 * Verifica se a lista resultada da busca é vazia, caso não seja, exibe a
+	 * lista de acordo com os resultaddos da busca
+	 */
+	private void checkListEntity() {
 		Component comp = getComponentById("resultList");
-		if(comp != null && listEntity != null){
-			if(listEntity.isEmpty())
+		if (comp != null && listEntity != null) {
+			if (listEntity.isEmpty())
 				comp.setVisible(false);
 			else
 				comp.setVisible(true);
@@ -233,7 +286,7 @@ public class MarkingComposer extends
 		entity.setColor(colorbox.getColor());
 		entity.setUserBookway((UserBookway) getUserLogged());
 		for (TagsOfMarking tag : entity.getTagsOfMarkings()) {
-			if(tag.getUserBookway() == null)
+			if (tag.getUserBookway() == null)
 				tag.setUserBookway((UserBookway) getUserLogged());
 		}
 		Return ret = super.saveEntity();
@@ -244,35 +297,51 @@ public class MarkingComposer extends
 		treatReturn(ret);
 		return ret;
 	}
-	
-	public Return putMarkingInStudy(){
+
+	/**
+	 * Atribui aos elementos selecionados uma marcação escolhida alterando o
+	 * estilos dos elementos da tela
+	 * 
+	 * @return {@link Return}
+	 */
+	public Return putMarkingInStudy() {
 		Return retAux, ret = new Return(true);
 		retAux = createMarkingInItens(itensSelected);
 		if (retAux.isValid()) {
-			changeStyleMarkingInItens(itemStudiesSelected, selectedEntity.getColor());
+			changeStyleMarkingInItens(itemStudiesSelected,
+					selectedEntity.getColor());
 			((Window) getComponentById("modalWindow")).detach();
-		} else ret.setValid(false);
-		
+		} else
+			ret.setValid(false);
+
 		return ret;
 	}
-	
+
+	/**
+	 * Realiza as chamadas a camada de controle para criação de uma marcação em
+	 * um elemento de texto para um dado estudo
+	 * 
+	 * @param itensSelected
+	 *            , lista de elementos do texto selecionados
+	 * @return {@link Return}
+	 */
 	private Return createMarkingInItens(List<ElementText> itensSelected) {
 		Return ret = new Return(true);
 		ElementsItensStudy elementsItensStudy;
 		MarkingUsed markingUsed;
-		
+
 		if (selectedEntity != null) {
 			markingUsed = new MarkingUsed();
 			markingUsed.setTypePrivacy(getTypePrivacy());
 			markingUsed.setMarkingOfUser(selectedEntity);
 			markingUsed.setStudy(study);
 			markingUsed.setDateItem(new Date());
-			
+
 			ret.concat(saveMarkingUsed(markingUsed));
-			
+
 			if (ret.isValid()) {
 				markingUsed = getMarkingUsed(markingUsed);
-				
+
 				for (ElementText elementText : itensSelected) {
 					elementsItensStudy = new ElementsItensStudy();
 					elementsItensStudy.setElementText(elementText);
@@ -280,46 +349,74 @@ public class MarkingComposer extends
 					elementsItensStudy.setStudy(study);
 					elementsItensStudies.add(elementsItensStudy);
 				}
-				
+
 				ret.concat(saveElementsItensStudy());
-				
-				if(ret.isValid()){
+
+				if (ret.isValid()) {
 					createIconsStudy(getItemStudiesSelected());
 				}
-					
+
 			}
 		} else
 			ret.setValid(false);
-		
+
 		return ret;
 	}
-	
+
+	/**
+	 * Acessa o controlador para buscar uma marcação de acordo com os dados
+	 * informados
+	 * 
+	 * @param markingUsed
+	 *            , objeto de marcação utilizado
+	 * @return objeto {@link MarkingUsed}
+	 */
 	private MarkingUsed getMarkingUsed(MarkingUsed markingUsed) {
 		Return ret = new Return(true);
 		newMap.put("markingUsed", markingUsed);
 		ret.concat(getMarkingUsedControl(newMap).searchThisMarkingUsed());
-		if(ret.isValid())
+		if (ret.isValid())
 			return (MarkingUsed) ret.getList().get(0);
 		return null;
 	}
 
-	public MarkingUsedControl getMarkingUsedControl(HashMap<String, Object> newMap) {
-		return SpringFactory.getController("markingUsedControl", MarkingUsedControl.class,
-				newMap);
+	/**
+	 * Retorna uma nova instância do controlador
+	 * 
+	 * @param newMap
+	 *            , objetos para manipulação no controlador
+	 * @return nova instância do controlador {@link MarkingUsedControl}
+	 */
+	public MarkingUsedControl getMarkingUsedControl(
+			HashMap<String, Object> newMap) {
+		return SpringFactory.getController("markingUsedControl",
+				MarkingUsedControl.class, newMap);
 	}
 
+	/**
+	 * Faz chamada ao controlador para salvar o uso de uma marcação em um estudo
+	 * 
+	 * @param marking
+	 *            , marcação que será salva
+	 * @return {@link Return}
+	 */
 	private Return saveMarkingUsed(MarkingUsed marking) {
 		Return ret = new Return(true);
-		
+
 		newMap.put("entity", marking);
 		ret.concat(getMarkingUsedControl(newMap).doAction("save"));
-		
+
 		return ret;
 	}
 
-	public void changeColorbox(){
-		Colorbox  colorbox = (Colorbox) getComponentById("clrbx");
-		if(colorbox != null)
+	/**
+	 * Seta a cor no campo de cor do formulário de seleção de marcação para ser
+	 * usada, para que o usuário possa identificar qual marcação deseja utilizar
+	 * de acordo com a cor
+	 */
+	public void changeColorbox() {
+		Colorbox colorbox = (Colorbox) getComponentById("clrbx");
+		if (colorbox != null)
 			colorbox.setValue(getSelectedEntity().getColor());
 		loadBinder();
 	}

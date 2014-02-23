@@ -52,6 +52,7 @@ public class AnnotationControl extends GenericControl<Annotation> {
 			for (Study study : studyAux) {
 				sql = "FROM Annotation WHERE id_study = '" + study.getId()
 						+ "'";
+				
 				if (title != null)
 					sql += " AND title like '%" + title + "%'";
 				data.put("sql", sql);

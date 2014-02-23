@@ -19,17 +19,23 @@ import br.ueg.tcc.bookway.model.Study;
 import br.ueg.tcc.bookway.model.UserBookway;
 
 /**
+ * Classe controladora do ambiente de Navegação de Texto
+ * 
  * @author Pedro
  * 
  */
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
 @Scope("prototype")
-public class NavigationStudyComposer extends
+public class NavigationStudyComposer
+		extends
 		BaseNavigationStudyComposer<ItemNavigationStudy, NavigationStudyControl> {
 
+	/**
+	 * Lista de marcações do usuário
+	 */
 	private List<MarkingOfUser> markingOfUsers;
-	
+
 	public List<MarkingOfUser> getMarkingOfUsers() {
 		return markingOfUsers;
 	}
@@ -41,18 +47,19 @@ public class NavigationStudyComposer extends
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
-		
+
 		study = (Study) session.getAttribute("study");
 		continueStudy = (Boolean) session.getAttribute("continueStudy");
-		isTextReferenceMode = (Boolean) session.getAttribute("isTextReferenceMode");
-		
-		if(isTextReferenceMode == null)
+		isTextReferenceMode = (Boolean) session
+				.getAttribute("isTextReferenceMode");
+
+		if (isTextReferenceMode == null)
 			isTextReferenceMode = false;
-		
+
 		if (study != null)
 			createAmbientStudy(HibernateUtils.materializeProxy(getControl()
 					.getLevelText(study.getText().getRootLevelText().getId())));
-		
+
 		if (!isTextReferenceMode) {
 			loadMarkingsOfUser();
 			checkButtonMarking();
@@ -60,6 +67,9 @@ public class NavigationStudyComposer extends
 		loadBinder();
 	}
 
+	/**
+	 * Faz chamada ao controle para carregar todas as marcações do usuário
+	 */
 	@SuppressWarnings("unchecked")
 	private void loadMarkingsOfUser() {
 		Return ret = getMarkingControl().getMarkingOfUser(
@@ -71,6 +81,10 @@ public class NavigationStudyComposer extends
 		}
 	}
 
+	/**
+	 * Verifica se existe marcações criada para o usuário e se não existir
+	 * desabilita o botão de inserção de marcações
+	 */
 	private void checkButtonMarking() {
 		Button buttonMarking = (Button) getComponentById("fldMarking");
 		if (!getMarkingOfUsers().isEmpty()) {
@@ -80,6 +94,11 @@ public class NavigationStudyComposer extends
 			buttonMarking.setDisabled(true);
 	}
 
+	/**
+	 * Instancia do controlador do caso de uso de Marcações
+	 * 
+	 * @return nova instância do controlador {@link MarkingControl}
+	 */
 	public MarkingControl getMarkingControl() {
 		return SpringFactory.getController("markingControl",
 				MarkingControl.class, null);
@@ -96,13 +115,25 @@ public class NavigationStudyComposer extends
 	public ItemNavigationStudy getEntityObject() {
 		return new ItemNavigationStudy();
 	}
-	
-	public void shareInFacebook(){
-		String message = "Está estudando os itens \"" + extractContentForShare() + "\" do texto \"" + study.getText().getTitle() + "\"";
-		postStatusMessageFacebook(message );
+
+	/**
+	 * Realiza a chamada ao método de compartilhamento no Facebook passando um
+	 * conteúdo a ser compartilhado
+	 */
+	public void shareInFacebook() {
+		String message = "Está estudando os itens \""
+				+ extractContentForShare() + "\" do texto \""
+				+ study.getText().getTitle() + "\"";
+		postStatusMessageFacebook(message);
 		getComponentById("selectSocialWeb").detach();
 	}
 
+	/**
+	 * Método que extrai dos itens selecionados o texto que deverá ser
+	 * compartilhado
+	 * 
+	 * @return texto a ser compartilhado
+	 */
 	private String extractContentForShare() {
 		String itensSharing = "";
 		for (ElementText elem : itensSelected) {
@@ -110,16 +141,20 @@ public class NavigationStudyComposer extends
 		}
 		return itensSharing;
 	}
-	
-	public void shareInTwitter(){
-		String message = "Está estudando os itens \"" + extractContentForShare() + "\" do texto \"" + study.getText().getTitle() + "\"";
-		if(message.length() > 140)
+
+	/**
+	 * Faz a chamada a um método para compartilhamento no Twitter
+	 */
+	public void shareInTwitter() {
+		String message = "Está estudando os itens \""
+				+ extractContentForShare() + "\" do texto \""
+				+ study.getText().getTitle() + "\"";
+		if (message.length() > 140)
 			message.substring(0, 139);
 		updateStatusTwitter(message);
 		getComponentById("selectSocialWeb").detach();
 	}
 
-	
 	@Override
 	protected String getUpdatePage() {
 		return null;
