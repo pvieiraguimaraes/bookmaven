@@ -1,0 +1,12 @@
+br.ueg.tcc.bookway.control
+br.ueg.tcc.bookway.control.textfactory
+br.ueg.tcc.bookway.control.validator
+br.ueg.tcc.bookway.model
+br.ueg.tcc.bookway.model.enums
+br.ueg.tcc.bookway.security
+br.ueg.tcc.bookway.utils
+br.ueg.tcc.bookway.view.components
+br.ueg.tcc.bookway.view.composer
+br.ueg.tcc.bookway.view.macros
+br.ueg.tcc.bookway.view.util
+br.ueg.tcc.bookway.view.validator

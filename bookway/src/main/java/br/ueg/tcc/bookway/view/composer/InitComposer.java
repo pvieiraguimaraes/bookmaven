@@ -342,11 +342,11 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		return "";
 	}
 	
-	/**
-	 * @param friendship
-	 * @param hasFriend
-	 * @param existInvite
-	 * @return
+	/** Método que cria os itens que representam os convites na página inicial do usuário
+	 * @param friendship, usuário de onde serão obtidos dos dados
+	 * @param hasFriend, verdadeiro se a amizade já existir
+	 * @param existInvite, valor string representando o tipo do convite
+	 * @return novo item {@link ItemFriend}
 	 */
 	private ItemFriend createItemFriend(UserBookway friendship, boolean hasFriend, String existInvite) {
 		ItemFriend item = new ItemFriend(friendship, hasFriend, existInvite);
@@ -354,6 +354,10 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		return item;
 	}
 
+	/** Cria os componentes para representar um usuário amigo
+	 * @param friendship, usuário de onde serão obtidos os dados
+	 * @return novo componente do tipo {@link MyFriend}
+	 */
 	private MyFriend createMyFriend(UserBookway friendship) {
 		MyFriend myFriend = new MyFriend();
 		showUserBookwayPhoto(myFriend.imageUser, friendship);
@@ -361,6 +365,10 @@ public class InitComposer<E extends ICommonEntity, G extends GenericControl<E>>
 		return myFriend;
 	}
 	
+	/**Seta uma imagem no componente foto
+	 * @param comp, componente imagem para onde será setada a foto
+	 * @param userBookway, usuário dono da imagem
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void showUserBookwayPhoto(Image comp, UserBookway userBookway) {
 		Attachment att = new AttachmentMedia();
