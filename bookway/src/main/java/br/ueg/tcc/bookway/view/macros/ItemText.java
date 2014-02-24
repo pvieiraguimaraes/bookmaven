@@ -9,6 +9,12 @@ import org.zkoss.zul.Label;
 import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.UserBookway;
 
+/**
+ * Componente utilizado para exibir os textos no caso de uso Manter Textos
+ * 
+ * @author pedro
+ * 
+ */
 @SuppressWarnings("serial")
 @VariableResolver(value = { org.zkoss.zkplus.spring.DelegatingVariableResolver.class })
 public class ItemText extends HtmlMacroComponent {
@@ -36,14 +42,39 @@ public class ItemText extends HtmlMacroComponent {
 	@Wire
 	private Button btnOpen;
 
-	public ItemText(UserBookway user, Text text, boolean has, Boolean isTextReferenceMode) {
+	/**
+	 * Construtor padrão do componente
+	 * 
+	 * @param user
+	 *            , usuário em questão
+	 * @param text
+	 *            , texto em questão
+	 * @param has
+	 *            , verdadeiro se o usuário já possui o texto
+	 * @param isTextReferenceMode
+	 *            , verdadeiro se é modalidade de referência
+	 */
+	public ItemText(UserBookway user, Text text, boolean has,
+			Boolean isTextReferenceMode) {
 		compose();
 		configureButtonsInComponent(user, text, has, isTextReferenceMode);
 	}
 
+	/**
+	 * Configura a visibilidade os elementos do componente
+	 * 
+	 * @param user
+	 *            , usuário em questão
+	 * @param text
+	 *            , texto de onde serão obtidos os dados
+	 * @param has
+	 *            , verdadeiro se o texto pertence ao usuário
+	 * @param isTextReferenceMode
+	 *            , verdadeiro se é modalidade de referência
+	 */
 	private void configureButtonsInComponent(UserBookway user, Text text,
 			boolean has, Boolean isTextReferenceMode) {
-		if(isTextReferenceMode != null && isTextReferenceMode)
+		if (isTextReferenceMode != null && isTextReferenceMode)
 			btnOpen.setVisible(true);
 		else {
 			if (text.getUserOwning() == null)
