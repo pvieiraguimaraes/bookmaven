@@ -24,19 +24,26 @@ import br.ueg.tcc.bookway.model.enums.State;
 import br.ueg.tcc.bookway.utils.AttachmentMedia;
 import br.ueg.tcc.bookway.view.validator.ImageValidator;
 
+/**
+ * Classe responsável pelas funcionalidades relacionadas a camada de controle do
+ * caso de uso Manter Usuários
+ * 
+ * @author pedro
+ * 
+ */
 @SuppressWarnings("serial")
 @org.springframework.stereotype.Component
 @Scope("prototype")
 public class UserComposer extends InitComposer<UserBookway, UserBookwayControl> {
-	
+
 	private List<AreaOfInterest> listAreaOfInterest;
 	private List<State> listState;
-	
+
 	private String actualPassword;
 	private String newPassword;
 	private String confirmNewPassword;
 	private Media photoUserBookway;
-	
+
 	public Media getPhotoUserBookway() {
 		return photoUserBookway;
 	}
@@ -92,17 +99,24 @@ public class UserComposer extends InitComposer<UserBookway, UserBookwayControl> 
 		loadBinder();
 	}
 
+	/**
+	 * Faz chamada a alguns métodos de inicialização de dados do usuário
+	 */
 	public void init() {
-//		checkUsersInactives30DaysLeft();
+		// checkUsersInactives30DaysLeft();
 		setUserProfile();
 		initLists();
 	}
 
+	/**
+	 * Faz chamada ao controle para verificação de usuários com contas que
+	 * deverão ser excluídas
+	 */
 	@SuppressWarnings("unchecked")
 	private void checkUsersInactives30DaysLeft() {
 		Return ret = getControl().doAction("chechUsersFordelete");
 		List<UserBookway> users = (List<UserBookway>) ret.getList();
-		if(ret.isValid() && !users.isEmpty()){
+		if (ret.isValid() && !users.isEmpty()) {
 			for (UserBookway userBookway : users) {
 				entity = userBookway;
 				getControl().deleteAllElementsUser();
@@ -110,18 +124,29 @@ public class UserComposer extends InitComposer<UserBookway, UserBookwayControl> 
 		}
 	}
 
+	/**
+	 * Inicializa lista de Estados e Áreas de interesse
+	 */
 	private void initLists() {
 		setListAreaOfInterest(getControl().initListAreaOfInterest());
 		setListState(getControl().initListState());
 	}
 
+	/**
+	 * Seta o usuário da sessão
+	 */
 	private void setUserProfile() {
 		entity = (UserBookway) getUserLogged();
-//		showUserBookwayPhoto((Image) getComponentById("photoUserbookway"), getEntity());
+		// showUserBookwayPhoto((Image) getComponentById("photoUserbookway"),
+		// getEntity());
 	}
 
+	/**
+	 * Faz chamada aos métodos do controle para alterações de dados da conta do
+	 * usuário
+	 */
 	public void updateAccount() {
-		if(photoUserBookway != null){
+		if (photoUserBookway != null) {
 			uploadUserBookwayImage(photoUserBookway, entity);
 			session.setAttribute("userProfile", entity);
 		}
@@ -132,15 +157,27 @@ public class UserComposer extends InitComposer<UserBookway, UserBookwayControl> 
 		loadBinder();
 	}
 
+	/**
+	 * Faz chamada ao controle para exclusão da conta do usuário
+	 */
 	public void deleteAccount() {
 		Return ret = new Return(true);
 		ret = getControl().doAction("deleteAccount");
 		treatReturn(ret);
 	}
-	
-	public Return uploadUserBookwayImage(Media file, UserBookway userBookway){
+
+	/**
+	 * Método que carrega foto do perfil do usuário
+	 * 
+	 * @param file
+	 *            , arquivo com a imagem para o perfil
+	 * @param userBookway
+	 *            , usuário em questão
+	 * @return {@link Return}
+	 */
+	public Return uploadUserBookwayImage(Media file, UserBookway userBookway) {
 		Return ret = new Return(true);
-		if(file != null){
+		if (file != null) {
 			AttachmentMedia att = new AttachmentMedia();
 			try {
 				att.uploadAttachment(file, "photo", userBookway);
@@ -150,30 +187,36 @@ public class UserComposer extends InitComposer<UserBookway, UserBookwayControl> 
 		}
 		return ret;
 	}
-	
-	public void changeUserBookwayImage(UploadEvent event){
-        Media media = event.getMedia();
-        ImageValidator val = new ImageValidator(media);
-        Return ret = val.upload();
-        if(ret.isValid()){
-        	try {
-        		AImage image = (AImage) media;
-        		InputStream image1 = ZKUtils.mediaToStream(media);
-    			if(image.getHeight() > 117 || image.getWidth() > 114){
-    				image1 = ImageUtils.scaleImage(image1, 114, 117, image.getFormat());
-    			}
-    			image = new AImage("photo", image1);
+
+	/**
+	 * Altera a foto do perfil do usuário
+	 * 
+	 * @param event
+	 *            , evento de upload
+	 */
+	public void changeUserBookwayImage(UploadEvent event) {
+		Media media = event.getMedia();
+		ImageValidator val = new ImageValidator(media);
+		Return ret = val.upload();
+		if (ret.isValid()) {
+			try {
+				AImage image = (AImage) media;
+				InputStream image1 = ZKUtils.mediaToStream(media);
+				if (image.getHeight() > 117 || image.getWidth() > 114) {
+					image1 = ImageUtils.scaleImage(image1, 114, 117,
+							image.getFormat());
+				}
+				image = new AImage("photo", image1);
 				setPhotoUserBookway(image);
-				
-				//TODO Ver como ficará o carregamento dessa imagem
-				((Image)getComponentById("photoPerfilUser")).setContent(image);
+
+				((Image) getComponentById("photoPerfilUser")).setContent(image);
 			} catch (Exception e) {
 				ret.concat(new ExceptionManager(e).treatException());
 			}
-        }
-        treatReturn(ret);
+		}
+		treatReturn(ret);
 	}
-	
+
 	@Override
 	public UserBookway getEntityObject() {
 		return new UserBookway();
@@ -181,18 +224,26 @@ public class UserComposer extends InitComposer<UserBookway, UserBookwayControl> 
 
 	@Override
 	public UserBookwayControl getControl() {
-		return SpringFactory.getController("userBookwayControl", UserBookwayControl.class, ReflectionUtils.prepareDataForPersistence(this));
+		return SpringFactory.getController("userBookwayControl",
+				UserBookwayControl.class,
+				ReflectionUtils.prepareDataForPersistence(this));
 	}
-	
-	public void checkUserPhoto(){
+
+	/**
+	 * Seta a foto do usuário no painel de foto
+	 */
+	public void checkUserPhoto() {
 		Image image = (Image) getComponentById("photoPerfilUser");
 		showUserBookwayPhoto(image, (UserBookway) getUserInSession());
 	}
-	
-	public void changePasswordUser(){
+
+	/**
+	 * Faz chamada ao controle para alteração de senha
+	 */
+	public void changePasswordUser() {
 		Return ret = new Return(true);
 		ret.concat(getControl().doAction("changePasswordUser"));
-		if(ret.isValid())
+		if (ret.isValid())
 			getComponentById(getComponent(), "frmChangePassword").detach();
 		treatReturn(ret);
 	}

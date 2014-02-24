@@ -27,6 +27,9 @@ import br.ueg.tcc.bookway.model.Text;
 import br.ueg.tcc.bookway.model.enums.TypePrivacy;
 
 /**
+ * Classe que contém as funcionalidades envolvidas no caso de uso de Manter
+ * Texto
+ * 
  * @author Pedro
  * 
  */
@@ -163,19 +166,31 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 			entity = text;
 		else {
 			initListTypeText();
-			
+
 		}
 		loadBinder();
 	}
-	
+
+	/**
+	 * Verifica o tipo selecionado e habilita a visibilidade de itens
+	 */
 	public void checkComboType() {
-		if (fldTypeText.getSelectedItem().getValue().equals(TypePrivacy.PRIVADO)) {
+		if (fldTypeText.getSelectedItem().getValue()
+				.equals(TypePrivacy.PRIVADO)) {
 			chckCommunity.setChecked(false);
 			chckCommunity.setDisabled(true);
 		} else
 			chckCommunity.setDisabled(false);
 	}
 
+	/**
+	 * Realiza o upload do arquivo de texto
+	 * 
+	 * @param media
+	 *            , arquivo a ser carregado
+	 * @param type
+	 *            , tipo do arquivo
+	 */
 	public void upload(Media media, String type) {
 		if (media != null && media.getFormat().equalsIgnoreCase(type)) {
 			showBusyServer(null, "Lendo o arquivo");
@@ -186,22 +201,34 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 			showNotification("Insira um arquivo para Upload!", "error");
 	}
 
+	/**
+	 * Método que faz chamadas a outros métodos para setar informações no texto
+	 */
 	private void prepareDataText() {
 		getLevelsName();
 		confirmCountLevels();
 		confirmPanelImport();
 	}
 
+	/**
+	 * Verifica o tipo de importação através do painel de importação aberto
+	 */
 	private void confirmPanelImport() {
 		setSimple(simpleImport.isOpen());
 		setAvanced(avancedImport.isOpen());
 	}
 
+	/**
+	 * Confirma a quantidade de níveis do texto que está sendo carregado
+	 */
 	private void confirmCountLevels() {
 		if (getLevels() != null)
 			setCountLevels(getLevels().size());
 	}
 
+	/**
+	 * Faz chamada ao controlador para salvar um texto
+	 */
 	public void saveText() {
 		Return retSave = new Return(true);
 		prepareDataText();
@@ -212,16 +239,22 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 		createListTextUser();
 		loadBinder();
 	}
-	
-	public void updateText(){
+
+	/**
+	 * Executa chamada ao controle para realizar alteração de um texto
+	 */
+	public void updateText() {
 		Return ret = new Return(true);
 		ret.concat(getControl().doAction("update"));
-		if(ret.isValid())
+		if (ret.isValid())
 			getComponentById("frmText").detach();
 		treatReturn(ret);
 		loadBinder();
 	}
 
+	/**
+	 * Inicializa todos os formulários
+	 */
 	private void resetEntity() {
 		entity = getEntityObject();
 		resetFormSimpleImport();
@@ -229,12 +262,18 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 		loadBinder();
 	}
 
+	/**
+	 * Inicializa o formulário de importação simples
+	 */
 	private void resetFormSimpleImport() {
 		upLabelTxt.setValue(null);
 		setPagesForChapter(null);
 		setLinesForPage(null);
 	}
 
+	/**
+	 * Inicializa o formulário de importação avançada
+	 */
 	private void resetFormAvancedImport() {
 		upLabelXml.setValue(null);
 		fldCountlevels.setValue(null);
@@ -244,6 +283,9 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 		fldLevel.setValue(null);
 	}
 
+	/**
+	 * Obtém os valores dos nomes dos níveis
+	 */
 	private void getLevelsName() {
 		ArrayList<String> levelsMap = new ArrayList<>();
 		levelsMap = createListLevelByListBox();
@@ -253,6 +295,12 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 			setLevels(levelsMap);
 	}
 
+	/**
+	 * Cria lista com os nomes dos níveis de acordo com os itens inseridos na
+	 * lista de níveis no painel de importação
+	 * 
+	 * @return lista com os nomes dos níveis
+	 */
 	private ArrayList<String> createListLevelByListBox() {
 		ArrayList<String> list = new ArrayList<String>();
 		for (Listitem item : fldlstlevel.getItems()) {
@@ -266,6 +314,9 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 		return list.isEmpty() ? null : list;
 	}
 
+	/**
+	 * Remove os elementos da lista de níveis
+	 */
 	private void removeListLevelOfListBox() {
 		for (int i = fldlstlevel.getItemCount() - 1; i >= 0; i--) {
 			fldlstlevel.removeItemAt(i);
@@ -284,6 +335,9 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 		return new Text();
 	}
 
+	/**
+	 * Adiciona um novo nível a lista de níveis do painel de importação avançada
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void addLevelInList() {
 		if (fldLevel.getValue() != "" && !checkListBoxLevelNames()) {
@@ -315,6 +369,9 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 		}
 	}
 
+	/**
+	 * Verifica a visibilidade da lista de níveis do painel de importação
+	 */
 	private void checkListBoxLevel() {
 		if (fldlstlevel.getItems().isEmpty() || fldlstlevel.getItems() == null) {
 			fldlstlevel.setVisible(false);
@@ -327,6 +384,11 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 		}
 	}
 
+	/**
+	 * Verifica a existência de níveis repetidos na lista de níveis
+	 * 
+	 * @return verdadeiro caso exista níveis repetidos
+	 */
 	private boolean checkListBoxLevelNames() {
 		List<String> levels = createListLevelByListBox();
 		if (levels != null && levels.contains(fldLevel.getValue())) {
@@ -336,6 +398,9 @@ public class TextComposer extends InitComposer<Text, TextControl> {
 		return false;
 	}
 
+	/**
+	 * Verifica o tipo de painel utilizado e inicializa os campos
+	 */
 	public void checkFormImport() {
 		setStream(null);
 		if (!simpleImport.isOpen())

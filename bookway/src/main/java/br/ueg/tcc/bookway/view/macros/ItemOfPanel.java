@@ -5,9 +5,13 @@ import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Div;
-import org.zkoss.zul.Hlayout;
 import org.zkoss.zul.Label;
 
+/**Componente utilizando para criar itens do painel de itens de estudo durante a navegação de estudo
+ * 
+ * @author pedro
+ *
+ */
 @SuppressWarnings("serial")
 @VariableResolver(value = { org.zkoss.zkplus.spring.DelegatingVariableResolver.class })
 public class ItemOfPanel extends HtmlMacroComponent {
@@ -55,12 +59,30 @@ public class ItemOfPanel extends HtmlMacroComponent {
 		compose();
 	}
 	
+	/**Construtor padrão
+	 * @param title, título que o item deverá ter
+	 * @param description, descrição que será exibida no item
+	 */
 	public ItemOfPanel(String title, String description) {
 		compose();
 		setTitle(title);
 		setDescription(description);
 	}
 	
+	/** Contrutor do componente com opções de tipagem para os elementos
+	 * @param typeItem, valor correspondente ao tipo do item "MarkingOfUser" ou "Annotaion" ou "Relationship"
+	 * @param title, título que será exibido no item
+	 * @param description, descrição do item
+	 * @param backgroundColor, cor de fundo do item caso exista
+	 * @param titleVisible, verdadeiro se o título é visível
+	 * @param nameMarkingVisible, verdadeiro se o nome da marcação é visível
+	 * @param descriptionVisible, verdadeiro se a descrição é visível
+	 * @param btnExcludeMarkingVisible, verdadeiro se o botão de exclusão da marcação é visível
+	 * @param btnEditAnnotVisible, verdadeiro se o botão de editão da anotação é visível
+	 * @param btnExcludeAnnotVisible, verdadeiro se o botão de exclusão da anotação é visível
+	 * @param idItem, código do item de estudo 
+	 * @param nameUser, nome do usuário a quem o item pertence
+	 */
 	public ItemOfPanel(String typeItem, String title, String description, String backgroundColor, boolean titleVisible, boolean nameMarkingVisible,
 			boolean descriptionVisible, boolean btnExcludeMarkingVisible,  boolean btnEditAnnotVisible, boolean btnExcludeAnnotVisible,
 			String idItem, String nameUser) {

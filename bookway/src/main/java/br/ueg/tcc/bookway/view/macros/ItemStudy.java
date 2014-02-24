@@ -5,6 +5,13 @@ import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Label;
 
+/**
+ * Componente utilizado para representar um item de estudo no ambiente de estudo
+ * do texto
+ * 
+ * @author pedro
+ * 
+ */
 @SuppressWarnings("serial")
 @VariableResolver(value = { org.zkoss.zkplus.spring.DelegatingVariableResolver.class })
 public class ItemStudy extends HtmlMacroComponent {
@@ -20,7 +27,7 @@ public class ItemStudy extends HtmlMacroComponent {
 
 	@Wire
 	private Label idIconStudy;
-	
+
 	public String getIdIconStudy() {
 		return this.idIconStudy.getValue();
 	}

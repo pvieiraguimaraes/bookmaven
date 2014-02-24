@@ -5,17 +5,23 @@ import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Image;
 
+/**
+ * Componente criado para exbir os amigos do usuário no painel de amigos
+ * 
+ * @author pedro
+ * 
+ */
 @SuppressWarnings("serial")
-@VariableResolver(value = {org.zkoss.zkplus.spring.DelegatingVariableResolver.class})
+@VariableResolver(value = { org.zkoss.zkplus.spring.DelegatingVariableResolver.class })
 public class MyFriend extends HtmlMacroComponent {
 
 	@Wire
 	public Image imageUser;
-	
+
 	public MyFriend() {
 		compose();
 	}
-	
+
 	public MyFriend(String imageSrc, String tooltipoImage) {
 		compose();
 		setImageUser(imageSrc);

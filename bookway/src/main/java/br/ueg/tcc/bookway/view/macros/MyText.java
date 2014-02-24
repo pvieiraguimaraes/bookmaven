@@ -5,15 +5,22 @@ import org.zkoss.zk.ui.select.annotation.VariableResolver;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Label;
 
+/**
+ * Componente utilizado para exibir os textos do usuário no painel dos meu
+ * textos
+ * 
+ * @author pedro
+ * 
+ */
 @SuppressWarnings("serial")
-@VariableResolver(value = {org.zkoss.zkplus.spring.DelegatingVariableResolver.class})
+@VariableResolver(value = { org.zkoss.zkplus.spring.DelegatingVariableResolver.class })
 public class MyText extends HtmlMacroComponent {
 
 	@Wire
 	private Label titleText;
 	@Wire
 	private Label descriptionText;
-	
+
 	public MyText() {
 		compose();
 	}
