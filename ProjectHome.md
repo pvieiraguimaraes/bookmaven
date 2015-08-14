@@ -1,0 +1,1 @@
+<img src='http://bookmaven.googlecode.com/files/logo.png' alt='Logo' /> Bookway Rede Social de Estudos
